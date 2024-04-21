@@ -11,6 +11,8 @@
         "test-coverage": "jest --coverage",
         "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "prepare": "husky install",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
         "preview": "vite preview"
     },
     "dependencies": {
@@ -24,6 +26,7 @@
         "dayjs": "^1.11.9",
         "echarts": "^5.4.3",
         "echarts-for-react": "^3.0.2",
+        "gh-pages": "^6.1.1",
         "moment": "^2.29.4",
         "notistack": "^3.0.1",
         "react": "^18.2.0",
