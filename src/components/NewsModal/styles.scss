@@ -1,0 +1,106 @@
+.newsModal {
+    .MuiDialog-paper {
+        width: 95%;
+        max-width: 95%;
+        height: 100%;
+        .MuiDialogTitle-root {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    .MuiFormControl-root {
+        margin: 8px 0;
+    }
+    .MuiFormHelperText-root {
+        margin: 3px 0 0;
+    }
+    .MuiToggleButton-root {
+        text-transform: none;
+    }
+    .nodata {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 100px;
+    }
+    .news-set {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+        width: 100%;
+        .news-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .news-main {
+            display: flex;
+            justify-content: space-between;
+            .news-left {
+                width: calc(100% - 170px);
+                display: flex;
+                .news-content{
+                    width: 98%;
+                    word-wrap: break-word;
+                }
+            }
+            .news-right {
+                width: 170px;
+                flex-direction: column;
+                display: flex;
+                align-items: flex-end;
+                .news-date {
+                    display: flex;
+                    align-items: center;
+                    color: $gray_text;
+                    font-size: 12px;
+                    .news-rate{
+                        margin-left: 5px;
+                    }
+                }
+                .news-tags{
+                    display: flex;
+                    align-items: center;
+                    margin-top: 5px;
+                    .news-type{
+                        transform: translateY(-2px);
+                        margin-left: 5px;
+                        &.success{
+                            color: $error;
+                        }
+                        &.warning{
+                            color: $success;
+                        }
+                        &.gray{
+                            color: $gray_text;
+                        }
+                    }
+                    .news-badge {
+                        display: flex;
+                        justify-content: center;
+                        white-space: nowrap;
+                        background-color: $primary;
+                        color: #fff;
+                        padding: 2px 6px;
+                        border-radius: 50px;
+                        font-size: 12px;
+                        margin-left: 5px;
+                        transform: translateY(-2px);
+                        &.success{
+                            background: $error;
+                        }
+                        &.warning{
+                            background: $success;
+                        }
+                        &.gray{
+                            background: $gray_text;
+                        }
+                    }
+                }
+            }
+        }
+        .MuiDivider-root {
+            padding-bottom: 10px;
+        }
+    }
+}

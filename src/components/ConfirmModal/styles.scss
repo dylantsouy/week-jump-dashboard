@@ -1,0 +1,35 @@
+.confirmModal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 7.5px;
+        z-index: 1000;
+        max-width: 500px;
+        @media screen and (max-width: 600px) {
+            max-width: 90%;
+        }
+
+        .content {
+            margin-bottom: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            padding: 8px 16px;
+            button {
+                flex: 1;
+                margin: 0 10px;
+            }
+        }
+    }
+}

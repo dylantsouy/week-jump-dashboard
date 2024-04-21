@@ -1,0 +1,275 @@
+/*
+ * This is for global css usage.
+ */
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    outline: none;
+}
+
+body,
+input,
+select,
+textarea,
+button {
+    -webkit-font-smoothing: antialiased;
+}
+
+html,
+#root {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    width: 100%;
+    height: 100%;
+    font-family: Microsoft JhengHei;
+}
+
+textarea,
+input {
+    appearance: none;
+    border-radius: 0;
+}
+
+input {
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: normal;
+    color: var(--black);
+}
+
+a {
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.relative {
+    position: relative;
+}
+.main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    .action-icon {
+        cursor: pointer;
+        transition: 0.3s !important;
+        color: $primary_light;
+        background-color: $primary_lighter;
+        padding: 5.5px;
+        width: 26px !important;
+        height: 26px !important;
+        border-radius: 50%;
+        &:hover {
+            background-color: $primary;
+            color: #fff;
+        }
+        &.warning {
+            background-color: $warning_light;
+            color: $warning;
+            &:hover {
+                background-color: $warning;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.MuiDataGrid-row {
+    &:hover {
+        background-color: #ece5dd;
+    }
+}
+.MuiDataGrid-virtualScroller {
+    &::-webkit-scrollbar {
+        height: 7px;
+        width: 7px;
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 10px !important;
+        background: #f0f0f0 !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px !important;
+        background: $gray !important;
+    }
+}
+
+.Header {
+    display: flex;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.border-cell {
+    border-right: 1px solid #dfdfdf;
+}
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.wrap-text {
+    div {
+        transform: scale(0.9);
+    }
+}
+
+.text-center {
+    display: flex;
+    justify-content: center;
+}
+.scale-text {
+    transform: scale(0.8) translateY(1px);
+}
+
+@for $i from 1 through 6 {
+    .ml-#{$i} {
+        margin-left: $i * 5px !important;
+    }
+    .mr-#{$i} {
+        margin-right: $i * 5px !important;
+    }
+    .mt-#{$i} {
+        margin-top: $i * 5px !important;
+    }
+    .mb-#{$i} {
+        margin-bottom: $i * 5px !important;
+    }
+}
+
+.bg {
+    padding: 3px 6px;
+    color: #fff;
+    border-radius: 5px;
+    &.best {
+        background-color: #df1616;
+    }
+    &.good {
+        background-color: #fcb6b6;
+    }
+    &.neutral {
+        background-color: #bbb;
+    }
+
+    &.bad {
+        background-color: #91cf8f;
+    }
+    &.worst {
+        background-color: #357932;
+    }
+}
+
+.best-text {
+    color: #df1616;
+}
+.good-text {
+    color: #fcb6b6;
+}
+.neutral-text {
+    color: #bbb;
+}
+
+.bad-text {
+    color: #91cf8f;
+}
+.worst-text {
+    color: #357932;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.stock-set {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    .stock-name-code {
+        display: flex;
+        align-items: flex-end;
+        .stock-name {
+            font-weight: 600;
+        }
+        .stock-code {
+            font-weight: 100;
+            margin-left: 3px;
+        }
+    }
+    .stock-price {
+        font-weight: 600;
+        color: $primary;
+    }
+}
+
+.editDialog {
+    .MuiDialog-paper {
+        width: 100%;
+    }
+}
+.delete-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .delete-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 17px;
+    }
+}
+
+.column_center_center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex_center{
+    display: flex;
+    align-items: center;
+}
+
+.g-10{
+    gap: 10px;
+}
+
+.text-center{
+    text-align: center;
+}
+
+a{
+    color: $primary;
+}
