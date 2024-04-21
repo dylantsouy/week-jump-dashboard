@@ -18,9 +18,11 @@ import { useSnackbar } from 'notistack';
 import EditEpsModal from '@/components/EditEpsModal';
 import NewsModal from '@/components/NewsModal';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
+import usePermissionCheck from '@/helpers/usePermissionCheck';
 
 function Dashboard() {
     const dashboardRef = useRef(null);
+    const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
@@ -55,7 +57,6 @@ function Dashboard() {
             mutate();
         }
     };
-
     const addHandler = () => {
         setShowAddDialog(true);
     };
@@ -90,12 +91,12 @@ function Dashboard() {
             let result = await deleteTarget(e?.id);
             const { success } = result;
             if (success) {
-                enqueueSnackbar('更新成功', { variant: 'success' });
+                enqueueSnackbar('刪除成功', { variant: 'success' });
                 handleCloseDelete(true);
                 setValue('modalLoading', false);
             }
         } catch (err) {
-            enqueueSnackbar('更新失敗', { variant: 'error' });
+            enqueueSnackbar('刪除失敗', { variant: 'error' });
             setValue('modalLoading', false);
         }
     };
@@ -113,7 +114,6 @@ function Dashboard() {
             setLoadingAction(false);
         }
     };
-
 
     const deleteHandler = (e) => {
         setModalHandler({
@@ -149,10 +149,10 @@ function Dashboard() {
                 </div>
             </div>
             <div className='title-switch'>
-                <Button variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler} disabled={loadingAction}>
+                <Button disabled={loadingAction || !actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                     新增
                 </Button>
-                <Button className='ml-2' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler} disabled={loadingAction}>
+                <Button disabled={loadingAction || !actionPermission} className='ml-2' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
                     抓取
                 </Button>
             </div>
@@ -163,7 +163,7 @@ function Dashboard() {
                         ref={dashboardRef}
                         rows={loading ? [] : listData || []}
                         getRowId={(row) => row.id}
-                        columns={listColumn(editHandler, deleteHandler, epsHandler, newsHandler)}
+                        columns={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission)}
                         loading={loading}
                         disableSelectionOnClick
                         componentsProps={{
@@ -216,8 +216,8 @@ function Dashboard() {
             </div>
             <AddTargetModal open={showAddDialog} handleClose={handleCloseAdd} />
             <EditTargetModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
-            <EditEpsModal open={showEpsDialog} handleClose={handleCloseEps} epsData={epsData} />
-            <NewsModal open={showNewsDialog} handleClose={handleCloseNews} newsData={newsData} />
+            <EditEpsModal actionPermission={actionPermission} open={showEpsDialog} handleClose={handleCloseEps} epsData={epsData} />
+            <NewsModal actionPermission={actionPermission} open={showNewsDialog} handleClose={handleCloseNews} newsData={newsData} />
         </div>
     );
 }

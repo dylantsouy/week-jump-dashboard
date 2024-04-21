@@ -92,6 +92,11 @@ p {
             background-color: $primary;
             color: #fff;
         }
+        &.disabled{
+            cursor: not-allowed;
+            background-color: rgba(0, 0, 0, 0.12);
+            color: rgba(0, 0, 0, 0.26);
+        }
         &.warning {
             background-color: $warning_light;
             color: $warning;
@@ -156,6 +161,9 @@ p {
 }
 
 @for $i from 1 through 6 {
+    .m-#{$i} {
+        margin: $i * 5px !important;
+    }
     .ml-#{$i} {
         margin-left: $i * 5px !important;
     }
@@ -167,6 +175,21 @@ p {
     }
     .mb-#{$i} {
         margin-bottom: $i * 5px !important;
+    }
+    .p-#{$i} {
+        padding: $i * 5px !important;
+    }
+    .pl-#{$i} {
+        padding-left: $i * 5px !important;
+    }
+    .pr-#{$i} {
+        padding-right: $i * 5px !important;
+    }
+    .pt-#{$i} {
+        padding-top: $i * 5px !important;
+    }
+    .pb-#{$i} {
+        padding-bottom: $i * 5px !important;
     }
 }
 

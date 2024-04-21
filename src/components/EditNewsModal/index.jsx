@@ -116,7 +116,7 @@ export default function EditNewsModal(props) {
     return (
         <Dialog className='editDialog EditNewsModal' open={open} onClose={() => (loading ? () => {} : handleClose())}>
             <DialogTitle>
-                <span className='title-text'>{'新增消息'}</span>
+                <span className='title-text'>{'編輯消息'}</span>
             </DialogTitle>
             <DialogContent>
                 <>
@@ -147,7 +147,7 @@ export default function EditNewsModal(props) {
                         }}
                     />
 
-                    {nameLists?.length && (
+                    {nameLists?.length ? (
                         <Autocomplete
                             disabled={nameListsLoading}
                             disablePortal
@@ -173,6 +173,21 @@ export default function EditNewsModal(props) {
                                     onChange={(event) => handleChange('name', event.target.value)}
                                 />
                             )}
+                        />
+                    ) : (
+                        <TextField
+                            margin='dense'
+                            label={'分類'}
+                            type='text'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.name.valid}
+                            helperText={validation.name.error}
+                            value={addData?.name}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('name', e.target.value);
+                            }}
                         />
                     )}
 

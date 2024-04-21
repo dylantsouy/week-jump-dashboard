@@ -149,8 +149,8 @@ export default function AddNewsModal(props) {
                         handleChange('sort', e.target.value);
                     }}
                 />
-    
-                {nameLists?.length && (
+
+                {nameLists?.length ? (
                     <Autocomplete
                         disabled={nameListsLoading}
                         disablePortal
@@ -175,6 +175,21 @@ export default function AddNewsModal(props) {
                                 onChange={(event) => handleChange('name', event.target.value)}
                             />
                         )}
+                    />
+                ) : (
+                    <TextField
+                        margin='dense'
+                        label={'分類'}
+                        type='text'
+                        size='small'
+                        disabled={loading}
+                        error={!validation.name.valid}
+                        helperText={validation.name.error}
+                        value={addData.name}
+                        fullWidth
+                        onChange={(e) => {
+                            handleChange('name', e.target.value);
+                        }}
                     />
                 )}
                 <TextField

@@ -7,7 +7,7 @@ import ConfirmButton from '@/components/ConfirmButton';
 import { editTarget } from '@/services/targetApi';
 
 export default function EditEpsModal(props) {
-    const { open, handleClose, epsData } = props;
+    const { open, handleClose, epsData, actionPermission } = props;
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
     const [addData, setAddData] = useState({
@@ -46,7 +46,20 @@ export default function EditEpsModal(props) {
                 id: epsData?.id,
             });
         }
-    }, [epsData?.eps?.eps2023, epsData?.eps?.eps2024, epsData?.eps?.eps2025, epsData?.eps?.eps2026, epsData?.eps?.margin2024, epsData?.eps?.margin2025, epsData?.eps?.margin2026, epsData?.eps?.revenue2024, epsData?.eps?.revenue2025, epsData?.eps?.revenue2026, epsData?.id, open]);
+    }, [
+        epsData?.eps?.eps2023,
+        epsData?.eps?.eps2024,
+        epsData?.eps?.eps2025,
+        epsData?.eps?.eps2026,
+        epsData?.eps?.margin2024,
+        epsData?.eps?.margin2025,
+        epsData?.eps?.margin2026,
+        epsData?.eps?.revenue2024,
+        epsData?.eps?.revenue2025,
+        epsData?.eps?.revenue2026,
+        epsData?.id,
+        open,
+    ]);
 
     const handlerOk = async () => {
         let eps = {
@@ -103,7 +116,7 @@ export default function EditEpsModal(props) {
                         type='number'
                         size='small'
                         style={{ width: '33.33%' }}
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.eps2023}
                         fullWidth
                         onChange={(e) => {
@@ -120,7 +133,7 @@ export default function EditEpsModal(props) {
                         label={'2024 EPS'}
                         type='number'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.eps2024}
                         fullWidth
                         onChange={(e) => {
@@ -133,7 +146,7 @@ export default function EditEpsModal(props) {
                         label={'2024 營收 (億)'}
                         type='text'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.revenue2024}
                         fullWidth
                         onChange={(e) => {
@@ -146,7 +159,7 @@ export default function EditEpsModal(props) {
                         label={'2024 毛利率 (%)'}
                         type='text'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.margin2024}
                         fullWidth
                         onChange={(e) => {
@@ -161,7 +174,7 @@ export default function EditEpsModal(props) {
                         label={'2025 EPS'}
                         type='number'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.eps2025}
                         fullWidth
                         onChange={(e) => {
@@ -174,7 +187,7 @@ export default function EditEpsModal(props) {
                         label={'2025 營收 (億)'}
                         type='text'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.revenue2025}
                         fullWidth
                         onChange={(e) => {
@@ -187,7 +200,7 @@ export default function EditEpsModal(props) {
                         label={'2025 毛利率 (%)'}
                         type='text'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.margin2025}
                         fullWidth
                         onChange={(e) => {
@@ -202,7 +215,7 @@ export default function EditEpsModal(props) {
                         label={'2026 EPS'}
                         type='number'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.eps2026}
                         fullWidth
                         onChange={(e) => {
@@ -215,7 +228,7 @@ export default function EditEpsModal(props) {
                         label={'2026 營收 (億)'}
                         type='text'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.revenue2026}
                         fullWidth
                         onChange={(e) => {
@@ -228,7 +241,7 @@ export default function EditEpsModal(props) {
                         label={'2026 毛利率 (%)'}
                         type='text'
                         size='small'
-                        disabled={loading}
+                        disabled={loading || !actionPermission}
                         value={addData.margin2026}
                         fullWidth
                         onChange={(e) => {
@@ -239,7 +252,7 @@ export default function EditEpsModal(props) {
                 <div className='mt-2 mb-2' />
             </DialogContent>
             <DialogActions>
-                <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} />
+                {actionPermission && <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} />}
                 <Button disabled={loading} onClick={() => handleClose()}>
                     取消
                 </Button>

@@ -3,7 +3,7 @@ import { rateMapping, profitHandler, dateGap, generateMeasureDate } from './form
 import { Tooltip } from '@mui/material';
 import { Delete, Edit, MonetizationOn, ReceiptLong } from '@mui/icons-material';
 
-export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler) => {
+export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, actionPermission) => {
     return [
         {
             field: 'sort',
@@ -391,6 +391,25 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler) 
             },
         },
         {
+            field: 'editEps',
+            headerName: '營收',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 60,
+            width: 60,
+            editable: false,
+            renderCell: (params) => {
+                return (
+                    <div className='action text-center'>
+                        <Tooltip title={'營收明細'} placement='bottom'>
+                            <MonetizationOn className='action-icon' onClick={() => epsHandler(params.row)} />
+                        </Tooltip>
+                    </div>
+                );
+            },
+        },
+        {
             field: 'avergePE',
             headerName: '歷史 PE',
             renderHeader: () => (
@@ -449,15 +468,24 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler) 
             renderCell: (params) => {
                 return (
                     <div className='action'>
-                        <Tooltip title={'編輯基本'} placement='bottom'>
-                            <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
-                        </Tooltip>
-                        <Tooltip title={'編輯 EPS'} placement='bottom'>
-                            <MonetizationOn className='action-icon mr-2' onClick={() => epsHandler(params.row)} />
-                        </Tooltip>
-                        <Tooltip title={'刪除'} placement='bottom'>
-                            <Delete className='action-icon warning' onClick={() => deleteHandler(params.row)} />
-                        </Tooltip>
+                        {actionPermission ? (
+                            <Tooltip title={'編輯基本'} placement='bottom'>
+                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title={'沒有權限'} placement='bottom'>
+                                <Edit className='action-icon disabled mr-2' />
+                            </Tooltip>
+                        )}
+                        {actionPermission ? (
+                            <Tooltip title={'刪除'} placement='bottom'>
+                                <Delete className='action-icon warning' onClick={() => deleteHandler(params.row)} />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title={'沒有權限'} placement='bottom'>
+                                <Delete className='action-icon disabled mr-2' />
+                            </Tooltip>
+                        )}
                     </div>
                 );
             },

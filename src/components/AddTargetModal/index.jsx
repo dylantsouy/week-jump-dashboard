@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import useCodeLists from '@/services/useCodeLists';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import NoData from '../NoData';
 
 const initValid = {
     stockCode: { valid: true, error: '' },
@@ -116,130 +117,134 @@ export default function AddTargetModal(props) {
         }
     };
 
-
     return (
         <Dialog className='editDialog EditTargetModal' open={open} onClose={() => (loading ? () => {} : handleClose())}>
             <DialogTitle>
                 <span className='title-text'>{'編輯觀察目標'}</span>
             </DialogTitle>
             <DialogContent>
-                {codeLists?.length && (
-                    <Autocomplete
-                        disabled={codeListsLoading}
-                        disablePortal
-                        id='stockCode-lists'
-                        size='small'
-                        options={codeLists}
-                        getOptionLabel={(option) => option.code}
-                        renderOption={(props, option) => (
-                            <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                {option.name} ({option.code})
-                            </Box>
-                        )}
-                        onChange={(event, value) => handleChange('stockCode', value ? +value.code : null)}
-                        renderInput={(params) => <TextField {...params} required error={!validation.stockCode.valid} helperText={validation.stockCode.error} label='代碼' />}
-                    />
+                {!codeLists?.length ? (
+                    <div className='nodata'>
+                        <NoData text='請先獲取股票清單' />
+                    </div>
+                ) : (
+                    <>
+                        <Autocomplete
+                            disabled={codeListsLoading}
+                            disablePortal
+                            id='stockCode-lists'
+                            size='small'
+                            options={codeLists}
+                            getOptionLabel={(option) => option.code}
+                            renderOption={(props, option) => (
+                                <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                    {option.name} ({option.code})
+                                </Box>
+                            )}
+                            onChange={(event, value) => handleChange('stockCode', value ? +value.code : null)}
+                            renderInput={(params) => <TextField {...params} required error={!validation.stockCode.valid} helperText={validation.stockCode.error} label='代碼' />}
+                        />
+                        <TextField
+                            margin='dense'
+                            required
+                            label={'排序'}
+                            type='number'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.sort.valid}
+                            helperText={validation.sort.error}
+                            value={addData.sort}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('sort', e.target.value);
+                            }}
+                        />
+                        <TextField
+                            margin='dense'
+                            required
+                            label={'初始價格'}
+                            type='number'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.initPrice.valid}
+                            helperText={validation.initPrice.error}
+                            value={addData.initPrice}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('initPrice', e.target.value);
+                            }}
+                        />
+                        <FormControl sx={{ m: 1, minWidth: 120 }} size='small' required>
+                            <InputLabel id='rate-label'>評等</InputLabel>
+                            <Select labelId='rate' id='rate' value={addData.rate} label='評等' onChange={(e) => handleChange('rate', e.target.value)}>
+                                <MenuItem value={1}>持有</MenuItem>
+                                <MenuItem value={2}>看好</MenuItem>
+                                <MenuItem value={3}>有機會</MenuItem>
+                                <MenuItem value={4}>需等待</MenuItem>
+                                <MenuItem value={5}>待觀察</MenuItem>
+                                <MenuItem value={6}>中立</MenuItem>
+                                <MenuItem value={7}>已反應</MenuItem>
+                                <MenuItem value={8}>有風險</MenuItem>
+                                <MenuItem value={9}>中立偏空</MenuItem>
+                                <MenuItem value={10}>不看好</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            margin='dense'
+                            label={'CAGR'}
+                            type='text'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.CAGR.valid}
+                            helperText={validation.CAGR.error}
+                            value={addData.CAGR}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('CAGR', e.target.value);
+                            }}
+                        />
+                        <TextField
+                            margin='dense'
+                            label={'平均殖利率'}
+                            type='text'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.yield.valid}
+                            helperText={validation.yield.error}
+                            value={addData.yield}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('yield', e.target.value);
+                            }}
+                        />
+                        <TextField
+                            margin='dense'
+                            label={'平均 PE'}
+                            type='text'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.avergePE.valid}
+                            helperText={validation.avergePE.error}
+                            value={addData.avergePE}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('avergePE', e.target.value);
+                            }}
+                        />
+                        <DatePicker
+                            label='觀察日期'
+                            value={addData.createdAt}
+                            maxDate={dayjs()}
+                            onChange={(e) => {
+                                handleChange('createdAt', e);
+                            }}
+                        />
+                    </>
                 )}
-                <TextField
-                    margin='dense'
-                    required
-                    label={'排序'}
-                    type='number'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.sort.valid}
-                    helperText={validation.sort.error}
-                    value={addData.sort}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('sort', e.target.value);
-                    }}
-                />
-                <TextField
-                    margin='dense'
-                    required
-                    label={'初始價格'}
-                    type='number'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.initPrice.valid}
-                    helperText={validation.initPrice.error}
-                    value={addData.initPrice}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('initPrice', e.target.value);
-                    }}
-                />
-
-                <FormControl sx={{ m: 1, minWidth: 120 }} size='small' required>
-                    <InputLabel id='rate-label'>評等</InputLabel>
-                    <Select labelId='rate' id='rate' value={addData.rate} label='評等' onChange={(e) => handleChange('rate', e.target.value)}>
-                        <MenuItem value={1}>持有</MenuItem>
-                        <MenuItem value={2}>看好</MenuItem>
-                        <MenuItem value={3}>有機會</MenuItem>
-                        <MenuItem value={4}>需等待</MenuItem>
-                        <MenuItem value={5}>待觀察</MenuItem>
-                        <MenuItem value={6}>中立</MenuItem>
-                        <MenuItem value={7}>已反應</MenuItem>
-                        <MenuItem value={8}>有風險</MenuItem>
-                        <MenuItem value={9}>中立偏空</MenuItem>
-                        <MenuItem value={10}>不看好</MenuItem>
-                    </Select>
-                </FormControl>
-                <TextField
-                    margin='dense'
-                    label={'CAGR'}
-                    type='text'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.CAGR.valid}
-                    helperText={validation.CAGR.error}
-                    value={addData.CAGR}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('CAGR', e.target.value);
-                    }}
-                />
-                <TextField
-                    margin='dense'
-                    label={'平均殖利率'}
-                    type='text'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.yield.valid}
-                    helperText={validation.yield.error}
-                    value={addData.yield}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('yield', e.target.value);
-                    }}
-                />
-                <TextField
-                    margin='dense'
-                    label={'平均 PE'}
-                    type='text'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.avergePE.valid}
-                    helperText={validation.avergePE.error}
-                    value={addData.avergePE}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('avergePE', e.target.value);
-                    }}
-                />
-                <DatePicker
-                    label='觀察日期'
-                    value={addData.createdAt}
-                    maxDate={dayjs()}
-                    onChange={(e) => {
-                        handleChange('createdAt', e);
-                    }}
-                />
                 <div className='mt-2 mb-2' />
             </DialogContent>
             <DialogActions>
-                <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} />
+                {codeLists?.length && <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} />}
                 <Button disabled={loading} onClick={() => handleClose()}>
                     取消
                 </Button>

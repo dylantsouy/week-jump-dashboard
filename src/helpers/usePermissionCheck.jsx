@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 
-const HasPermission = (props) => {
-    const { permission, children } = props;
+const usePermissionCheck = (permission) => {
     const [hasPermission, setHasPermission] = useState(false);
     const { permissionArray } = useAuthStore();
 
@@ -17,7 +16,7 @@ const HasPermission = (props) => {
         checkHasPermission();
     }, [checkHasPermission]);
 
-    return hasPermission ? <>{children}</> : '';
+    return hasPermission;
 };
 
-export default HasPermission;
+export default usePermissionCheck;
