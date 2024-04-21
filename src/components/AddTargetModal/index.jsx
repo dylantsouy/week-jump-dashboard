@@ -64,7 +64,7 @@ export default function AddTargetModal(props) {
         let data = {
             stockCode: addData.stockCode,
             rate: addData.rate,
-            initPrice: addData.initPrice,
+            initPrice: +addData.initPrice,
             createdAt: addData.createdAt,
             sort: addData.sort,
             yield: addData.yield.trim(),
@@ -135,7 +135,7 @@ export default function AddTargetModal(props) {
                             id='stockCode-lists'
                             size='small'
                             options={codeLists}
-                            getOptionLabel={(option) => option.code}
+                            getOptionLabel={(option) => option.code }
                             renderOption={(props, option) => (
                                 <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                                     {option.name} ({option.code})
@@ -244,7 +244,7 @@ export default function AddTargetModal(props) {
                 <div className='mt-2 mb-2' />
             </DialogContent>
             <DialogActions>
-                {codeLists?.length && <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} />}
+                {codeLists?.length ? <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} /> : ''}
                 <Button disabled={loading} onClick={() => handleClose()}>
                     取消
                 </Button>

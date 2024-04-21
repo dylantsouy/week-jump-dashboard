@@ -11,7 +11,7 @@
         "test-coverage": "jest --coverage",
         "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "prepare": "husky install",
-        "predeploy": "npm run build",
+        "predeploy": "dotenv -e .env.prod vite build",
         "deploy": "gh-pages -d dist",
         "preview": "vite preview"
     },

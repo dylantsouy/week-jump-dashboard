@@ -64,7 +64,7 @@ export default function EditTargetModal(props) {
         let data = {
             id: editData.id,
             rate: addData.rate,
-            initPrice: addData.initPrice,
+            initPrice: +addData.initPrice,
             createdAt: addData.createdAt,
             sort: addData.sort,
             yield: addData.yield.trim(),
