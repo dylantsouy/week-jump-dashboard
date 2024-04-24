@@ -55,12 +55,12 @@ export const typeMapping = (e) => {
             </Tooltip>
         ),
         2: (
-            <Tooltip title='利多' placement='bottom' className='news-type warning'>
+            <Tooltip title='利空' placement='bottom' className='news-type warning'>
                 <SentimentVeryDissatisfiedIcon />
             </Tooltip>
         ),
         3: (
-            <Tooltip title='利多' placement='bottom' className='news-type gray'>
+            <Tooltip title='中立' placement='bottom' className='news-type gray'>
                 <SentimentNeutralIcon />
             </Tooltip>
         ),
