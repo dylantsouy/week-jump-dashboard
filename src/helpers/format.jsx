@@ -4,6 +4,7 @@ import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import { Tooltip } from '@mui/material';
 import AlarmIcon from '@mui/icons-material/Alarm';
+import { AlarmOff } from '@mui/icons-material';
 
 export const generateMeasureDate = (e) => {
     return moment(e).format('YYYY-MM-DD');
@@ -108,6 +109,11 @@ export const statusMapping = (e) => {
         8: (
             <Tooltip title='樂觀準時' placement='bottom' className='news-type success'>
                 <AlarmIcon />
+            </Tooltip>
+        ),
+        9: (
+            <Tooltip title='無時效性' placement='bottom' className='news-type gray'>
+                <AlarmOff />
             </Tooltip>
         ),
     };
