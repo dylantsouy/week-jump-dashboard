@@ -92,7 +92,7 @@ p {
             background-color: $primary;
             color: #fff;
         }
-        &.disabled{
+        &.disabled {
             cursor: not-allowed;
             background-color: rgba(0, 0, 0, 0.12);
             color: rgba(0, 0, 0, 0.26);
@@ -107,7 +107,9 @@ p {
         }
     }
 }
-
+strong {
+    font-weight: 600;
+}
 .MuiDataGrid-row {
     &:hover {
         background-color: #ece5dd;
@@ -273,26 +275,26 @@ p {
     }
 }
 
-.column_center_center{
+.column_center_center {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.flex_center{
+.flex_center {
     display: flex;
     align-items: center;
 }
 
-.g-10{
+.g-10 {
     gap: 10px;
 }
 
-.text-center{
+.text-center {
     text-align: center;
 }
 
-a{
+a {
     color: $primary;
 }

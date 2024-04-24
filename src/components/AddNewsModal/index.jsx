@@ -17,6 +17,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Rating from '@mui/material/Rating';
 import Autocomplete from '@mui/material/Autocomplete';
 import useNewsNames from '@/services/useNewsNames';
+import RichEditor from '@/components/RichEditor';
 
 const initValid = {
     status: { valid: true, error: '' },
@@ -48,7 +49,6 @@ export default function AddNewsModal(props) {
     const { isLoading: nameListsLoading, data: nameLists } = useNewsNames({ open, targetId });
 
     const handleChange = (type, e) => {
-        console.log(e);
         setValidation(initValid);
         setAddData((prevState) => ({
             ...prevState,
@@ -194,22 +194,6 @@ export default function AddNewsModal(props) {
                 )}
                 <TextField
                     margin='dense'
-                    label={'內容'}
-                    multiline
-                    rows={6}
-                    type='text'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.content.valid}
-                    helperText={validation.content.error}
-                    value={addData.content}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('content', e.target.value);
-                    }}
-                />
-                <TextField
-                    margin='dense'
                     label={'來源'}
                     type='text'
                     size='small'
@@ -245,6 +229,7 @@ export default function AddNewsModal(props) {
                         <MenuItem value={9}>無時效性</MenuItem>
                     </Select>
                 </FormControl>
+                <RichEditor data={addData.content} label='內容' type='content' disabled={loading} handleChange={handleChange} />
                 <div className='rate'>
                     重要程度:
                     <Rating name='size-small' value={addData.rate} onChange={(e, r) => handleChange('rate', r)} />

@@ -17,6 +17,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import Rating from '@mui/material/Rating';
 import useNewsNames from '@/services/useNewsNames';
 import Autocomplete from '@mui/material/Autocomplete';
+import RichEditor from '../RichEditor';
 
 const initValid = {
     status: { valid: true, error: '' },
@@ -190,23 +191,6 @@ export default function EditNewsModal(props) {
                             }}
                         />
                     )}
-
-                    <TextField
-                        margin='dense'
-                        label={'內容'}
-                        multiline
-                        rows={6}
-                        type='text'
-                        size='small'
-                        disabled={loading}
-                        error={!validation.content.valid}
-                        helperText={validation.content.error}
-                        value={addData?.content}
-                        fullWidth
-                        onChange={(e) => {
-                            handleChange('content', e.target.value);
-                        }}
-                    />
                     <TextField
                         margin='dense'
                         label={'來源'}
@@ -243,6 +227,7 @@ export default function EditNewsModal(props) {
                             <MenuItem value={8}>樂觀準時</MenuItem>
                         </Select>
                     </FormControl>
+                    <RichEditor data={addData.content} label='內容' type='content' disabled={loading} handleChange={handleChange} />
                     <div className='rate'>
                         重要程度:
                         <Rating name='size-small' value={addData.rate} onChange={(e, r) => handleChange('rate', r)} />

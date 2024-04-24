@@ -115,7 +115,7 @@ export default function NewsModal(props) {
                                     <div className='news-main' key={r?.newsId}>
                                         <div className='news-left'>
                                             <div className='news-index mr-1'>{i + 1}.</div>
-                                            <div className='news-content'>{r?.content}</div>
+                                            <div className='news-content' dangerouslySetInnerHTML={{ __html: r?.content }}></div>
                                         </div>
                                         <div className='news-right'>
                                             <div className='news-date'>
