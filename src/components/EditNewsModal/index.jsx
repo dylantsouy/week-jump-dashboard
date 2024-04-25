@@ -225,6 +225,7 @@ export default function EditNewsModal(props) {
                             <MenuItem value={6}>狀況不明</MenuItem>
                             <MenuItem value={7}>悲觀延後</MenuItem>
                             <MenuItem value={8}>樂觀準時</MenuItem>
+                            <MenuItem value={9}>無時效性</MenuItem>
                         </Select>
                     </FormControl>
                     <RichEditor data={addData.content} label='內容' type='content' disabled={loading} handleChange={handleChange} />
