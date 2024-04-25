@@ -16,7 +16,7 @@ export default function RichEditor(props) {
                 value={data}
                 onChange={onChange}
                 modules={{
-                    toolbar: [[{ size: [] }], [{ color: [] }], ['bold', 'underline', 'strike', 'code'], ['link', 'image'], ['clean']],
+                    toolbar: [[{ size: [] }], [{ color: [] }], [{ background: [] }], ['bold', 'underline', 'strike', 'code'], ['link', 'image'], ['clean']],
                     clipboard: {
                         matchVisual: false,
                     },
