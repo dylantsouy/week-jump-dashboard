@@ -16,6 +16,7 @@ import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import { deleteNews } from '@/services/newsApi';
 import HasPermission from '@/helpers/HasPermission';
+import ModalSkeleton from '../ModalSkeleton';
 
 export default function NewsModal(props) {
     const { open, handleClose, newsData, actionPermission } = props;
@@ -106,7 +107,9 @@ export default function NewsModal(props) {
                     </div>
                     <div className='stock-price'>{newsData?.price}</div>
                 </div>
-                {listData?.length ? (
+                {loadingNews ? (
+                    <ModalSkeleton />
+                ) : listData?.length ? (
                     <div>
                         {listData?.map((e) => (
                             <div className='news-set' key={e?.name}>
