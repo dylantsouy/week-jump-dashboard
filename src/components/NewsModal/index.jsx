@@ -110,7 +110,9 @@ export default function NewsModal(props) {
                     <div>
                         {listData?.map((e) => (
                             <div className='news-set' key={e?.name}>
-                                <div className='news-title'>{e?.name}</div>
+                                <div className='news-title'>
+                                    <span className='title-text'>{e?.name}</span>
+                                </div>
                                 {e?.items?.map((r, i) => (
                                     <div className='news-main' key={r?.newsId}>
                                         <div className='news-left'>

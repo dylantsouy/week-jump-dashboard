@@ -29,9 +29,16 @@
         margin-top: 20px;
         width: 100%;
         .news-title {
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 5px;
+            color: #fff;
+            margin-bottom: 10px;
+            .title-text{
+                font-weight: 600;
+                font-size: 14px;
+                background-color: $primary;
+                padding: 2px 5px;
+                border-radius: 5px 0  5px 0 ;
+                border-left: 5px solid rgb(255, 136, 0);
+            }
         }
         .news-main {
             display: flex;
@@ -39,7 +46,11 @@
             .news-left {
                 width: calc(100% - 170px);
                 display: flex;
+                .news-index{
+                    font-size: 14px;
+                }
                 .news-content{
+                    font-size: 14px;
                     width: 98%;
                     word-wrap: break-word;
                 }

@@ -107,6 +107,12 @@ p {
         }
     }
 }
+code{
+    background-color: $background;
+    border-radius: 5px;
+    padding: 2px 3px;
+    font-size: 14px;
+}
 strong {
     font-weight: 600;
 }
