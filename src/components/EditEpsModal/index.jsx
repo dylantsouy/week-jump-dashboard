@@ -115,8 +115,9 @@ export default function EditEpsModal(props) {
                         label={'2023 EPS'}
                         type='number'
                         size='small'
+                        InputProps={{ readOnly: !actionPermission }}
                         style={{ width: '33.33%' }}
-                        disabled={loading || !actionPermission}
+                        disabled={loading}
                         value={addData.eps2023}
                         fullWidth
                         onChange={(e) => {
@@ -133,7 +134,8 @@ export default function EditEpsModal(props) {
                         label={'2024 EPS'}
                         type='number'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.eps2024}
                         fullWidth
                         onChange={(e) => {
@@ -146,7 +148,8 @@ export default function EditEpsModal(props) {
                         label={'2024 營收 (億)'}
                         type='text'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.revenue2024}
                         fullWidth
                         onChange={(e) => {
@@ -159,7 +162,8 @@ export default function EditEpsModal(props) {
                         label={'2024 毛利率 (%)'}
                         type='text'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.margin2024}
                         fullWidth
                         onChange={(e) => {
@@ -174,7 +178,8 @@ export default function EditEpsModal(props) {
                         label={'2025 EPS'}
                         type='number'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.eps2025}
                         fullWidth
                         onChange={(e) => {
@@ -187,7 +192,8 @@ export default function EditEpsModal(props) {
                         label={'2025 營收 (億)'}
                         type='text'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.revenue2025}
                         fullWidth
                         onChange={(e) => {
@@ -200,7 +206,8 @@ export default function EditEpsModal(props) {
                         label={'2025 毛利率 (%)'}
                         type='text'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.margin2025}
                         fullWidth
                         onChange={(e) => {
@@ -215,7 +222,8 @@ export default function EditEpsModal(props) {
                         label={'2026 EPS'}
                         type='number'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.eps2026}
                         fullWidth
                         onChange={(e) => {
@@ -228,7 +236,8 @@ export default function EditEpsModal(props) {
                         label={'2026 營收 (億)'}
                         type='text'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.revenue2026}
                         fullWidth
                         onChange={(e) => {
@@ -241,7 +250,8 @@ export default function EditEpsModal(props) {
                         label={'2026 毛利率 (%)'}
                         type='text'
                         size='small'
-                        disabled={loading || !actionPermission}
+                        InputProps={{ readOnly: !actionPermission }}
+                        disabled={loading}
                         value={addData.margin2026}
                         fullWidth
                         onChange={(e) => {

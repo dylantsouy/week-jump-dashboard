@@ -116,6 +116,9 @@ code{
 strong {
     font-weight: 600;
 }
+.MuiInputBase-readOnly{
+    cursor: not-allowed;
+}
 .MuiDataGrid-row {
     &:hover {
         background-color: #ece5dd;
