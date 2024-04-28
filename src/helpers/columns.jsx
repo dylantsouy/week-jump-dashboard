@@ -11,8 +11,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
+            minWidth: 60,
+            width: 60,
             renderCell: RenderCellExpand,
         },
         {
@@ -21,8 +21,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 58,
+            width: 58,
             renderCell: RenderCellExpand,
         },
         {
@@ -31,8 +31,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 50,
+            width: 50,
             renderCell: (params) => {
                 const { row } = params;
                 return (
@@ -48,8 +48,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 72,
-            width: 72,
+            minWidth: 60,
+            width: 60,
             renderCell: (params) => {
                 const { row } = params;
                 return rateMapping(row?.rate);
@@ -61,8 +61,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 58,
+            width: 58,
             renderCell: RenderCellExpand,
         },
         {
@@ -71,8 +71,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 58,
+            width: 58,
             renderCell: RenderCellExpand,
         },
         {
@@ -81,8 +81,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 58,
+            width: 58,
             renderCell: (params) => {
                 const { row } = params;
                 const profit = Math.round((((row?.price - row?.initPrice) / row?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
@@ -95,7 +95,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 90,
+            minWidth: 80,
+            width: 80,
             editable: false,
             renderCell: (params) => {
                 const { row } = params;
@@ -114,8 +115,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             editable: false,
             renderCell: (params) => {
                 const { row } = params;
@@ -128,8 +129,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 50,
+            width: 50,
             editable: false,
             renderCell: (params) => {
                 return (
@@ -154,8 +155,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2023',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 return row?.eps?.eps2023 || '-';
@@ -174,8 +175,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2024',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 return row?.eps?.eps2024 || '-';
@@ -194,8 +195,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2024',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.price && row?.eps?.eps2024) {
@@ -220,8 +221,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2024',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.eps?.eps2023 && row?.eps?.eps2024) {
@@ -247,8 +248,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2025',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 return row?.eps?.eps2025 || '-';
@@ -267,8 +268,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2025',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.price && row?.eps?.eps2025) {
@@ -293,8 +294,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2025',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.eps?.eps2024 && row?.eps?.eps2025) {
@@ -320,8 +321,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2026',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 return row?.eps?.eps2026 || '-';
@@ -340,8 +341,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2026',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.price && row?.eps?.eps2026) {
@@ -366,8 +367,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2026',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.eps?.eps2025 && row?.eps?.eps2026) {
@@ -386,8 +387,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 50,
+            width: 50,
             editable: false,
             renderCell: (params) => {
                 return (
@@ -411,8 +412,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: RenderCellExpand,
         },
         {
@@ -427,8 +428,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.eps?.eps2024 && row?.eps?.eps2024 > 0 && row?.averagePE) {
@@ -451,8 +452,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 56,
+            width: 56,
             renderCell: (params) => {
                 const { row } = params;
                 if (row?.eps?.eps2025 && row?.eps?.eps2025 > 0 && row?.averagePE) {
@@ -475,8 +476,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 56,
-            width: 56,
+            minWidth: 54,
+            width: 54,
             renderCell: RenderCellExpand,
         },
         {
