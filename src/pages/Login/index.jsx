@@ -88,7 +88,7 @@ function LoginPage() {
     return (
         <div className='LoginPage'>
             <div className='left'>
-                <img src={titleLogo} className='logo' alt='SWeek Jump Dashboard Logo' />
+                <img src={titleLogo} className='logo' alt='Week Jump Dashboard Logo' />
                 <div className='ball ball1' />
                 <div className='ball ball2' />
                 <div className='ball ball3' />

@@ -18,7 +18,7 @@ const initValid = {
     createdAt: { valid: true, error: '' },
     sort: { valid: true, error: '' },
     yield: { valid: true, error: '' },
-    avergePE: { valid: true, error: '' },
+    averagePE: { valid: true, error: '' },
     CAGR: { valid: true, error: '' },
 };
 
@@ -32,7 +32,7 @@ export default function EditTargetModal(props) {
         createdAt: '',
         sort: 0,
         yield: '',
-        avergePE: '',
+        averagePE: '',
         CAGR: '',
     });
     const [validation, setValidation] = useState(initValid);
@@ -54,11 +54,11 @@ export default function EditTargetModal(props) {
                 createdAt: dayjs(editData?.createdAt),
                 sort: editData?.sort,
                 yield: editData?.yield,
-                avergePE: editData?.avergePE,
+                averagePE: editData?.averagePE,
                 CAGR: editData?.CAGR,
             });
         }
-    }, [editData?.CAGR, editData?.avergePE, editData?.createdAt, editData?.initPrice, editData?.rate, editData?.sort, editData?.yield, open]);
+    }, [editData?.CAGR, editData?.averagePE, editData?.createdAt, editData?.initPrice, editData?.rate, editData?.sort, editData?.yield, open]);
 
     const handlerOk = async () => {
         let data = {
@@ -68,7 +68,7 @@ export default function EditTargetModal(props) {
             createdAt: addData.createdAt,
             sort: addData.sort,
             yield: addData.yield.trim(),
-            avergePE: addData.avergePE.trim(),
+            averagePE: addData.averagePE.trim(),
             CAGR: addData.CAGR.trim(),
         };
         if (!data.rate || !data.initPrice || !data.createdAt || !data.sort) {
@@ -205,12 +205,12 @@ export default function EditTargetModal(props) {
                     type='text'
                     size='small'
                     disabled={loading}
-                    error={!validation.avergePE.valid}
-                    helperText={validation.avergePE.error}
-                    value={addData.avergePE}
+                    error={!validation.averagePE.valid}
+                    helperText={validation.averagePE.error}
+                    value={addData.averagePE}
                     fullWidth
                     onChange={(e) => {
-                        handleChange('avergePE', e.target.value);
+                        handleChange('averagePE', e.target.value);
                     }}
                 />
                 <DatePicker

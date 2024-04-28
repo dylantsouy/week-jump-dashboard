@@ -32,7 +32,7 @@ const initValid = {
 const initValue = {
     rate: 1,
     sort: 1,
-    status: 1,
+    status: 9,
     date: dayjs(),
     type: 1,
     name: '',

@@ -64,7 +64,7 @@ export default function EditNewsModal(props) {
         let data = {
             newsId: editData?.newsId,
             rate: addData.rate,
-            sort: addData.sort,
+            sort: addData.sort || 0,
             status: addData.status,
             date: addData.date,
             type: addData.type,
@@ -72,16 +72,12 @@ export default function EditNewsModal(props) {
             fromWhere: addData.fromWhere.trim(),
             content: addData.content.trim(),
         };
-        if (!data.status || !data.date || !data.type || !data.sort || !data.name) {
+        if (!data.status || !data.date || !data.type || !data.name) {
             setValidation((prevState) => ({
                 ...prevState,
                 name: {
                     valid: !!data.name,
                     error: !data.name ? '此欄位必填' : '',
-                },
-                sort: {
-                    valid: !!data.sort,
-                    error: !data.sort ? '此欄位必填' : '',
                 },
                 status: {
                     valid: !!data.status,

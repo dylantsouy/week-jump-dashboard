@@ -23,7 +23,7 @@ const initValid = {
     createdAt: { valid: true, error: '' },
     sort: { valid: true, error: '' },
     yield: { valid: true, error: '' },
-    avergePE: { valid: true, error: '' },
+    averagePE: { valid: true, error: '' },
     CAGR: { valid: true, error: '' },
 };
 
@@ -33,7 +33,7 @@ const initValue = {
     createdAt: dayjs(),
     sort: '',
     yield: '',
-    avergePE: '',
+    averagePE: '',
     CAGR: '',
     stockCode: null,
 };
@@ -68,7 +68,7 @@ export default function AddTargetModal(props) {
             createdAt: addData.createdAt,
             sort: addData.sort,
             yield: addData.yield.trim(),
-            avergePE: addData.avergePE.trim(),
+            averagePE: addData.averagePE.trim(),
             CAGR: addData.CAGR.trim(),
         };
         if (!data.stockCode || !data.rate || !data.initPrice || !data.createdAt || !data.sort) {
@@ -135,7 +135,7 @@ export default function AddTargetModal(props) {
                             id='stockCode-lists'
                             size='small'
                             options={codeLists}
-                            getOptionLabel={(option) => option.code }
+                            getOptionLabel={(option) => option.code}
                             renderOption={(props, option) => (
                                 <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                                     {option.name} ({option.code})
@@ -223,12 +223,12 @@ export default function AddTargetModal(props) {
                             type='text'
                             size='small'
                             disabled={loading}
-                            error={!validation.avergePE.valid}
-                            helperText={validation.avergePE.error}
-                            value={addData.avergePE}
+                            error={!validation.averagePE.valid}
+                            helperText={validation.averagePE.error}
+                            value={addData.averagePE}
                             fullWidth
                             onChange={(e) => {
-                                handleChange('avergePE', e.target.value);
+                                handleChange('averagePE', e.target.value);
                             }}
                         />
                         <DatePicker

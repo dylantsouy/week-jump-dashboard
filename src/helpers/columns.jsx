@@ -1,20 +1,10 @@
 import { RenderCellExpand } from '@/components/RenderCellExpand';
-import { rateMapping, profitHandler, dateGap, generateMeasureDate } from './format';
+import { rateMapping, profitHandler, dateGap, generateMeasureDate, calculateTargetPriceRange, targetColorHandler } from './format';
 import { Tooltip } from '@mui/material';
 import { Delete, Edit, MonetizationOn, ReceiptLong } from '@mui/icons-material';
 
 export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, actionPermission) => {
     return [
-        {
-            field: 'sort',
-            headerName: '排序',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 59,
-            width: 59,
-            renderCell: RenderCellExpand,
-        },
         {
             field: 'name',
             headerName: '名稱',
@@ -410,7 +400,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             },
         },
         {
-            field: 'avergePE',
+            field: 'averagePE',
             headerName: '歷史 PE',
             renderHeader: () => (
                 <div className='column_center_center'>
@@ -424,6 +414,54 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             minWidth: 60,
             width: 60,
             renderCell: RenderCellExpand,
+        },
+        {
+            field: 'targetPrice24',
+            headerName: '2024股價',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>2024</div>
+                    <div>股價</div>
+                </div>
+            ),
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 60,
+            width: 60,
+            renderCell: (params) => {
+                const { row } = params;
+                if (row?.eps?.eps2024 && row?.eps?.eps2024 > 0 && row?.averagePE) {
+                    const now = row?.price;
+                    const targetPrice = calculateTargetPriceRange(row?.eps?.eps2024, row?.averagePE);
+                    return targetColorHandler(now, targetPrice[0], targetPrice[1]);
+                }
+                return '-';
+            },
+        },
+        {
+            field: 'targetPrice25',
+            headerName: '2025股價',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>2025</div>
+                    <div>股價</div>
+                </div>
+            ),
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 60,
+            width: 60,
+            renderCell: (params) => {
+                const { row } = params;
+                if (row?.eps?.eps2025 && row?.eps?.eps2025 > 0 && row?.averagePE) {
+                    const now = row?.price;
+                    const targetPrice = calculateTargetPriceRange(row?.eps?.eps2025, row?.averagePE);
+                    return targetColorHandler(now, targetPrice[0], targetPrice[1]);
+                }
+                return '-';
+            },
         },
         {
             field: 'CAGR',

@@ -10,6 +10,54 @@ export const generateMeasureDate = (e) => {
     return moment(e).format('YYYY-MM-DD');
 };
 
+export const calculateTargetPriceRange = (eps2025, averagePE) => {
+    const [minPE, maxPE] = averagePE.split('~').map(Number);
+    const minTargetPrice = (eps2025 * minPE).toFixed(0);
+    const maxTargetPrice = (eps2025 * maxPE).toFixed(0);
+
+    return [minTargetPrice, maxTargetPrice];
+};
+
+export const targetColorHandler = (now, target1, target2) => {
+    const diff1 = now < target1 ? ((target1 - now) / now) * 100 : -((now - target1) / target1) * 100;
+    const diff2 = now < target2 ? ((target2 - now) / now) * 100 : -((now - target2) / target2) * 100;
+    let result1;
+    let result2;
+    if (diff1 < -30) {
+        result1 = <div className='worst-text'>{target1}</div>;
+    } else if (diff1 < 0) {
+        result1 = <div className='bad-text'>{target1}</div>;
+    } else if (diff1 < 10) {
+        result1 = <div className='neutral-text'>{target1}</div>;
+    } else if (diff1 < 30) {
+        result1 = <div className='good-text'>{target1}</div>;
+    } else {
+        result1 = <div className='best-text'>{target1}</div>;
+    }
+    if (diff2 < -30) {
+        result2 = <div className='worst-text'>{target2}</div>;
+    } else if (diff2 < 0) {
+        result2 = <div className='bad-text'>{target2}</div>;
+    } else if (diff2 < 10) {
+        result2 = <div className='neutral-text'>{target2}</div>;
+    } else if (diff2 < 30) {
+        result2 = <div className='good-text'>{target2}</div>;
+    } else {
+        result2 = <div className='best-text'>{target2}</div>;
+    }
+    return (
+        <div className='flex_center'>
+            <Tooltip title={`${diff1?.toFixed(0)}%`} placement='bottom'>
+                {result1}
+            </Tooltip>
+            ~
+            <Tooltip title={`${diff2?.toFixed(0)}%`} placement='bottom'>
+                {result2}
+            </Tooltip>
+        </div>
+    );
+};
+
 export const generateMeasureTime = (e) => {
     return moment(e).format('YYYY-MM-DD HH:mm:ss');
 };
@@ -34,13 +82,13 @@ export const rateMapping = (e) => {
 };
 
 export const profitHandler = (e) => {
-    if (e < -20) {
+    if (e < -30) {
         return <div className='worst-text'>{e}%</div>;
-    } else if (e < -10) {
+    } else if (e < 0) {
         return <div className='bad-text'>{e}%</div>;
-    } else if (e < 3) {
-        return <div className='neutral-text'>{e}%</div>;
     } else if (e < 10) {
+        return <div className='neutral-text'>{e}%</div>;
+    } else if (e < 30) {
         return <div className='good-text'>{e}%</div>;
     } else {
         return <div className='best-text'>{e}%</div>;
