@@ -5,8 +5,8 @@ export const permissionHandler = (role) => {
         case 2:
             return ['dashboard', 'jump', 'action'];
         case 3:
-            return ['dashboard'];
+            return ['dashboard', 'jump'];
         default:
-            return ['dashboard'];
+            return ['dashboard', 'jump'];
     }
 };
