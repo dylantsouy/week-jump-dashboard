@@ -118,7 +118,7 @@ function Jump() {
         <div className='Dashboard'>
             <div className='dashboard-header'>
                 <div className='header-left'>
-                    <div className='title'>觀察清單</div>
+                    <div className='title'>跳空清單</div>
                 </div>
                 <div className='header-right'>
                     <div className='title'>
