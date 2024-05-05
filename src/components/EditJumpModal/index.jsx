@@ -29,7 +29,7 @@ const initValid = {
     fromWhere: { valid: true, error: '' },
 };
 
-export default function EditNewsModal(props) {
+export default function EditJumpModal(props) {
     const { open, handleClose, editData, targetId, newsData } = props;
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
@@ -122,7 +122,7 @@ export default function EditNewsModal(props) {
     };
 
     return (
-        <Dialog className='editDialog EditNewsModal' open={open} onClose={() => (loading ? () => {} : handleClose())}>
+        <Dialog className='editDialog EditJumpModal' open={open} onClose={() => (loading ? () => {} : handleClose())}>
             <DialogTitle>
                 <span className='title-text'>{'編輯消息'}</span>
             </DialogTitle>

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, InputAdornment } from '@mui/material';
 import { useEffect, useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import './styles.scss';
@@ -41,10 +41,11 @@ const initValue = {
 };
 
 export default function AddNewsModal(props) {
-    const { open, handleClose, targetId } = props;
+    const { open, handleClose, targetId, newsData } = props;
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
     const [addData, setAddData] = useState(initValue);
+    const [sortCount, setSortCount] = useState(0);
     const [validation, setValidation] = useState(initValid);
     const { isLoading: nameListsLoading, data: nameLists } = useNewsNames({ open, targetId });
 
@@ -60,8 +61,19 @@ export default function AddNewsModal(props) {
         if (open) {
             setValidation(initValid);
             setAddData(initValue);
+            setSortCount(0);
         }
     }, [open]);
+
+    useEffect(() => {
+        if (addData?.name) {
+            const find = newsData?.find((e) => e?.name === addData.name);
+            const count = find?.items?.length || 0;
+            setSortCount(count);
+        } else {
+            setSortCount(0);
+        }
+    }, [addData.name, newsData]);
 
     const handlerOk = async () => {
         let data = {
@@ -147,6 +159,9 @@ export default function AddNewsModal(props) {
                     fullWidth
                     onChange={(e) => {
                         handleChange('sort', e.target.value);
+                    }}
+                    InputProps={{
+                        endAdornment: <InputAdornment position='end'>{sortCount || '-'}</InputAdornment>,
                     }}
                 />
 

@@ -19,13 +19,13 @@ import HasPermission from '@/helpers/HasPermission';
 import ModalSkeleton from '../ModalSkeleton';
 
 export default function NewsModal(props) {
-    const { open, handleClose, newsData, actionPermission } = props;
+    const { open, handleClose, targetData, actionPermission } = props;
     const { setModalHandler, closeModal, setValue } = useStore();
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showEditDialog, setShowEditDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const [editData, setEditData] = useState();
-    const { isLoading: loadingNews, data: listData, mutate } = useAllNews({ targetId: newsData?.id });
+    const { isLoading: loadingNews, data: newsData, mutate } = useAllNews({ targetId: targetData?.id });
 
     const handleCloseAdd = (refresh) => {
         setShowAddDialog(false);
@@ -103,15 +103,15 @@ export default function NewsModal(props) {
             <DialogContent>
                 <div className='stock-set'>
                     <div className='stock-name-code'>
-                        <div className='stock-name'>{newsData?.name}</div> <div className='stock-code'>{newsData?.code}</div>
+                        <div className='stock-name'>{targetData?.name}</div> <div className='stock-code'>{targetData?.code}</div>
                     </div>
-                    <div className='stock-price'>{newsData?.price}</div>
+                    <div className='stock-price'>{targetData?.price}</div>
                 </div>
                 {loadingNews ? (
                     <ModalSkeleton />
-                ) : listData?.length ? (
+                ) : newsData?.length ? (
                     <div>
-                        {listData?.map((e) => (
+                        {newsData?.map((e) => (
                             <div className='news-set' key={e?.name}>
                                 <div className='news-title'>
                                     <span className='title-text'>{e?.name}</span>
@@ -161,8 +161,8 @@ export default function NewsModal(props) {
             <DialogActions>
                 <Button onClick={() => handleClose()}>關閉</Button>
             </DialogActions>
-            <AddNewsModal targetId={newsData?.id} open={showAddDialog} handleClose={handleCloseAdd} />
-            <EditNewsModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} targetId={newsData?.id} />
+            <AddNewsModal targetId={targetData?.id} open={showAddDialog} handleClose={handleCloseAdd} newsData={newsData} />
+            <EditNewsModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} targetId={targetData?.id} newsData={newsData} />
         </Dialog>
     );
 }

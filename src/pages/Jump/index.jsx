@@ -1,109 +1,40 @@
 import './index.scss';
-import { listColumn } from '@/helpers/columnsTargets';
+import { listColumn } from '@/helpers/columnsJumps';
 import { DataGrid } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import NoResultsOverlay from '@/components/NoResultsOverlay';
 import DataGridSkeleton from '@/components/DataGridSkeleton';
-import CustomToolbar from '@/components/CustomToolbar';
 import { Button, Skeleton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
-import useTargets from '@/services/useTargets';
 import { AddCircleOutline } from '@mui/icons-material';
-import EditTargetModal from '@/components/EditTargetModal';
-import AddTargetModal from '@/components/AddTargetModal';
 import { useStore } from '@/stores/store';
-import { deleteTarget } from '@/services/targetApi';
-import { createStock } from '@/services/stockApi';
 import { useSnackbar } from 'notistack';
-import EditEpsModal from '@/components/EditEpsModal';
-import NewsModal from '@/components/NewsModal';
-import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
+import useJumps from '@/services/useJumps';
+import JumpModal from '@/components/JumpModal';
+import { addJumps, deleteJump } from '@/services/jumpApi';
+import DateRange from '@/components/DateRange';
+import dayjs from 'dayjs';
 
-function Dashboard() {
+function Jump() {
     const dashboardRef = useRef(null);
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
-    const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showAddDialog, setShowAddDialog] = useState(false);
     const [loadingAction, setLoadingAction] = useState(false);
-    const [showEpsDialog, setShowEpsDialog] = useState(false);
-    const [showNewsDialog, setShowNewsDialog] = useState(false);
-    const [editData, setEditData] = useState(null);
-    const [epsData, setEpsData] = useState(null);
-    const [newsData, setNewsData] = useState(null);
+    const [showRecordDialog, setShowRecordDialog] = useState(false);
+    const [recordData, setRecordData] = useState(null);
+    const [selectDate, setSelectDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(dayjs().subtract(1, 'week').startOf('week').day(1));
+    const [endDate, setEndDate] = useState(dayjs().endOf('week').day(0));
+    const [range, setRange] = useState(1);
     const { enqueueSnackbar } = useSnackbar();
 
-    const { isLoading: loading, data: listData, mutate, updatedDate } = useTargets();
+    const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate });
 
-    const editHandler = (e) => {
-        setEditData(e);
-        setShowEditDialog(true);
-    };
-
-    const epsHandler = (e) => {
-        setEpsData(e);
-        setShowEpsDialog(true);
-    };
-
-    const newsHandler = (e) => {
-        setNewsData(e);
-        setShowNewsDialog(true);
-    };
-
-    const handleCloseEps = (refresh) => {
-        setShowEpsDialog(false);
-        if (refresh) {
-            mutate();
-        }
-    };
-    const addHandler = () => {
-        setShowAddDialog(true);
-    };
-
-    const handleCloseNews = () => {
-        setShowNewsDialog(false);
-    };
-
-    const handleCloseAdd = (refresh) => {
-        setShowAddDialog(false);
-        if (refresh) {
-            mutate();
-        }
-    };
-
-    const handleCloseEdit = (refresh) => {
-        setShowEditDialog(false);
-        if (refresh) {
-            mutate();
-        }
-    };
-
-    const handleCloseDelete = (refresh) => {
-        closeModal(false);
-        if (refresh) {
-            mutate();
-        }
-    };
-    const confirmDelete = async (e) => {
-        setValue('modalLoading', true);
-        try {
-            let result = await deleteTarget(e?.id);
-            const { success } = result;
-            if (success) {
-                enqueueSnackbar('刪除成功', { variant: 'success' });
-                handleCloseDelete(true);
-                setValue('modalLoading', false);
-            }
-        } catch (err) {
-            enqueueSnackbar('刪除失敗', { variant: 'error' });
-            setValue('modalLoading', false);
-        }
-    };
-    const refreshHandler = async () => {
+    const addHandler = async () => {
         setLoadingAction(true);
         try {
-            let result = await createStock();
+            let result = await addJumps({ range, startDate });
             const { success } = result;
             if (success) {
                 enqueueSnackbar('更新成功', { variant: 'success' });
@@ -115,6 +46,53 @@ function Dashboard() {
         }
     };
 
+    const showRecord = (e) => {
+        let m = [];
+        let w = [];
+        let d = [];
+        e?.JumpsRecords.forEach((r) => {
+            if (r?.type === 'w') {
+                w.push(r);
+            } else if (r?.type === 'm') {
+                m.push(r);
+            } else {
+                d.push(r);
+            }
+        });
+        e.w = w;
+        e.m = m;
+        e.d = d;
+        setRecordData(e);
+        setShowRecordDialog(true);
+    };
+
+    const handleCloseRecord = () => {
+        setShowRecordDialog(false);
+    };
+
+    const handleCloseDelete = (refresh) => {
+        closeModal(false);
+        if (refresh) {
+            mutate();
+        }
+    };
+
+    const confirmDelete = async (e) => {
+        setValue('modalLoading', true);
+        try {
+            let result = await deleteJump(e?.id);
+            const { success } = result;
+            if (success) {
+                enqueueSnackbar('刪除成功', { variant: 'success' });
+                handleCloseDelete(true);
+                setValue('modalLoading', false);
+            }
+        } catch (err) {
+            enqueueSnackbar('刪除失敗', { variant: 'error' });
+            setValue('modalLoading', false);
+        }
+    };
+
     const deleteHandler = (e) => {
         setModalHandler({
             func: () => confirmDelete(e),
@@ -123,10 +101,11 @@ function Dashboard() {
                     <div className='delete-title'>
                         <div className='stock-set'>
                             <div className='stock-name-code'>
-                                <div className='stock-name'>{'請確認是否刪除'}:</div>
-                                <div className='stock-code'>
-                                    {e?.name} {e?.code}
+                                <div className='stock-name'>{'請確認是否刪除'}</div>
+                                <div className='stock-code mr-1'>
+                                    {e?.Stock?.name} {e?.Stock?.code}
                                 </div>
+                                <div className='stock-name'>{'跳空紀錄'}</div>
                             </div>
                         </div>
                     </div>
@@ -148,13 +127,30 @@ function Dashboard() {
                     </div>
                 </div>
             </div>
-            <div className='title-switch'>
-                <Button disabled={loadingAction || !actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
-                    新增
-                </Button>
-                <Button disabled={loadingAction || !actionPermission} className='ml-2' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+            <div className='title-action'>
+                <Button
+                    className='act'
+                    disabled={loadingAction || !actionPermission || range === 3}
+                    variant='contained'
+                    color='warning'
+                    startIcon={<AddCircleOutline />}
+                    onClick={addHandler}
+                >
                     抓取
                 </Button>
+                <div className='date'>
+                    <DateRange
+                        loading={loading}
+                        selectDate={selectDate}
+                        setSelectDate={setSelectDate}
+                        startDate={startDate}
+                        setStartDate={setStartDate}
+                        endDate={endDate}
+                        setEndDate={setEndDate}
+                        range={range}
+                        setRange={setRange}
+                    />
+                </div>
             </div>
             <div className='container'>
                 <div className='table-wrapper'>
@@ -163,7 +159,7 @@ function Dashboard() {
                         ref={dashboardRef}
                         rows={loading ? [] : listData || []}
                         getRowId={(row) => row.id}
-                        columns={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission)}
+                        columns={listColumn(showRecord, deleteHandler, actionPermission)}
                         loading={loading}
                         disableSelectionOnClick
                         componentsProps={{
@@ -200,13 +196,12 @@ function Dashboard() {
                         }}
                         initialState={{
                             sorting: {
-                                sortModel: [{ field: 'sort', sort: 'asc' }],
+                                sortModel: [{ field: 'newestDate', sort: 'desc' }],
                             },
                         }}
                         density='compact'
                         sortingOrder={['desc', 'asc']}
                         components={{
-                            Toolbar: CustomToolbar,
                             NoRowsOverlay: NoResultsOverlay,
                             NoResultsOverlay: NoResultsOverlay,
                             LoadingOverlay: DataGridSkeleton,
@@ -214,12 +209,9 @@ function Dashboard() {
                     />
                 </div>
             </div>
-            <AddTargetModal open={showAddDialog} handleClose={handleCloseAdd} />
-            <EditTargetModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
-            <EditEpsModal actionPermission={actionPermission} open={showEpsDialog} handleClose={handleCloseEps} epsData={epsData} />
-            <NewsModal actionPermission={actionPermission} open={showNewsDialog} handleClose={handleCloseNews} targetData={newsData} />
+            <JumpModal loading={loading} actionPermission={actionPermission} open={showRecordDialog} handleClose={handleCloseRecord} recordData={recordData} mutate={mutate} />
         </div>
     );
 }
 
-export default Dashboard;
+export default Jump;

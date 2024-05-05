@@ -168,3 +168,13 @@ export const statusMapping = (e) => {
 
     return map[e];
 };
+
+export const jumpTypeMapping = (e) => {
+    const map = {
+        d: <div className='bg neutral'>日</div>,
+        w: <div className='bg good'>周</div>,
+        m: <div className='bg best'>月</div>,
+    };
+
+    return map[e];
+};

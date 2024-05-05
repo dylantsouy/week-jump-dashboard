@@ -1,13 +1,13 @@
-import { LogoSM } from '@/assets/icons';
+import { Jump, LogoSM } from '@/assets/icons';
 import './index.scss';
 import { IconButton, Tooltip } from '@mui/material';
 import { Logout } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import HasPermission from '@/helpers/HasPermission';
+import AdsClickIcon from '@mui/icons-material/AdsClick';
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -20,8 +20,14 @@ export default function Sidebar() {
         {
             title: '觀察清單',
             router: '/dashboard',
-            icon: <ViewListIcon />,
-            permission:'dashboard'
+            icon: <AdsClickIcon />,
+            permission: 'dashboard',
+        },
+        {
+            title: '跳空清單',
+            router: '/jump',
+            icon: <Jump />,
+            permission: 'jump',
         },
     ];
 
@@ -55,7 +61,7 @@ export default function Sidebar() {
             <div className='sidebar-items'>
                 {sidebarItems.map((e) => (
                     <HasPermission key={e.router} permission={e.permission}>
-                        <Tooltip title={e.title} placement='left' >
+                        <Tooltip title={e.title} placement='left'>
                             <div className={`sidebar-item ${pathname?.includes(e.router) && 'active'}`} onClick={() => goHandler(e.router)}>
                                 <IconButton color='white'>{e.icon}</IconButton>
                             </div>

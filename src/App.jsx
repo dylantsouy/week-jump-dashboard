@@ -10,6 +10,7 @@ import DateAdapterProvider from '@/providers/DateAdapterProvider';
 import Snackbar from '@/providers/Snackbar';
 import Sidebar from '@/components/Sidebar';
 import ConfirmModal from './components/ConfirmModal';
+import Jump from './pages/Jump';
 
 function App() {
     let element = useRoutes([
@@ -18,6 +19,14 @@ function App() {
             element: (
                 <ProtectedRoute>
                     <Dashboard />
+                </ProtectedRoute>
+            ),
+        },
+        {
+            path: '/jump',
+            element: (
+                <ProtectedRoute>
+                    <Jump />
                 </ProtectedRoute>
             ),
         },

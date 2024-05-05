@@ -21,6 +21,10 @@
     margin-top: 50px;
     .sidebar-item{
       margin-bottom: 25px;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
     }
   }
   .logout {

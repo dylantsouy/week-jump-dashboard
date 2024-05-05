@@ -1,0 +1,130 @@
+.JumpModal {
+    .MuiDialog-paper {
+        width: 95%;
+        max-width: 95%;
+        height: 100%;
+        .MuiDialogTitle-root {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    .MuiFormControl-root {
+        margin: 8px 0;
+    }
+    .MuiFormHelperText-root {
+        margin: 3px 0 0;
+    }
+    .MuiToggleButton-root {
+        text-transform: none;
+    }
+    .nodata {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .jump-title {
+        color: #fff;
+        margin-bottom: 10px;
+        .title-text{
+            font-weight: 600;
+            font-size: 14px;
+            background-color: $primary;
+            padding: 2px 5px;
+            border-radius: 5px 0  5px 0 ;
+            border-left: 5px solid rgb(255, 136, 0);
+        }
+    }
+    .jump-set {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+        width: 100%;
+        .jump-main {
+            display: flex;
+            justify-content: space-between;
+            @media screen and (max-width: 700px) {
+                flex-direction: column;
+                &:nth-child(odd){
+                    background-color: $background;
+                }
+                margin-bottom: 10px;
+            }
+            .jump-left {
+                width: calc(100% - 170px);
+                display: flex;
+                @media screen and (max-width: 700px) {
+                    width: 100%;
+                }
+                .jump-index{
+                    font-size: 14px;
+                }
+                .jump-date {
+                    font-size: 14px;
+                }
+            }
+            .jump-right {
+                width: 60px;
+                flex-direction: column;
+                display: flex;
+                align-items: flex-end;
+                @media screen and (max-width: 700px) {
+                    width: 100%;
+                    flex-direction: row;
+                    justify-content: space-between;
+                }
+                @media screen and (max-width: 470px) {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .jump-tags{
+                    display: flex;
+                    align-items: center;
+                    margin-top: 5px;
+                    .MuiButtonBase-root{
+                        transform: translateY(-1px);
+                        svg{
+                            font-size: 20px;
+                        }
+                    }
+                    .jump-type{
+                        transform: translateY(-2px);
+                        margin-left: 5px;
+                        &.success{
+                            color: $error;
+                        }
+                        &.warning{
+                            color: $success;
+                        }
+                        &.gray{
+                            color: $gray_text;
+                        }
+                    }
+                    .jump-badge {
+                        display: flex;
+                        justify-content: center;
+                        white-space: nowrap;
+                        background-color: $primary;
+                        color: #fff;
+                        padding: 2px 6px;
+                        border-radius: 50px;
+                        font-size: 12px;
+                        margin-left: 5px;
+                        transform: translateY(-2px);
+                        &.success{
+                            background: $error;
+                        }
+                        &.warning{
+                            background: $success;
+                        }
+                        &.gray{
+                            background: $gray_text;
+                        }
+                    }
+                }
+            }
+        }
+        .MuiDivider-root {
+            padding-bottom: 10px;
+        }
+    }
+}
