@@ -12,11 +12,12 @@ import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import useJumps from '@/services/useJumps';
 import JumpModal from '@/components/JumpModal';
-import { addJumps, deleteJump } from '@/services/jumpApi';
+import { addJumps, deleteJump, updateIfClosed } from '@/services/jumpApi';
 import DateRange from '@/components/DateRange';
 import dayjs from 'dayjs';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { AddCircleOutline } from '@mui/icons-material';
 
 function Jump() {
     const dashboardRef = useRef(null);
@@ -49,6 +50,21 @@ function Jump() {
             }
         } catch (err) {
             enqueueSnackbar('更新失敗', { variant: 'error' });
+            setLoadingAction(false);
+        }
+    };
+
+    const checkHandler = async () => {
+        setLoadingAction(true);
+        try {
+            let result = await updateIfClosed({ range, startDate });
+            const { success } = result;
+            if (success) {
+                enqueueSnackbar('檢查成功', { variant: 'success' });
+                setLoadingAction(false);
+            }
+        } catch (err) {
+            enqueueSnackbar('檢查失敗', { variant: 'error' });
             setLoadingAction(false);
         }
     };
@@ -135,16 +151,21 @@ function Jump() {
                 </div>
             </div>
             <div className='title-action'>
-                <Button
-                    className='act'
-                    disabled={loadingAction || !actionPermission || range === 3}
-                    variant='contained'
-                    color='warning'
-                    startIcon={<CloudSyncIcon />}
-                    onClick={addHandler}
-                >
-                    抓取
-                </Button>
+                <div className='title-btns'>
+                    <Button
+                        className='act'
+                        disabled={loadingAction || !actionPermission || range === 3}
+                        variant='contained'
+                        color='warning'
+                        startIcon={<AddCircleOutline />}
+                        onClick={addHandler}
+                    >
+                        抓取
+                    </Button>
+                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' startIcon={<CloudSyncIcon />} onClick={checkHandler}>
+                        檢查補上
+                    </Button>
+                </div>
                 <div className='date'>
                     <DateRange
                         loading={loading}

@@ -129,13 +129,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         },
         {
             field: 'jumpPrice',
-            headerName: '跳空開盤',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>跳空</div>
-                    <div>開盤</div>
-                </div>
-            ),
+            headerName: '開盤價',
             headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
@@ -165,11 +159,11 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         },
         {
             field: 'newestLastPrice',
-            headerName: '缺口低點',
+            headerName: '補上價格',
             renderHeader: () => (
                 <div className='column_center_center'>
-                    <div>缺口</div>
-                    <div>低點</div>
+                    <div>補上</div>
+                    <div>價格</div>
                 </div>
             ),
             headerClassName: 'eps2025',

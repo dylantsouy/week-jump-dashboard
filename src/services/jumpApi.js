@@ -28,3 +28,9 @@ export const deleteJumpRecord = async (id) => {
 
     return data;
 };
+
+export const updateIfClosed = async () => {
+    const data = await fetcher(`/jumps/updateIfClosed`, 'POST');
+
+    return data;
+};

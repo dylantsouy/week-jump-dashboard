@@ -153,7 +153,7 @@ function Dashboard() {
                     新增
                 </Button>
                 <Button disabled={loadingAction || !actionPermission} className='ml-2' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
-                    抓取
+                    更新收盤價
                 </Button>
             </div>
             <div className='container'>
