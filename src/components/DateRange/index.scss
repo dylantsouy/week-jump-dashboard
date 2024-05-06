@@ -22,7 +22,7 @@
             width: 100%;
             transform: translateX(0);
         }
-        &.fake{
+        &.fake {
             height: 34px;
         }
         .arrow {
@@ -49,7 +49,8 @@
                 position: relative;
             }
 
-            input[type='week']::-webkit-calendar-picker-indicator, input[type='month']::-webkit-calendar-picker-indicator {
+            input[type='week']::-webkit-calendar-picker-indicator,
+            input[type='month']::-webkit-calendar-picker-indicator {
                 background: transparent;
                 bottom: 0;
                 color: transparent;
@@ -90,19 +91,6 @@
                 margin: 10px 0 15px;
             }
         }
-        .user {
-            margin-right: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            color: $gray_text;
-            background-color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 3px #ccc;
-            @media screen and (max-width: 700px) {
-                margin: 5px 0 15px;
-            }
-        }
         .date-range {
             display: flex;
             align-items: center;
@@ -113,24 +101,15 @@
             @media screen and (max-width: 700px) {
                 width: 100%;
             }
-            .date-block {
-                font-size: 14px;
-                font-weight: 600;
-                background-color: $primary;
-                color: #fff;
-                padding: 2px;
-                @media screen and (max-width: 700px) {
-                    padding: 0;
-                    font-size: 13px;
-                }
-                &.active {
-                    background-color: $warning;
-                }
-            }
-            button {
-                &.Mui-disabled {
-                    background-color: $gray !important;
-                    cursor: not-allowed;
+            .MuiToggleButtonGroup-root {
+                height: 30px;
+                button {
+                    background-color: $primary;
+                    color: #fff;
+                    border-color: #fff;
+                    &.Mui-selected{
+                        background-color: $warning;
+                    }
                 }
             }
         }

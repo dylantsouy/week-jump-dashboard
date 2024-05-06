@@ -2,6 +2,8 @@ import './index.scss';
 import { Button, IconButton } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import dayjs from 'dayjs';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 export default function DateRange(props) {
     const { loading, selectDate, setSelectDate, startDate, setStartDate, endDate, setEndDate, range, setRange } = props;
@@ -60,7 +62,8 @@ export default function DateRange(props) {
         setSelectDate(startOfMonth.toDate());
     };
 
-    const handleRangeChange = (newRange) => {
+    const handleRangeChange = (e) => {
+        const newRange = +e.target.value;
         setRange(newRange);
         if (newRange === 1) {
             const startOfWeek = dayjs().subtract(1, 'week').startOf('week').day(1);
@@ -104,15 +107,17 @@ export default function DateRange(props) {
             )}
             <div className='date-range-outer'>
                 <div className='date-range'>
-                    <Button disabled={loading} className={`${range === 1 ? 'active' : ''} date-block`} variant={'contained'} color={'primary'} onClick={() => handleRangeChange(1)}>
-                        周
-                    </Button>
-                    <Button disabled={loading} className={`${range === 2 ? 'active' : ''} date-block`} variant={'contained'} color={'primary'} onClick={() => handleRangeChange(2)}>
-                        月
-                    </Button>
-                    <Button disabled={loading} className={`${range === 3 ? 'active' : ''} date-block`} variant={'contained'} color={'primary'} onClick={() => handleRangeChange(3)}>
-                        All
-                    </Button>
+                    <ToggleButtonGroup color='primary' value={range} exclusive onChange={handleRangeChange} aria-label='Platform'>
+                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={1}>
+                            周
+                        </ToggleButton>
+                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={2}>
+                            月
+                        </ToggleButton>
+                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
+                            全
+                        </ToggleButton>
+                    </ToggleButtonGroup>
                 </div>
             </div>
         </div>
