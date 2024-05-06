@@ -25,106 +25,114 @@
     .jump-title {
         color: #fff;
         margin-bottom: 10px;
-        .title-text{
+        .title-text {
             font-weight: 600;
             font-size: 14px;
             background-color: $primary;
             padding: 2px 5px;
-            border-radius: 5px 0  5px 0 ;
+            border-radius: 5px 0 5px 0;
             border-left: 5px solid rgb(255, 136, 0);
         }
     }
-    .jump-set {
-        display: flex;
-        flex-direction: column;
-        margin-top: 20px;
+    .datagrid-wrapper {
+        height: 91%;
         width: 100%;
-        .jump-main {
+        display: flex;
+        gap: 20px;
+        @media screen and (max-width: 850px) {
+            width: 100%;
+            flex-direction: column;
+        }
+        .datagrid-set {
+            height: 100%;
+            flex:1;
             display: flex;
-            justify-content: space-between;
-            @media screen and (max-width: 700px) {
-                flex-direction: column;
-                &:nth-child(odd){
-                    background-color: $background;
-                }
-                margin-bottom: 10px;
+            flex-direction: column;
+        }
+    }
+    .container {
+        padding-top: 2px;
+        height: 100%;
+        .MuiDataGrid-columnHeader {
+            background-color: $primary;
+            color: #fff;
+            font-size: 12px;
+            &.eps2023 {
+                background-color: $primary_light;
             }
-            .jump-left {
-                width: calc(100% - 170px);
-                display: flex;
-                @media screen and (max-width: 700px) {
-                    width: 100%;
-                }
-                .jump-index{
-                    font-size: 14px;
-                }
-                .jump-date {
-                    font-size: 14px;
-                }
+            &.eps2024 {
+                background-color: $warning;
             }
-            .jump-right {
-                width: 60px;
-                flex-direction: column;
+            &.eps2025 {
+                background-color: $primary_light;
+            }
+            &.eps2026 {
+                background-color: $warning;
+            }
+        }
+        .MuiDataGrid-menuIcon {
+            display: none;
+        }
+        .MuiDataGrid-cell {
+            font-size: 12px;
+            &.eps2023 {
+                color: $primary_light;
+                background-color: $primary_lighter;
+            }
+            &.eps2024 {
+                background-color: $warning_light;
+                color: $warning;
+            }
+            &.eps2025 {
+                color: $primary_light;
+                background-color: $primary_lighter;
+            }
+            &.eps2026 {
+                background-color: $warning_light;
+                color: $warning;
+            }
+        }
+        .MuiDataGrid-iconButtonContainer {
+            button {
+                transform: translateY(1px);
+                padding: 0;
+                color: #fff;
+                font-size: 14px;
+            }
+        }
+        .table-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            .MuiDataGrid-toolbarContainer {
                 display: flex;
-                align-items: flex-end;
-                @media screen and (max-width: 700px) {
-                    width: 100%;
-                    flex-direction: row;
-                    justify-content: space-between;
+                justify-content: flex-end;
+                margin-bottom: 5px;
+            }
+            .MuiDataGrid-main {
+                border-radius: 5px;
+                background-color: #fff;
+                box-shadow: 0 0 5px #e0e0e0;
+            }
+            .table-root {
+                border: none;
+                & *,
+                & *:focus {
+                    outline: none !important;
                 }
-                @media screen and (max-width: 470px) {
-                    flex-direction: column;
-                    align-items: center;
+
+                & .muidatagrid-columnheaderwrapper > div {
+                    height: 56px;
                 }
-                .jump-tags{
-                    display: flex;
-                    align-items: center;
-                    margin-top: 5px;
-                    .MuiButtonBase-root{
-                        transform: translateY(-1px);
-                        svg{
-                            font-size: 20px;
-                        }
-                    }
-                    .jump-type{
-                        transform: translateY(-2px);
-                        margin-left: 5px;
-                        &.success{
-                            color: $error;
-                        }
-                        &.warning{
-                            color: $success;
-                        }
-                        &.gray{
-                            color: $gray_text;
-                        }
-                    }
-                    .jump-badge {
-                        display: flex;
-                        justify-content: center;
-                        white-space: nowrap;
-                        background-color: $primary;
-                        color: #fff;
-                        padding: 2px 6px;
-                        border-radius: 50px;
-                        font-size: 12px;
-                        margin-left: 5px;
-                        transform: translateY(-2px);
-                        &.success{
-                            background: $error;
-                        }
-                        &.warning{
-                            background: $success;
-                        }
-                        &.gray{
-                            background: $gray_text;
-                        }
-                    }
+
+                & .first-header-class,
+                & .first-cell-class {
+                    padding-left: 20px;
                 }
             }
         }
-        .MuiDivider-root {
-            padding-bottom: 10px;
-        }
+        transform: translateY(-8px);
     }
 }

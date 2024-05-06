@@ -6,7 +6,7 @@ import NoResultsOverlay from '@/components/NoResultsOverlay';
 import DataGridSkeleton from '@/components/DataGridSkeleton';
 import { Button, Skeleton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
-import { AddCircleOutline } from '@mui/icons-material';
+import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
@@ -140,7 +140,7 @@ function Jump() {
                     disabled={loadingAction || !actionPermission || range === 3}
                     variant='contained'
                     color='warning'
-                    startIcon={<AddCircleOutline />}
+                    startIcon={<CloudSyncIcon />}
                     onClick={addHandler}
                 >
                     抓取
@@ -177,33 +177,6 @@ function Jump() {
                             pagination: {
                                 labelRowsPerPage: '每頁筆數:',
                             },
-                        }}
-                        localeText={{
-                            columnMenuUnsort: '不排序',
-                            columnMenuSortAsc: '升冪排序',
-                            columnMenuSortDesc: '降冪排序',
-                            columnMenuShowColumns: '顯示欄位',
-                            columnMenuHideColumn: '隱藏欄位',
-                            toolbarExport: '輸出報表',
-                            toolbarExportCSV: '下載為 CSV',
-                            columnMenuFilter: '過濾',
-                            filterOperatorContains: '包含',
-                            filterOperatorEquals: '完全相符',
-                            filterOperatorStartsWith: '開頭為',
-                            filterOperatorEndsWith: '結束於',
-                            filterOperatorIsEmpty: '為空',
-                            filterOperatorIsNotEmpty: '不為空',
-                            filterOperatorIsAnyOf: '複選',
-                            filterPanelColumns: '欄位',
-                            filterPanelInputLabel: '值',
-                            filterPanelOperators: '條件',
-                            filterPanelInputPlaceholder: '請輸入值',
-                            toolbarColumns: '欄位',
-                            columnsPanelHideAllButton: '隱藏全部',
-                            columnsPanelShowAllButton: '顯示全部',
-                            columnsPanelTextFieldPlaceholder: '輸入欄位名稱',
-                            columnsPanelTextFieldLabel: '欄位名稱',
-                            toolbarFilters: '過濾',
                         }}
                         initialState={{
                             sorting: {
