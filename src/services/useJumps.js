@@ -3,9 +3,10 @@ import useSWR from 'swr';
 import dayjs from 'dayjs';
 
 const useJumps = (props) => {
-    const { startDate, range } = props;
+    const { startDate, range, closed } = props;
     let url = '/jumps';
     let queryParams = {};
+    queryParams.closed = closed;
     if (range !== 3) {
         const formattedDate = dayjs(startDate).format('YYYYMMDD');
         queryParams.date = formattedDate;

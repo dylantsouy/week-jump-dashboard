@@ -15,6 +15,8 @@ import JumpModal from '@/components/JumpModal';
 import { addJumps, deleteJump } from '@/services/jumpApi';
 import DateRange from '@/components/DateRange';
 import dayjs from 'dayjs';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 function Jump() {
     const dashboardRef = useRef(null);
@@ -27,9 +29,14 @@ function Jump() {
     const [startDate, setStartDate] = useState(dayjs().subtract(1, 'week').startOf('week').day(1));
     const [endDate, setEndDate] = useState(dayjs().endOf('week').day(0));
     const [range, setRange] = useState(1);
+    const [checked, setChecked] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
-    const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate });
+    const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate, closed: checked });
+
+    const handleChange = (event) => {
+        setChecked(event.target.checked);
+    };
 
     const addHandler = async () => {
         setLoadingAction(true);
@@ -150,6 +157,10 @@ function Jump() {
                         range={range}
                         setRange={setRange}
                     />
+                    <div className='switch'>
+                        <FormControlLabel value='start' control={<Switch checked={checked} onChange={handleChange} color='primary' />} label='未補上' labelPlacement='start' />
+                        <div className='switch-label'>補上</div>
+                    </div>
                 </div>
             </div>
             <div className='container'>

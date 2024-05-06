@@ -176,5 +176,5 @@ export const jumpTypeMapping = (e) => {
         m: <div className='bg best'>月</div>,
     };
 
-    return map[e];
+    return map?.[e];
 };

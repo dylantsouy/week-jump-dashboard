@@ -116,7 +116,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
             width: 80,
             renderCell: (params) => {
                 const { row } = params;
-                return moment(row?.newestDate).format('YYYY/MM/DD');
+                return row?.newestDate ? moment(row?.newestDate).format('YYYY/MM/DD') : '';
             },
         },
         {

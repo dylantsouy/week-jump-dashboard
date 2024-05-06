@@ -50,6 +50,24 @@
             }
         }
     }
+    .date {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .switch {
+        display: flex;
+        align-items: center;
+        transform: translateY(-5px);
+        .switch-label {
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 1.5;
+            margin-left: 10px;
+            letter-spacing: 0.00938em;
+        }
+    }
     .title-action {
         display: flex;
         flex-wrap: wrap;
