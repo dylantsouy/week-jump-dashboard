@@ -118,7 +118,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             headerName: '類型',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025 border-cell',
+            cellClassName: 'border-cell',
             minWidth: 56,
             width: 56,
             valueGetter: (params) => params.row.newest.type,
