@@ -61,6 +61,15 @@ export const targetColorHandler = (now, target1, target2) => {
 export const generateMeasureTime = (e) => {
     return moment(e).format('YYYY-MM-DD HH:mm:ss');
 };
+export const observeTypeMapping = (e) => {
+    const map = {
+        1: <div className='bg best'>觀察</div>,
+        2: <div className='bg good'>稍微觀察</div>,
+        3: <div className='bg neutral'>其他</div>,
+    };
+
+    return map[e];
+};
 export const dateGap = (e) => {
     return moment().diff(moment(e), 'days');
 };

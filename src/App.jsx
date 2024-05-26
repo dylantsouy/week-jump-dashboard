@@ -11,6 +11,7 @@ import Snackbar from '@/providers/Snackbar';
 import Sidebar from '@/components/Sidebar';
 import ConfirmModal from './components/ConfirmModal';
 import Jump from './pages/Jump';
+import Observe from './pages/Observe';
 
 function App() {
     let element = useRoutes([
@@ -27,6 +28,14 @@ function App() {
             element: (
                 <ProtectedRoute>
                     <Jump />
+                </ProtectedRoute>
+            ),
+        },
+        {
+            path: '/observe',
+            element: (
+                <ProtectedRoute>
+                    <Observe />
                 </ProtectedRoute>
             ),
         },

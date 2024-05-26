@@ -25,8 +25,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
+            minWidth: 70,
+            width: 70,
             valueGetter: (params) => params.row.Stock.industry,
             renderCell: (params) => {
                 const { row } = params;

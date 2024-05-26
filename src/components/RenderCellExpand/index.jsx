@@ -71,5 +71,5 @@ const CellExpand = React.memo(function CellExpand(props) {
 });
 
 export function RenderCellExpand(params) {
-    return <CellExpand value={params.value ? params.value.toString() : '-'} width={params.colDef.width} />;
+    return <CellExpand value={params.value || (!params.value && params.value === 0) ? params.value.toString() : '-'} width={params.colDef.width} />;
 }

@@ -8,6 +8,7 @@ import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import HasPermission from '@/helpers/HasPermission';
 import AdsClickIcon from '@mui/icons-material/AdsClick';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -28,6 +29,12 @@ export default function Sidebar() {
             router: '/jump',
             icon: <Jump />,
             permission: 'jump',
+        },
+        {
+            title: '動能清單',
+            router: '/observe',
+            icon: <DirectionsRunIcon />,
+            permission: 'observe',
         },
     ];
 

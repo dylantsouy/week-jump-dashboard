@@ -17,6 +17,22 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             },
         },
         {
+            field: 'lastValue',
+            headerName: '前量',
+            align: 'center',
+            headerAlign: 'center',
+            minWidth: 60,
+            width: 60,
+            valueGetter: (params) => {
+                const { row } = params;
+                return row?.lastValue;
+            },
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.lastValue;
+            },
+        },
+        {
             field: 'jumpPrice',
             headerName: '開盤價',
             align: 'center',

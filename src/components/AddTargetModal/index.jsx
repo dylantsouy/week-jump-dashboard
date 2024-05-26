@@ -103,7 +103,7 @@ export default function AddTargetModal(props) {
             let result = await addTarget(data);
             const { success } = result;
             if (success) {
-                enqueueSnackbar('更新成功', { variant: 'success' });
+                enqueueSnackbar('新增成功', { variant: 'success' });
                 handleClose(true);
                 setLoading(false);
             }
@@ -111,7 +111,7 @@ export default function AddTargetModal(props) {
             if (err.message === 'Target with the same stockCode already exists') {
                 enqueueSnackbar('此目標已存在', { variant: 'error' });
             } else {
-                enqueueSnackbar('更新失敗', { variant: 'error' });
+                enqueueSnackbar('新增失敗', { variant: 'error' });
             }
             setLoading(false);
         }
@@ -120,7 +120,7 @@ export default function AddTargetModal(props) {
     return (
         <Dialog className='editDialog EditTargetModal' open={open} onClose={() => (loading ? () => {} : handleClose())}>
             <DialogTitle>
-                <span className='title-text'>{'編輯觀察目標'}</span>
+                <span className='title-text'>{'新增觀察目標'}</span>
             </DialogTitle>
             <DialogContent>
                 {!codeLists?.length ? (

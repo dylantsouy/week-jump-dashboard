@@ -1,0 +1,138 @@
+.ObserveRecordModal {
+    .MuiDialog-paper {
+        width: 95%;
+        max-width: 95%;
+        height: 100%;
+        .MuiDialogTitle-root {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+    .MuiFormControl-root {
+        margin: 8px 0;
+    }
+    .MuiFormHelperText-root {
+        margin: 3px 0 0;
+    }
+    .MuiToggleButton-root {
+        text-transform: none;
+    }
+    .nodata {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .jump-title {
+        color: #fff;
+        margin-bottom: 10px;
+        .title-text {
+            font-weight: 600;
+            font-size: 14px;
+            background-color: $primary;
+            padding: 2px 5px;
+            border-radius: 5px 0 5px 0;
+            border-left: 5px solid rgb(255, 136, 0);
+        }
+    }
+    .datagrid-wrapper {
+        height: 91%;
+        width: 100%;
+        display: flex;
+        gap: 20px;
+        @media screen and (max-width: 850px) {
+            width: 100%;
+            flex-direction: column;
+        }
+        .datagrid-set {
+            height: 100%;
+            flex:1;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    .container {
+        padding-top: 2px;
+        height: 100%;
+        .MuiDataGrid-columnHeader {
+            background-color: $primary;
+            color: #fff;
+            font-size: 12px;
+            &.eps2023 {
+                background-color: $primary_light;
+            }
+            &.eps2024 {
+                background-color: $warning;
+            }
+            &.eps2025 {
+                background-color: $primary_light;
+            }
+            &.eps2026 {
+                background-color: $warning;
+            }
+        }
+        .MuiDataGrid-menuIcon {
+            display: none;
+        }
+        .MuiDataGrid-cell {
+            font-size: 12px;
+            &.eps2023 {
+                color: $primary_light;
+                background-color: $primary_lighter;
+            }
+            &.eps2024 {
+                background-color: $warning_light;
+                color: $warning;
+            }
+            &.eps2025 {
+                color: $primary_light;
+                background-color: $primary_lighter;
+            }
+            &.eps2026 {
+                background-color: $warning_light;
+                color: $warning;
+            }
+        }
+        .MuiDataGrid-iconButtonContainer {
+            button {
+                transform: translateY(1px);
+                padding: 0;
+                color: #fff;
+                font-size: 14px;
+            }
+        }
+        .table-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            .MuiDataGrid-toolbarContainer {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 5px;
+            }
+            .MuiDataGrid-main {
+                border-radius: 5px;
+                background-color: #fff;
+                box-shadow: 0 0 5px #e0e0e0;
+            }
+            .table-root {
+                border: none;
+                & *,
+                & *:focus {
+                    outline: none !important;
+                }
+
+                & .muidatagrid-columnheaderwrapper > div {
+                    height: 56px;
+                }
+
+                & .first-header-class,
+                & .first-cell-class {
+                    padding-left: 20px;
+                }
+            }
+        }
+        transform: translateY(-8px);
+    }
+}
