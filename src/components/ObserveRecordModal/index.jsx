@@ -23,7 +23,7 @@ export default function ObserveRecordModal(props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [editData, setEditData] = useState(null);
     const { enqueueSnackbar } = useSnackbar();
-    const { isLoading: loading, data, mutate: mutateRecord } = useObservesRecords({ observeId: recordData?.id });
+    const { isLoading: loading, data, mutate: mutateRecord } = useObservesRecords({ observeId: recordData?.id }, open);
 
     const editHandler = (e) => {
         setEditData(e);

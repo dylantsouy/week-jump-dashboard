@@ -139,7 +139,7 @@ function Observe() {
                             觀察
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={2}>
-                            稍微觀察
+                            稍微
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
                             其他

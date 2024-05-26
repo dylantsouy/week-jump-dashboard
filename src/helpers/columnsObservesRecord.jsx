@@ -98,7 +98,7 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             headerName: '理由',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'border-cell',
+            cellClassName: 'border-cell cell-wrap',
             minWidth: 58,
             width: 58,
             flex: 1,

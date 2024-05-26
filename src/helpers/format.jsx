@@ -64,7 +64,7 @@ export const generateMeasureTime = (e) => {
 export const observeTypeMapping = (e) => {
     const map = {
         1: <div className='bg best'>觀察</div>,
-        2: <div className='bg good'>稍微觀察</div>,
+        2: <div className='bg good'>稍微</div>,
         3: <div className='bg neutral'>其他</div>,
     };
 

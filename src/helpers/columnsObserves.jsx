@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import { Delete, Edit, RemoveRedEye } from '@mui/icons-material';
 import moment from 'moment';
-import { dateGap, profitHandler } from './format';
+import { dateGap, observeTypeMapping, profitHandler } from './format';
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 
 export const listColumn = (showRecord, deleteHandler, editHandler, actionPermission) => {
@@ -46,7 +46,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'initPrice',
-            headerName: '觀察價',
+            headerName: '初始價',
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
@@ -131,24 +131,24 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
+            minWidth: 50,
+            width: 50,
             renderCell: RenderCellExpand,
         },
         {
             field: 'observe2Count',
-            headerName: '稍微觀察',
+            headerName: '稍微',
             renderHeader: () => (
                 <div className='column_center_center'>
-                    <div>稍微觀察</div>
+                    <div>稍微</div>
                     <div>(次)</div>
                 </div>
             ),
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
+            minWidth: 50,
+            width: 50,
             renderCell: RenderCellExpand,
         },
         {
@@ -163,9 +163,112 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
+            minWidth: 50,
+            width: 50,
+            renderCell: RenderCellExpand,
+        },
+        {
+            field: 'latestDate',
+            headerName: '最新日期',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>最新</div>
+                    <div>日期</div>
+                </div>
+            ),
+            headerClassName: 'eps2023',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2023',
             minWidth: 70,
             width: 70,
-            renderCell: RenderCellExpand,
+            valueGetter: (params) => params.row.latestRecord.date,
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.latestRecord?.date ? moment(row?.latestRecord?.date).format('YYYY/MM/DD') : '';
+            },
+        },
+        {
+            field: 'latestType',
+            headerName: '最新類別',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>最新</div>
+                    <div>類別</div>
+                </div>
+            ),
+            headerClassName: 'eps2023',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2023',
+            minWidth: 60,
+            width: 60,
+            renderCell: (params) => {
+                const { row } = params;
+                return observeTypeMapping(row?.latestRecord?.type);
+            },
+        },
+        {
+            field: 'latestPrice',
+            headerName: '最新價格',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>最新</div>
+                    <div>價格</div>
+                </div>
+            ),
+            headerClassName: 'eps2023',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2023',
+            minWidth: 60,
+            width: 60,
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.latestRecord?.price;
+            },
+        },
+        {
+            field: 'latestProfit',
+            headerName: '最新損益',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>最新</div>
+                    <div>損益</div>
+                </div>
+            ),
+            headerClassName: 'eps2023',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2023',
+            minWidth: 58,
+            width: 58,
+            renderCell: (params) => {
+                const { row } = params;
+                const profit = Math.round((((row?.price - row?.latestRecord?.price) / row?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
+                return profitHandler(profit);
+            },
+        },
+        {
+            field: 'latestReason',
+            headerName: '最新理由',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>最新</div>
+                    <div>理由</div>
+                </div>
+            ),
+            headerClassName: 'eps2023',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2023 cell-wrap',
+            minWidth: 200,
+            width: 200,
+            flex: 1,
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.latestRecord?.reason;
+            },
         },
         {
             field: 'action',
@@ -174,11 +277,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             disableExport: true,
             headerName: '操作',
             minWidth: 130,
-            flex: 1,
             renderCell: (params) => {
                 return (
                     <div className='action'>
-                        <Tooltip title={'跳空明細'} placement='bottom'>
+                        <Tooltip title={'觀察明細'} placement='bottom'>
                             <RemoveRedEye className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
                         </Tooltip>
                         {actionPermission ? (
