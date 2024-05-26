@@ -3,7 +3,7 @@ import { Tooltip } from '@mui/material';
 import { Delete, RemoveRedEye } from '@mui/icons-material';
 import moment from 'moment';
 
-export const listColumn = (showRecord, deleteHandler, actionPermission) => {
+export const listColumn = (showRecord, deleteHandler, actionPermission, range) => {
     return [
         {
             field: 'name',
@@ -94,16 +94,17 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         {
             field: 'newestDate',
             headerName: '最新跳空',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>最新</div>
-                    <div>跳空</div>
-                </div>
-            ),
-            headerClassName: 'eps2025',
+            renderHeader: () =>
+                range === 3 ? (
+                    <div className='column_center_center'>
+                        <div>最新</div>
+                        <div>跳空</div>
+                    </div>
+                ) : (
+                    <div className='column_center_center'>日期</div>
+                ),
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 80,
             width: 80,
             valueGetter: (params) => params.row.newest.date,
@@ -115,7 +116,6 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         {
             field: 'newestType',
             headerName: '類型',
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2025 border-cell',
@@ -130,10 +130,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         {
             field: 'jumpPrice',
             headerName: '開盤價',
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => params.row.newest.jumpPrice,
@@ -145,10 +143,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         {
             field: 'price',
             headerName: '現價',
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => params.row.Stock.price,
@@ -166,10 +162,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
                     <div>價格</div>
                 </div>
             ),
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => params.row.newest.lastPrice,
@@ -181,10 +175,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
         {
             field: 'gap',
             headerName: '距離',
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => {
@@ -207,10 +199,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
                     <div>(%)</div>
                 </div>
             ),
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => {
@@ -233,10 +223,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission) => {
                     <div>補上</div>
                 </div>
             ),
-            headerClassName: 'eps2025',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2025',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => params.row.newest.closed,

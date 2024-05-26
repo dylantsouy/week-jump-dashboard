@@ -191,7 +191,7 @@ function Jump() {
                         ref={dashboardRef}
                         rows={loading ? [] : listData || []}
                         getRowId={(row) => row.id}
-                        columns={listColumn(showRecord, deleteHandler, actionPermission)}
+                        columns={listColumn(showRecord, deleteHandler, actionPermission, range)}
                         loading={loading}
                         disableSelectionOnClick
                         componentsProps={{

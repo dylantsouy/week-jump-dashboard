@@ -176,10 +176,8 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>日期</div>
                 </div>
             ),
-            headerClassName: 'eps2023',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2023',
             minWidth: 70,
             width: 70,
             valueGetter: (params) => params.row.latestRecord.date,
@@ -197,10 +195,8 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>類別</div>
                 </div>
             ),
-            headerClassName: 'eps2023',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2023',
             minWidth: 60,
             width: 60,
             renderCell: (params) => {
@@ -217,10 +213,8 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>價格</div>
                 </div>
             ),
-            headerClassName: 'eps2023',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2023',
             minWidth: 60,
             width: 60,
             renderCell: (params) => {
@@ -237,10 +231,8 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>損益</div>
                 </div>
             ),
-            headerClassName: 'eps2023',
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2023',
             minWidth: 58,
             width: 58,
             renderCell: (params) => {
@@ -258,7 +250,6 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>理由</div>
                 </div>
             ),
-            headerClassName: 'eps2023',
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'eps2023 cell-wrap',
