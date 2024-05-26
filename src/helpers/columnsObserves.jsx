@@ -176,6 +176,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>日期</div>
                 </div>
             ),
+            cellClassName: 'border-cell',
             align: 'center',
             headerAlign: 'center',
             minWidth: 70,
@@ -195,6 +196,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>類別</div>
                 </div>
             ),
+            cellClassName: 'border-cell',
             align: 'center',
             headerAlign: 'center',
             minWidth: 60,
@@ -213,6 +215,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>價格</div>
                 </div>
             ),
+            cellClassName: 'border-cell',
             align: 'center',
             headerAlign: 'center',
             minWidth: 60,
@@ -231,6 +234,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>損益</div>
                 </div>
             ),
+            cellClassName: 'border-cell',
             align: 'center',
             headerAlign: 'center',
             minWidth: 58,
@@ -252,7 +256,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             ),
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'cell-wrap',
+            cellClassName: 'cell-wrap border-cell',
             minWidth: 200,
             width: 200,
             flex: 1,
