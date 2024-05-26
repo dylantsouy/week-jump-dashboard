@@ -252,7 +252,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             ),
             align: 'center',
             headerAlign: 'center',
-            cellClassName: 'eps2023 cell-wrap',
+            cellClassName: 'cell-wrap',
             minWidth: 200,
             width: 200,
             flex: 1,
