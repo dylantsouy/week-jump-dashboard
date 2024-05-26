@@ -1,4 +1,4 @@
-import { jumpTypeMapping } from './format';
+import { jumpTypeMapping, profitHandler } from './format';
 import { Tooltip } from '@mui/material';
 import { Delete, RemoveRedEye } from '@mui/icons-material';
 import moment from 'moment';
@@ -209,15 +209,10 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             cellClassName: 'border-cell',
             minWidth: 60,
             width: 60,
-            valueGetter: (params) => {
-                const { row } = params;
-                const gap = +(+row?.Stock?.price - row?.newest?.lastPrice).toFixed(2);
-                return gap > 0 ? +((gap / row?.Stock?.price) * 100) : -1;
-            },
             renderCell: (params) => {
                 const { row } = params;
-                const gap = +(+row?.Stock?.price - row?.newest?.lastPrice).toFixed(2);
-                return gap > 0 ? `${+((gap / row?.Stock?.price) * 100).toFixed(2)}%` : '-';
+                const gap = Math.round((((row?.Stock?.price - row?.newest?.lastPrice) / row?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
+                return gap > 0 ? profitHandler(gap) : '-';
             },
         },
         {

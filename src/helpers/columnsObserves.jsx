@@ -173,7 +173,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             renderHeader: () => (
                 <div className='column_center_center'>
                     <div>最新</div>
-                    <div>日期</div>
+                    <div>觀察日期</div>
                 </div>
             ),
             cellClassName: 'border-cell',
