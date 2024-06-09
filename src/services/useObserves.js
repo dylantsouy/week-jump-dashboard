@@ -12,8 +12,9 @@ const useObserves = (props) => {
     const { data, mutate, isValidating } = useSWR([fullUrl, {}, 'GET'], swrFetcher, {
         revalidateOnFocus: false,
     });
+    let updatedDate = data?.data?.[0]?.stockUpdatedAt;
 
-    return { data: data?.data, mutate, isLoading: isValidating };
+    return { data: data?.data, mutate, updatedDate, isLoading: isValidating };
 };
 
 export default useObserves;

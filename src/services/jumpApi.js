@@ -34,3 +34,9 @@ export const updateIfClosed = async () => {
 
     return data;
 };
+
+export const bulkDelete = async (ids) => {
+    const data = await fetcher(`/bulkDelete/jumpRecords`, 'DELETE', { ids });
+
+    return data;
+};

@@ -209,6 +209,11 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             cellClassName: 'border-cell',
             minWidth: 60,
             width: 60,
+            valueGetter: (params) => {
+                const { row } = params;
+                const gap = Math.round((((row?.Stock?.price - row?.newest?.lastPrice) / row?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
+                return gap;
+            },
             renderCell: (params) => {
                 const { row } = params;
                 const gap = Math.round((((row?.Stock?.price - row?.newest?.lastPrice) / row?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
