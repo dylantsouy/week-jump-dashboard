@@ -241,6 +241,23 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             },
         },
         {
+            field: 'lastValue',
+            headerName: '前量',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 60,
+            width: 60,
+            valueGetter: (params) => {
+                const { row } = params;
+                return row?.newest?.lastValue;
+            },
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.newest?.lastValue;
+            },
+        },
+        {
             field: 'action',
             filterable: false,
             sortable: false,

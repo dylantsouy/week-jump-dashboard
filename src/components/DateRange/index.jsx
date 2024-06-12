@@ -4,6 +4,8 @@ import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import isoWeek from 'dayjs/plugin/isoWeek';
+dayjs.extend(isoWeek);
 
 export default function DateRange(props) {
     const { loading, selectDate, setSelectDate, startDate, setStartDate, endDate, setEndDate, range, setRange } = props;
@@ -66,8 +68,8 @@ export default function DateRange(props) {
         const newRange = +e.target.value;
         setRange(newRange);
         if (newRange === 1) {
-            const startOfWeek = dayjs().subtract(1, 'week').startOf('week').day(1);
-            const endOfWeek = dayjs().endOf('week').day(0);
+            const startOfWeek = dayjs().startOf('week').day(1);
+            const endOfWeek = dayjs().add(1, 'week').endOf('week').day(0);
             setStartDate(startOfWeek.toDate());
             setEndDate(endOfWeek.toDate());
             setSelectDate(startOfWeek.toDate());
@@ -79,6 +81,7 @@ export default function DateRange(props) {
             setSelectDate(startOfMonth.toDate());
         }
     };
+    console.log(dayjs(selectDate).format('YYYY-[W]WW'));
     return (
         <div className='picker-area'>
             {range != 3 ? (
@@ -92,7 +95,7 @@ export default function DateRange(props) {
                                 {dayjs(startDate).format('YYYY/MM/DD')} ~ {dayjs(endDate).format('YYYY/MM/DD')}
                             </>
                             {range === 1 ? (
-                                <input type='week' className='hidden' value={dayjs(selectDate).format('YYYY-[W]WW')} onChange={handleWeekChange} />
+                                <input type='week' className='hidden' value={`${dayjs(selectDate).format('YYYY')}-W${dayjs(selectDate).isoWeek()}`} onChange={handleWeekChange} />
                             ) : (
                                 <input disabled={loading} type='month' className='hidden' value={dayjs(selectDate).format('YYYY-MM')} onChange={handleMonthChange} />
                             )}

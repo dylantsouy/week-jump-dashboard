@@ -27,12 +27,11 @@ function Jump() {
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
     const [selectDate, setSelectDate] = useState(new Date());
-    const [startDate, setStartDate] = useState(dayjs().subtract(1, 'week').startOf('week').day(1));
-    const [endDate, setEndDate] = useState(dayjs().endOf('week').day(0));
+    const [startDate, setStartDate] = useState(dayjs().startOf('week').day(1));
+    const [endDate, setEndDate] = useState(dayjs().add(1, 'week').endOf('week').day(0));
     const [range, setRange] = useState(1);
     const [checked, setChecked] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-
     const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate, closed: checked });
 
     const handleChange = (event) => {
@@ -201,7 +200,7 @@ function Jump() {
                         }}
                         initialState={{
                             sorting: {
-                                sortModel: [{ field: 'newestDate', sort: 'desc' }],
+                                sortModel: [{ field: 'gapPercent', sort: 'desc' }],
                             },
                         }}
                         density='compact'

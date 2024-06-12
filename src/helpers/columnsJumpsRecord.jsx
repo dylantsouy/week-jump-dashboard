@@ -9,6 +9,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             headerName: '日期',
             align: 'center',
             headerAlign: 'center',
+            cellClassName: 'border-cell',
             minWidth: 80,
             width: 80,
             renderCell: (params) => {
@@ -21,6 +22,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             headerName: '前量',
             align: 'center',
             headerAlign: 'center',
+            cellClassName: 'border-cell',
             minWidth: 60,
             width: 60,
             valueGetter: (params) => {
@@ -37,6 +39,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             headerName: '開盤價',
             align: 'center',
             headerAlign: 'center',
+            cellClassName: 'border-cell',
             minWidth: 60,
             width: 60,
         },
@@ -45,6 +48,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             headerName: '現價',
             align: 'center',
             headerAlign: 'center',
+            cellClassName: 'border-cell',
             minWidth: 60,
             width: 60,
             valueGetter: () => recordData.Stock.price,
@@ -55,6 +59,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'lastPrice',
             headerName: '補上價格',
+            cellClassName: 'border-cell',
             renderHeader: () => (
                 <div className='column_center_center'>
                     <div>補上</div>
@@ -69,6 +74,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'gap',
             headerName: '距離',
+            cellClassName: 'border-cell',
             align: 'center',
             headerAlign: 'center',
             minWidth: 60,
@@ -87,6 +93,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'gapPercent',
             headerName: '距離 %',
+            cellClassName: 'border-cell',
             renderHeader: () => (
                 <div className='column_center_center'>
                     <div>距離</div>
@@ -111,6 +118,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'closed',
             headerName: '是否補上',
+            cellClassName: 'border-cell',
             renderHeader: () => (
                 <div className='column_center_center'>
                     <div>是否</div>
