@@ -9,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import HasPermission from '@/helpers/HasPermission';
 import AdsClickIcon from '@mui/icons-material/AdsClick';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -35,6 +36,12 @@ export default function Sidebar() {
             router: '/observe',
             icon: <DirectionsRunIcon />,
             permission: 'observe',
+        },
+        {
+            title: '合約清單',
+            router: '/contract',
+            icon: <ReceiptLongIcon />,
+            permission: 'contract',
         },
     ];
 

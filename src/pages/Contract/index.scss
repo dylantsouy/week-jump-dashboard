@@ -1,0 +1,185 @@
+.Dashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    background: $background;
+    .dashboard-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        @media screen and (max-width: 750px) {
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            @media screen and (max-width: 750px) {
+                align-items: center;
+                margin-bottom: 5px;
+            }
+            .title {
+                font-weight: 600;
+            }
+        }
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            @media screen and (max-width: 750px) {
+                align-items: center;
+                margin-bottom: 5px;
+            }
+            .title {
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+                color: $primary;
+                .flex-center {
+                    color: $warning;
+                    margin: 0 5px;
+                }
+                .mins {
+                    font-size: 12px;
+                    color: $gray_text;
+                }
+            }
+        }
+    }
+    .date {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+
+    .date-range-outer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @media screen and (max-width: 520px) {
+            width: 100%;
+            flex-direction: column;
+        }
+        .MuiFormControl-root {
+            width: 90px;
+            .MuiInputBase-root{
+                height: 30px;
+            }
+            fieldset {
+                top: -8px;
+            }
+            @media screen and (max-width: 520px) {
+                margin: 10px 0 15px;
+            }
+        }
+        .select-area{
+            display: flex;
+            align-items: center;
+        }
+        .date-range {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-right: 10px;
+            @media screen and (max-width: 700px) {
+                width: 100%;
+            }
+            .MuiToggleButtonGroup-root {
+                height: 30px;
+                button {
+                    background-color: $primary;
+                    color: #fff;
+                    border-color: #fff;
+                    &.Mui-selected {
+                        background-color: $warning;
+                    }
+                }
+            }
+        }
+    }
+    .title-action {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        flex-wrap: wrap;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        @media screen and (max-width: 750px) {
+            justify-content: center;
+        }
+        @media screen and (max-width: 520px) {
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+    }
+    & .container {
+        padding-top: 2px;
+        height: calc(100vh);
+        @media screen and (max-width: 700px) {
+            height: calc(100vh);
+        }
+        .MuiDataGrid-columnHeader {
+            background-color: $primary;
+            color: #fff;
+            font-size: 12px;
+        }
+        .MuiDataGrid-menuIcon {
+            display: none;
+        }
+        .MuiDataGrid-cell {
+            font-size: 12px;
+        }
+        .MuiDataGrid-iconButtonContainer {
+            button {
+                transform: translateY(1px);
+                padding: 0;
+                color: #fff;
+                font-size: 14px;
+            }
+        }
+        .table-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            .MuiDataGrid-toolbarContainer {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 5px;
+            }
+            .MuiDataGrid-main {
+                border-radius: 5px;
+                background-color: #fff;
+                box-shadow: 0 0 5px #e0e0e0;
+            }
+            .table-root {
+                border: none;
+                & *,
+                & *:focus {
+                    outline: none !important;
+                }
+
+                & .muidatagrid-columnheaderwrapper > div {
+                    height: 56px;
+                }
+
+                & .first-header-class,
+                & .first-cell-class {
+                    padding-left: 20px;
+                }
+            }
+        }
+        transform: translateY(-8px);
+    }
+}

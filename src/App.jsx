@@ -12,6 +12,7 @@ import Sidebar from '@/components/Sidebar';
 import ConfirmModal from './components/ConfirmModal';
 import Jump from './pages/Jump';
 import Observe from './pages/Observe';
+import Contract from './pages/Contract';
 
 function App() {
     let element = useRoutes([
@@ -36,6 +37,14 @@ function App() {
             element: (
                 <ProtectedRoute>
                     <Observe />
+                </ProtectedRoute>
+            ),
+        },
+        {
+            path: '/contract',
+            element: (
+                <ProtectedRoute>
+                    <Contract />
                 </ProtectedRoute>
             ),
         },

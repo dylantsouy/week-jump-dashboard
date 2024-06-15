@@ -81,7 +81,6 @@ export default function DateRange(props) {
             setSelectDate(startOfMonth.toDate());
         }
     };
-    console.log(dayjs(selectDate).format('YYYY-[W]WW'));
     return (
         <div className='picker-area'>
             {range != 3 ? (

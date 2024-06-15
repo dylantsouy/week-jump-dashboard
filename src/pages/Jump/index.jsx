@@ -44,11 +44,11 @@ function Jump() {
             let result = await addJumps({ range, startDate });
             const { success } = result;
             if (success) {
-                enqueueSnackbar('更新成功', { variant: 'success' });
+                enqueueSnackbar('抓取成功', { variant: 'success' });
                 setLoadingAction(false);
             }
         } catch (err) {
-            enqueueSnackbar('更新失敗', { variant: 'error' });
+            enqueueSnackbar('抓取失敗', { variant: 'error' });
             setLoadingAction(false);
         }
     };
