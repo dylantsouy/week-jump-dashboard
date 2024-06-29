@@ -10,12 +10,16 @@ import HasPermission from '@/helpers/HasPermission';
 import AdsClickIcon from '@mui/icons-material/AdsClick';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import CalculateModal from '../CalculateModal';
+import { useState } from 'react';
 
 export default function Sidebar() {
     const navigate = useNavigate();
     const { setModalHandler, closeModal } = useStore();
     const { enqueueSnackbar } = useSnackbar();
     const { setAuthValue, ifRememberAccount } = useAuthStore();
+    const [showCalculateDialog, setShowCalculateDialog] = useState(false);
     const { pathname } = useLocation();
 
     const sidebarItems = [
@@ -44,6 +48,13 @@ export default function Sidebar() {
             permission: 'contract',
         },
     ];
+    const showCalculateHandler = () => {
+        setShowCalculateDialog(true);
+    };
+
+    const handleCloseCalculate = () => {
+        setShowCalculateDialog(false);
+    };
 
     const goHandler = (r) => {
         navigate(r);
@@ -84,6 +95,13 @@ export default function Sidebar() {
                 ))}
             </div>
             <div className='logout'>
+                <Tooltip title='計算工具' placement='left'>
+                    <div className='sidebar-item mb-3' onClick={showCalculateHandler}>
+                        <IconButton color='white'>
+                            <CalculateIcon />
+                        </IconButton>
+                    </div>
+                </Tooltip>
                 <Tooltip title='登出' placement='left'>
                     <div className='sidebar-item' onClick={logoutHandler}>
                         <IconButton color='white'>
@@ -92,6 +110,7 @@ export default function Sidebar() {
                     </div>
                 </Tooltip>
             </div>
+            <CalculateModal open={showCalculateDialog} handleClose={handleCloseCalculate} />
         </div>
     );
 }
