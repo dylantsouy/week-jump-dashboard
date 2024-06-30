@@ -43,7 +43,7 @@ export default function EditNewsModal(props) {
         type: 1,
         name: '',
         content: '',
-        fromWhere: '站長',
+        fromWhere: '',
     });
     const [validation, setValidation] = useState(initValid);
     const handleChange = (type, e) => {
@@ -83,7 +83,7 @@ export default function EditNewsModal(props) {
             fromWhere: addData.fromWhere.trim(),
             content: addData.content.trim(),
         };
-        if (!data.status || !data.date || !data.type || !data.name) {
+        if (!data.status || !data.date || !data.type || !data.name || !data.fromWhere) {
             setValidation((prevState) => ({
                 ...prevState,
                 name: {
@@ -101,6 +101,10 @@ export default function EditNewsModal(props) {
                 type: {
                     valid: !!data.type,
                     error: !data.type ? '此欄位必填' : '',
+                },
+                fromWhere: {
+                    valid: !!data.fromWhere,
+                    error: !data.fromWhere ? '此欄位必填' : '',
                 },
             }));
             return;
@@ -204,6 +208,7 @@ export default function EditNewsModal(props) {
                     <TextField
                         margin='dense'
                         label={'來源'}
+                        required
                         type='text'
                         size='small'
                         disabled={loading}

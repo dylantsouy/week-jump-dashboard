@@ -25,6 +25,7 @@ const initValid = {
     yield: { valid: true, error: '' },
     averagePE: { valid: true, error: '' },
     CAGR: { valid: true, error: '' },
+    deadline: { valid: true, error: '' },
 };
 
 const initValue = {
@@ -35,6 +36,7 @@ const initValue = {
     yield: '',
     averagePE: '',
     CAGR: '',
+    deadline: '',
     stockCode: null,
 };
 
@@ -70,6 +72,7 @@ export default function AddTargetModal(props) {
             yield: addData.yield.trim(),
             averagePE: addData.averagePE.trim(),
             CAGR: addData.CAGR.trim(),
+            deadline: addData.deadline.trim(),
         };
         if (!data.stockCode || !data.rate || !data.initPrice || !data.createdAt || !data.sort) {
             setValidation((prevState) => ({
@@ -201,6 +204,20 @@ export default function AddTargetModal(props) {
                             fullWidth
                             onChange={(e) => {
                                 handleChange('CAGR', e.target.value);
+                            }}
+                        />
+                        <TextField
+                            margin='dense'
+                            label={'高峰點'}
+                            type='text'
+                            size='small'
+                            disabled={loading}
+                            error={!validation.deadline.valid}
+                            helperText={validation.deadline.error}
+                            value={addData.deadline}
+                            fullWidth
+                            onChange={(e) => {
+                                handleChange('deadline', e.target.value);
                             }}
                         />
                         <TextField

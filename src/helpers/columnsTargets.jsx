@@ -90,40 +90,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             },
         },
         {
-            field: 'createdAt',
-            headerName: '觀察日期',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 80,
-            width: 80,
-            editable: false,
-            renderCell: (params) => {
-                const { row } = params;
-                return generateMeasureDate(row?.createdAt);
-            },
-        },
-        {
-            field: 'gap',
-            headerName: '過多久',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>過多久</div>
-                    <div>(天)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
-            width: 56,
-            editable: false,
-            renderCell: (params) => {
-                const { row } = params;
-                return dateGap(row?.createdAt);
-            },
-        },
-        {
             field: 'news',
             headerName: '消息',
             align: 'center',
@@ -141,6 +107,16 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     </div>
                 );
             },
+        },
+        {
+            field: 'deadline',
+            headerName: '高峰點',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 98,
+            width: 98,
+            renderCell: RenderCellExpand,
         },
         {
             field: 'eps2023',
@@ -308,79 +284,79 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                 return '-';
             },
         },
-        {
-            field: 'eps2026',
-            headerName: '2026 EPS',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>EPS</div>
-                </div>
-            ),
-            headerClassName: 'eps2026',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2026',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.eps?.eps2026 || '-';
-            },
-        },
-        {
-            field: 'pe2026',
-            headerName: '2026 PE',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>PE</div>
-                </div>
-            ),
-            headerClassName: 'eps2026',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2026',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.price && row?.eps?.eps2026) {
-                    if (row?.eps?.eps2026 < 0) {
-                        return 'N/A';
-                    }
-                    return (row?.price / row?.eps?.eps2026).toFixed(2);
-                }
-                return '-';
-            },
-        },
-        {
-            field: 'grow2026',
-            headerName: '2026 成長',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>成長</div>
-                </div>
-            ),
-            headerClassName: 'eps2026',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2026',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2025 && row?.eps?.eps2026) {
-                    if (row?.eps?.eps2025 < 0 && row?.eps?.eps2025 > 0) {
-                        return '虧轉盈';
-                    }
-                    const growthRate = ((row.eps.eps2026 - row.eps.eps2025) / row.eps.eps2025) * 100;
-                    return growthRate.toFixed(1) + '%';
-                }
-                return '-';
-            },
-        },
+        // {
+        //     field: 'eps2026',
+        //     headerName: '2026 EPS',
+        //     renderHeader: () => (
+        //         <div className='column_center_center'>
+        //             <div>2026</div>
+        //             <div>EPS</div>
+        //         </div>
+        //     ),
+        //     headerClassName: 'eps2026',
+        //     align: 'center',
+        //     headerAlign: 'center',
+        //     cellClassName: 'eps2026',
+        //     minWidth: 56,
+        //     width: 56,
+        //     renderCell: (params) => {
+        //         const { row } = params;
+        //         return row?.eps?.eps2026 || '-';
+        //     },
+        // },
+        // {
+        //     field: 'pe2026',
+        //     headerName: '2026 PE',
+        //     renderHeader: () => (
+        //         <div className='column_center_center'>
+        //             <div>2026</div>
+        //             <div>PE</div>
+        //         </div>
+        //     ),
+        //     headerClassName: 'eps2026',
+        //     align: 'center',
+        //     headerAlign: 'center',
+        //     cellClassName: 'eps2026',
+        //     minWidth: 56,
+        //     width: 56,
+        //     renderCell: (params) => {
+        //         const { row } = params;
+        //         if (row?.price && row?.eps?.eps2026) {
+        //             if (row?.eps?.eps2026 < 0) {
+        //                 return 'N/A';
+        //             }
+        //             return (row?.price / row?.eps?.eps2026).toFixed(2);
+        //         }
+        //         return '-';
+        //     },
+        // },
+        // {
+        //     field: 'grow2026',
+        //     headerName: '2026 成長',
+        //     renderHeader: () => (
+        //         <div className='column_center_center'>
+        //             <div>2026</div>
+        //             <div>成長</div>
+        //         </div>
+        //     ),
+        //     headerClassName: 'eps2026',
+        //     align: 'center',
+        //     headerAlign: 'center',
+        //     cellClassName: 'eps2026',
+        //     minWidth: 56,
+        //     width: 56,
+        //     renderCell: (params) => {
+        //         const { row } = params;
+        //         if (row?.eps?.eps2025 && row?.eps?.eps2026) {
+        //             if (row?.eps?.eps2025 < 0 && row?.eps?.eps2025 > 0) {
+        //                 return '虧轉盈';
+        //             }
+        //             const growthRate = ((row.eps.eps2026 - row.eps.eps2025) / row.eps.eps2025) * 100;
+        //             return growthRate.toFixed(1) + '%';
+        //         }
+        //         return '-';
+        //     },
+        // },
         {
             field: 'editEps',
             headerName: '營收',
@@ -462,6 +438,40 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     return targetColorHandler(now, targetPrice[0], targetPrice[1]);
                 }
                 return '-';
+            },
+        },
+        {
+            field: 'createdAt',
+            headerName: '觀察日期',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 80,
+            width: 80,
+            editable: false,
+            renderCell: (params) => {
+                const { row } = params;
+                return generateMeasureDate(row?.createdAt);
+            },
+        },
+        {
+            field: 'gap',
+            headerName: '過多久',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>過多久</div>
+                    <div>(天)</div>
+                </div>
+            ),
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 56,
+            width: 56,
+            editable: false,
+            renderCell: (params) => {
+                const { row } = params;
+                return dateGap(row?.createdAt);
             },
         },
         {

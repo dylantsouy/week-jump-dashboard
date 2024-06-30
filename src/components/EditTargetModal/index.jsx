@@ -20,6 +20,7 @@ const initValid = {
     yield: { valid: true, error: '' },
     averagePE: { valid: true, error: '' },
     CAGR: { valid: true, error: '' },
+    deadline: { valid: true, error: '' },
 };
 
 export default function EditTargetModal(props) {
@@ -34,6 +35,7 @@ export default function EditTargetModal(props) {
         yield: '',
         averagePE: '',
         CAGR: '',
+        deadline: '',
     });
     const [validation, setValidation] = useState(initValid);
 
@@ -56,9 +58,10 @@ export default function EditTargetModal(props) {
                 yield: editData?.yield,
                 averagePE: editData?.averagePE,
                 CAGR: editData?.CAGR,
+                deadline: editData?.deadline,
             });
         }
-    }, [editData?.CAGR, editData?.averagePE, editData?.createdAt, editData?.initPrice, editData?.rate, editData?.sort, editData?.yield, open]);
+    }, [editData?.CAGR, editData?.averagePE, editData?.createdAt, editData?.deadline, editData?.initPrice, editData?.rate, editData?.sort, editData?.yield, open]);
 
     const handlerOk = async () => {
         let data = {
@@ -70,6 +73,7 @@ export default function EditTargetModal(props) {
             yield: addData.yield.trim(),
             averagePE: addData.averagePE.trim(),
             CAGR: addData.CAGR.trim(),
+            deadline: addData.deadline.trim(),
         };
         if (!data.rate || !data.initPrice || !data.createdAt || !data.sort) {
             setValidation((prevState) => ({
@@ -183,6 +187,20 @@ export default function EditTargetModal(props) {
                     fullWidth
                     onChange={(e) => {
                         handleChange('CAGR', e.target.value);
+                    }}
+                />
+                <TextField
+                    margin='dense'
+                    label={'高峰點'}
+                    type='text'
+                    size='small'
+                    disabled={loading}
+                    error={!validation.deadline.valid}
+                    helperText={validation.deadline.error}
+                    value={addData.deadline}
+                    fullWidth
+                    onChange={(e) => {
+                        handleChange('deadline', e.target.value);
                     }}
                 />
                 <TextField

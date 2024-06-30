@@ -33,11 +33,11 @@ const initValue = {
     rate: 1,
     sort: 1,
     status: 9,
-    date: dayjs(),
     type: 1,
     name: '',
     content: '',
-    fromWhere: '站長',
+    date: dayjs(),
+    fromWhere: '',
 };
 
 export default function AddNewsModal(props) {
@@ -60,7 +60,15 @@ export default function AddNewsModal(props) {
     useEffect(() => {
         if (open) {
             setValidation(initValid);
-            setAddData(initValue);
+            setAddData((prevState) => ({
+                ...prevState,
+                rate: 1,
+                sort: 1,
+                status: 9,
+                type: 1,
+                name: '',
+                content: '',
+            }));
             setSortCount(0);
         }
     }, [open]);
@@ -87,7 +95,7 @@ export default function AddNewsModal(props) {
             fromWhere: addData.fromWhere.trim(),
             content: addData.content.trim(),
         };
-        if (!data.status || !data.date || !data.type || !data.sort || !data.name) {
+        if (!data.status || !data.date || !data.type || !data.sort || !data.name || !data.fromWhere) {
             setValidation((prevState) => ({
                 ...prevState,
                 name: {
@@ -109,6 +117,10 @@ export default function AddNewsModal(props) {
                 type: {
                     valid: !!data.type,
                     error: !data.type ? '此欄位必填' : '',
+                },
+                fromWhere: {
+                    valid: !!data.fromWhere,
+                    error: !data.fromWhere ? '此欄位必填' : '',
                 },
             }));
             return;
@@ -209,6 +221,7 @@ export default function AddNewsModal(props) {
                 )}
                 <TextField
                     margin='dense'
+                    required
                     label={'來源'}
                     type='text'
                     size='small'
