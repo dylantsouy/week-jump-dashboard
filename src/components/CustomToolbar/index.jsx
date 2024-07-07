@@ -1,5 +1,5 @@
 import './styles.scss';
-import { GridToolbarColumnsButton, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid';
 
 export default function CustomToolbar() {
     // const generateFileName = () => {
@@ -10,7 +10,8 @@ export default function CustomToolbar() {
 
     return (
         <GridToolbarContainer>
-            <GridToolbarColumnsButton />
+            <GridToolbarQuickFilter />
+            {/* <GridToolbarColumnsButton /> */}
             <GridToolbarFilterButton />
             {/* <GridToolbarExport
                 csvOptions={{

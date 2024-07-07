@@ -19,6 +19,7 @@ import EditEpsModal from '@/components/EditEpsModal';
 import NewsModal from '@/components/NewsModal';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
+import { localeText } from '@/helpers/datagridHelper';
 
 function Dashboard() {
     const dashboardRef = useRef(null);
@@ -171,33 +172,7 @@ function Dashboard() {
                                 labelRowsPerPage: '每頁筆數:',
                             },
                         }}
-                        localeText={{
-                            columnMenuUnsort: '不排序',
-                            columnMenuSortAsc: '升冪排序',
-                            columnMenuSortDesc: '降冪排序',
-                            columnMenuShowColumns: '顯示欄位',
-                            columnMenuHideColumn: '隱藏欄位',
-                            toolbarExport: '輸出報表',
-                            toolbarExportCSV: '下載為 CSV',
-                            columnMenuFilter: '過濾',
-                            filterOperatorContains: '包含',
-                            filterOperatorEquals: '完全相符',
-                            filterOperatorStartsWith: '開頭為',
-                            filterOperatorEndsWith: '結束於',
-                            filterOperatorIsEmpty: '為空',
-                            filterOperatorIsNotEmpty: '不為空',
-                            filterOperatorIsAnyOf: '複選',
-                            filterPanelColumns: '欄位',
-                            filterPanelInputLabel: '值',
-                            filterPanelOperators: '條件',
-                            filterPanelInputPlaceholder: '請輸入值',
-                            toolbarColumns: '欄位',
-                            columnsPanelHideAllButton: '隱藏全部',
-                            columnsPanelShowAllButton: '顯示全部',
-                            columnsPanelTextFieldPlaceholder: '輸入欄位名稱',
-                            columnsPanelTextFieldLabel: '欄位名稱',
-                            toolbarFilters: '過濾',
-                        }}
+                        localeText={localeText()}
                         initialState={{
                             sorting: {
                                 sortModel: [{ field: 'sort', sort: 'asc' }],

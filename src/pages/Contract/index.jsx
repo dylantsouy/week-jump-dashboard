@@ -18,6 +18,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { localeText } from '@/helpers/datagridHelper';
+import CustomToolbar from '@/components/CustomToolbar';
 
 function Contract() {
     const dashboardRef = useRef(null);
@@ -69,7 +71,7 @@ function Contract() {
             </div>
             <div className='title-action'>
                 <div className='title-btns'>
-                    {/* <Button
+                    <Button
                         className='act'
                         disabled={loadingAction || !actionPermission || range === 3}
                         variant='contained'
@@ -78,7 +80,7 @@ function Contract() {
                         onClick={addHandler}
                     >
                         抓取
-                    </Button> */}
+                    </Button>
                 </div>
                 <div className='date'>
                     <div className='date-range-outer'>
@@ -119,11 +121,10 @@ function Contract() {
                                 <FormControl fullWidth>
                                     <InputLabel id='quarter-label'>季度</InputLabel>
                                     <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
-                                        <MenuItem value={'23Q1'}>23Q1</MenuItem>
-                                        <MenuItem value={'23Q2'}>23Q2</MenuItem>
-                                        <MenuItem value={'23Q3'}>23Q3</MenuItem>
-                                        <MenuItem value={'23Q4'}>23Q4</MenuItem>
                                         <MenuItem value={'24Q1'}>24Q1</MenuItem>
+                                        <MenuItem value={'24Q2'}>24Q2</MenuItem>
+                                        <MenuItem value={'24Q3'}>24Q3</MenuItem>
+                                        <MenuItem value={'24Q4'}>24Q4</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Box>
@@ -151,9 +152,11 @@ function Contract() {
                                 sortModel: [{ field: 'percentage', sort: 'desc' }],
                             },
                         }}
+                        localeText={localeText()}
                         density='compact'
                         sortingOrder={['desc', 'asc']}
                         components={{
+                            Toolbar: () => CustomToolbar(),
                             NoRowsOverlay: NoResultsOverlay,
                             NoResultsOverlay: NoResultsOverlay,
                             LoadingOverlay: DataGridSkeleton,

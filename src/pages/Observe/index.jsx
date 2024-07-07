@@ -17,6 +17,8 @@ import ObserveRecordModal from '@/components/ObserveRecordModal';
 import { deleteObserve } from '@/services/observe';
 import AddObserveModal from '@/components/AddObserveModal';
 import EditObserveModal from '@/components/EditObserveModal';
+import { localeText } from '@/helpers/datagridHelper';
+import CustomToolbar from '@/components/CustomToolbar';
 
 function Observe() {
     const dashboardRef = useRef(null);
@@ -170,9 +172,11 @@ function Observe() {
                                 sortModel: [{ field: 'newestDate', sort: 'desc' }],
                             },
                         }}
+                        localeText={localeText()}
                         density='compact'
                         sortingOrder={['desc', 'asc']}
                         components={{
+                            Toolbar: CustomToolbar,
                             NoRowsOverlay: NoResultsOverlay,
                             NoResultsOverlay: NoResultsOverlay,
                             LoadingOverlay: DataGridSkeleton,

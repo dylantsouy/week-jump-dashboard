@@ -18,6 +18,8 @@ import dayjs from 'dayjs';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { AddCircleOutline } from '@mui/icons-material';
+import CustomToolbar from '@/components/CustomToolbar';
+import { localeText } from '@/helpers/datagridHelper';
 
 function Jump() {
     const dashboardRef = useRef(null);
@@ -198,6 +200,7 @@ function Jump() {
                                 labelRowsPerPage: '每頁筆數:',
                             },
                         }}
+                        localeText={localeText()}
                         initialState={{
                             sorting: {
                                 sortModel: [{ field: 'gapPercent', sort: 'desc' }],
@@ -206,6 +209,7 @@ function Jump() {
                         density='compact'
                         sortingOrder={['desc', 'asc']}
                         components={{
+                            Toolbar: CustomToolbar,
                             NoRowsOverlay: NoResultsOverlay,
                             NoResultsOverlay: NoResultsOverlay,
                             LoadingOverlay: DataGridSkeleton,
