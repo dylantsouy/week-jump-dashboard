@@ -169,20 +169,13 @@ function Jump() {
             </div>
             <div className='title-action'>
                 <div className='title-btns'>
-                    <Button
-                        className='act'
-                        disabled={loadingAction || !actionPermission || range === 3}
-                        variant='contained'
-                        color='warning'
-                        startIcon={<AddCircleOutline />}
-                        onClick={addHandler}
-                    >
+                    <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         抓取
                     </Button>
-                    <Button disabled={loadingAction || !actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+                    <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
                         更新收盤價
                     </Button>
-                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
+                    <Button className='act' disabled={!actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
                         檢查補上
                     </Button>
                 </div>
