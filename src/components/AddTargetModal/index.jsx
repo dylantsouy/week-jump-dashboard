@@ -64,7 +64,7 @@ export default function AddTargetModal(props) {
 
     const handlerOk = async () => {
         let data = {
-            stockCode: addData.stockCode,
+            stockCode: String(addData.stockCode),
             rate: addData.rate,
             initPrice: +addData.initPrice,
             createdAt: addData.createdAt,

@@ -25,10 +25,28 @@ function Contract() {
     const dashboardRef = useRef(null);
     const actionPermission = usePermissionCheck('action');
     const [loadingAction, setLoadingAction] = useState(false);
-    const [quarter, setQuarter] = useState('24Q1');
     const [range, setRange] = useState(50);
     const [rank, setRank] = useState('percentage');
     const { enqueueSnackbar } = useSnackbar();
+    const getCurrentQuarter = () => {
+        const now = new Date();
+        const year = now.getFullYear().toString().slice(2); // 取後兩位，如 2024 -> "24"
+        const month = now.getMonth() + 1; // getMonth() 從 0 開始
+        const quarter = Math.ceil(month / 3); // 計算季度
+        return `${year}Q${quarter}`;
+    };
+
+    const getQuarterOptions = () => {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const yearList = [currentYear - 2, currentYear - 1, currentYear]; // 包含前年、去年、今年
+        const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+        return yearList.flatMap((year) => quarters.map((q) => `${year.toString().slice(2)}${q}`));
+    };
+
+    const [quarter, setQuarter] = useState(getCurrentQuarter());
+    const quarterOptions = getQuarterOptions();
     const { isLoading: loading, data: listData, updatedDate } = useContracts({ range, rank, quarter });
 
     const addHandler = async () => {
@@ -121,10 +139,11 @@ function Contract() {
                                 <FormControl fullWidth>
                                     <InputLabel id='quarter-label'>季度</InputLabel>
                                     <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
-                                        <MenuItem value={'24Q1'}>24Q1</MenuItem>
-                                        <MenuItem value={'24Q2'}>24Q2</MenuItem>
-                                        <MenuItem value={'24Q3'}>24Q3</MenuItem>
-                                        <MenuItem value={'24Q4'}>24Q4</MenuItem>
+                                        {quarterOptions.map((q) => (
+                                            <MenuItem key={q} value={q}>
+                                                {q}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
                             </Box>

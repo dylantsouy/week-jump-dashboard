@@ -25,7 +25,6 @@ html,
     width: 100%;
     height: 100%;
 }
-
 body {
     margin: 0;
     overflow-x: hidden;
@@ -107,7 +106,7 @@ p {
         }
     }
 }
-code{
+code {
     background-color: $background;
     border-radius: 5px;
     padding: 2px 3px;
@@ -116,7 +115,7 @@ code{
 strong {
     font-weight: 600;
 }
-.MuiInputBase-readOnly{
+.MuiInputBase-readOnly {
     cursor: not-allowed;
 }
 .MuiDataGrid-row {
@@ -209,13 +208,13 @@ strong {
     color: #fff;
     border-radius: 5px;
     &.best {
-        background-color: #df1616;
+        background-color: #f74c4c;
     }
     &.good {
-        background-color: #fcb6b6;
+        background-color: #f18832;
     }
     &.neutral {
-        background-color: #bbb;
+        background-color: #7ea2ea;
     }
 
     &.bad {
@@ -223,6 +222,56 @@ strong {
     }
     &.worst {
         background-color: #357932;
+    }
+}
+
+.water {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 5% 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #1a1e20;
+    svg{
+        margin-right: 2px;
+        font-size: 18px;
+    }
+    &.water1 {
+        color:#e1ebef;  
+        svg {
+            color: #e1ebef;
+        }
+    }
+    &.water2 {
+        color:#7ea2ea;  
+        svg {
+            color: #7ea2ea;
+        }
+    }
+    &.water3 {
+        color:#e4d57d;  
+        svg {
+            color: #e4d57d;
+        }
+    }
+
+    &.water4 {
+        color:#ffc400;  
+        svg {
+            color: #ffc400;
+        }
+    }
+    &.water5 {
+        color:#ff6f1c;  
+        svg {
+            color: #ff6f1c;
+        }
+    }
+    &.water6 {
+        color:#f74c4c;  
+        svg {
+            color: #f74c4c;
+        }
     }
 }
 

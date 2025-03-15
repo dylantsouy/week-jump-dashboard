@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import { Delete, Edit, RemoveRedEye } from '@mui/icons-material';
 import moment from 'moment';
-import { dateGap, observeTypeMapping, profitHandler } from './format';
+import { dateGap, observeReasonMapping, observeTypeMapping, profitHandler } from './format';
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 
 export const listColumn = (showRecord, deleteHandler, editHandler, actionPermission) => {
@@ -84,12 +84,12 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'createdAt',
-            headerName: '觀察日期',
+            headerName: '首次觀察',
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
+            minWidth: 100,
+            width: 100,
             renderCell: (params) => {
                 const { row } = params;
                 return row?.createdAt ? moment(row?.createdAt).format('YYYY/MM/DD') : '';
@@ -121,10 +121,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'observe1Count',
-            headerName: '觀察',
+            headerName: '冷水',
             renderHeader: () => (
                 <div className='column_center_center'>
-                    <div>觀察</div>
+                    <div>冷水</div>
                     <div>(次)</div>
                 </div>
             ),
@@ -137,10 +137,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'observe2Count',
-            headerName: '稍微',
+            headerName: '溫水',
             renderHeader: () => (
                 <div className='column_center_center'>
-                    <div>稍微</div>
+                    <div>溫水</div>
                     <div>(次)</div>
                 </div>
             ),
@@ -153,10 +153,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'observe3Count',
-            headerName: '其他',
+            headerName: '熱水',
             renderHeader: () => (
                 <div className='column_center_center'>
-                    <div>其他</div>
+                    <div>熱水</div>
                     <div>(次)</div>
                 </div>
             ),
@@ -169,18 +169,18 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'latestDate',
-            headerName: '最新日期',
+            headerName: '最新觀察',
             renderHeader: () => (
                 <div className='column_center_center'>
                     <div>最新</div>
-                    <div>觀察日期</div>
+                    <div>觀察</div>
                 </div>
             ),
             cellClassName: 'border-cell',
             align: 'center',
             headerAlign: 'center',
-            minWidth: 70,
-            width: 70,
+            minWidth: 100,
+            width: 100,
             valueGetter: (params) => params.row.latestRecord.date,
             renderCell: (params) => {
                 const { row } = params;
@@ -204,6 +204,25 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             renderCell: (params) => {
                 const { row } = params;
                 return observeTypeMapping(row?.latestRecord?.type);
+            },
+        },
+        {
+            field: 'latestReason',
+            headerName: '最新位階',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>最新</div>
+                    <div>位階</div>
+                </div>
+            ),
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'cell-wrap border-cell',
+            minWidth: 150,
+            width: 150,
+            renderCell: (params) => {
+                const { row } = params;
+                return observeReasonMapping(row?.latestRecord?.reason);
             },
         },
         {
@@ -246,39 +265,20 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             },
         },
         {
-            field: 'latestReason',
-            headerName: '最新理由',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>最新</div>
-                    <div>理由</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'cell-wrap border-cell',
-            minWidth: 200,
-            width: 200,
-            flex: 1,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.latestRecord?.reason;
-            },
-        },
-        {
             field: 'action',
             filterable: false,
             sortable: false,
             disableExport: true,
             headerName: '操作',
             minWidth: 130,
+            flex: 1,
             renderCell: (params) => {
                 return (
                     <div className='action'>
                         <Tooltip title={'觀察明細'} placement='bottom'>
                             <RemoveRedEye className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
                         </Tooltip>
-                        {actionPermission ? (
+                        {/* {actionPermission ? (
                             <Tooltip title={'編輯'} placement='bottom'>
                                 <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
                             </Tooltip>
@@ -286,7 +286,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                             <Tooltip title={'沒有權限'} placement='bottom'>
                                 <Delete className='action-icon disabled mr-2' />
                             </Tooltip>
-                        )}
+                        )} */}
                         {actionPermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
                                 <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />

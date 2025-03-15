@@ -5,6 +5,7 @@ import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDiss
 import { Tooltip } from '@mui/material';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import { AlarmOff } from '@mui/icons-material';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
 
 export const generateMeasureDate = (e) => {
     return moment(e).format('YYYY-MM-DD');
@@ -63,9 +64,52 @@ export const generateMeasureTime = (e) => {
 };
 export const observeTypeMapping = (e) => {
     const map = {
-        1: <div className='bg best'>觀察</div>,
-        2: <div className='bg good'>稍微</div>,
-        3: <div className='bg neutral'>其他</div>,
+        1: <div className='bg neutral'>冷水</div>,
+        2: <div className='bg good'>溫水</div>,
+        3: <div className='bg best'>熱水</div>,
+    };
+
+    return map[e];
+};
+
+export const observeReasonMapping = (e) => {
+    const map = {
+        列入觀察: (
+            <div className='water water1'>
+                <WaterDropIcon />
+                列入觀察
+            </div>
+        ),
+        等待資金: (
+            <div className='water water2'>
+                <WaterDropIcon />
+                等待資金
+            </div>
+        ),
+        偏多整理: (
+            <div className='water water3'>
+                <WaterDropIcon />
+                偏多整理
+            </div>
+        ),
+        帶量發動: (
+            <div className='water water4'>
+                <WaterDropIcon />
+                帶量發動
+            </div>
+        ),
+        行情噴發: (
+            <div className='water water5'>
+                <WaterDropIcon />
+                行情噴發
+            </div>
+        ),
+        過熱注意: (
+            <div className='water water6'>
+                <WaterDropIcon />
+                過熱注意
+            </div>
+        ),
     };
 
     return map[e];

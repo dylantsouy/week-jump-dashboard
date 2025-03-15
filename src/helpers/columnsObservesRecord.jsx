@@ -1,7 +1,7 @@
 import { Tooltip } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import moment from 'moment';
-import { dateGap, observeTypeMapping, profitHandler } from './format';
+import { dateGap, observeReasonMapping, observeTypeMapping, profitHandler } from './format';
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 
 export const listColumn = (deleteHandler, editHandler, actionPermission, recordData) => {
@@ -17,6 +17,19 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             renderCell: (params) => {
                 const { row } = params;
                 return observeTypeMapping(row?.type);
+            },
+        },
+        {
+            field: 'reason',
+            headerName: '位階',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'cell-wrap border-cell',
+            minWidth: 150,
+            width: 150,
+            renderCell: (params) => {
+                const { row } = params;
+                return observeReasonMapping(row?.reason);
             },
         },
         {
@@ -94,22 +107,12 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             },
         },
         {
-            field: 'reason',
-            headerName: '理由',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell cell-wrap',
-            minWidth: 58,
-            width: 58,
-            flex: 1,
-            renderCell: RenderCellExpand,
-        },
-        {
             field: 'action',
             filterable: false,
             sortable: false,
             disableExport: true,
             headerName: '操作',
+            flex: 1,
             minWidth: 130,
             renderCell: (params) => {
                 return (

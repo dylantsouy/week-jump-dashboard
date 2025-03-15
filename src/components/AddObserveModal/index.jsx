@@ -24,12 +24,16 @@ const initValid = {
 
 const initValue = {
     price: '',
-    reason: '',
+    reason: '列入觀察',
     date: dayjs(),
     stockCode: null,
     type: 1,
 };
-
+const reasonOptions = {
+    1: ['列入觀察', '等待資金'],
+    2: ['偏多整理', '帶量發動'],
+    3: ['行情噴發', '過熱注意'],
+};
 export default function AddObserveModal(props) {
     const { open, handleClose } = props;
     const { enqueueSnackbar } = useSnackbar();
@@ -38,12 +42,13 @@ export default function AddObserveModal(props) {
     const [addData, setAddData] = useState(initValue);
     const [validation, setValidation] = useState(initValid);
 
-    const handleChange = (type, e) => {
-        setValidation(initValid);
+    const handleChange = (key, value) => {
         setAddData((prevState) => ({
             ...prevState,
-            [type]: e,
+            [key]: value,
+            ...(key === 'type' ? { reason: reasonOptions[value]?.[0] || '' } : {}), // 預設選第一個 reason
         }));
+        setValidation(initValid);
     };
 
     useEffect(() => {
@@ -54,13 +59,13 @@ export default function AddObserveModal(props) {
 
     const handlerOk = async () => {
         let data = {
-            stockCode: addData.stockCode,
+            stockCode: String(addData.stockCode),
             price: +addData.price,
             date: addData.date,
             type: addData.type,
             reason: addData.reason,
         };
-        if (!data.stockCode || !data.price || !data.date) {
+        if (!data.stockCode || !data.price || !data.date || !data.reason) {
             setValidation(() => ({
                 stockCode: {
                     valid: !!data.stockCode,
@@ -69,6 +74,10 @@ export default function AddObserveModal(props) {
                 price: {
                     valid: !!data.price,
                     error: !data.price ? '此欄位必填' : '',
+                },
+                reason: {
+                    valid: !!data.reason,
+                    error: !data.reason ? '此欄位必填' : '',
                 },
                 date: {
                     valid: !!data.date,
@@ -105,12 +114,23 @@ export default function AddObserveModal(props) {
                     </div>
                 ) : (
                     <>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size='small' required>
-                            <InputLabel id='type-label'>類別</InputLabel>
-                            <Select labelId='type-label' id='type' value={addData.type} label='類別' onChange={(e) => handleChange('type', e.target.value)}>
-                                <MenuItem value={1}>觀察</MenuItem>
-                                <MenuItem value={2}>稍微</MenuItem>
-                                <MenuItem value={3}>其他</MenuItem>
+                        <FormControl sx={{ minWidth: 120 }} size='small' required>
+                            <InputLabel id='category-label'>類別</InputLabel>
+                            <Select labelId='category-label' id='category' value={addData.type} label='類別' onChange={(e) => handleChange('type', e.target.value)}>
+                                <MenuItem value={1}>冷水</MenuItem>
+                                <MenuItem value={2}>溫水</MenuItem>
+                                <MenuItem value={3}>熱水</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <FormControl sx={{ minWidth: 120 }} size='small' required>
+                            <InputLabel id='level-label'>位階</InputLabel>
+                            <Select labelId='level-label' id='level' value={addData.reason} label='位階' onChange={(e) => handleChange('reason', e.target.value)}>
+                                {(reasonOptions[addData.type] || []).map((item) => (
+                                    <MenuItem key={item} value={item}>
+                                        {item}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <Autocomplete
@@ -118,7 +138,7 @@ export default function AddObserveModal(props) {
                             disablePortal
                             id='stockCode-lists'
                             size='small'
-                            options={codeLists}
+                            options={codeLists || []}
                             getOptionLabel={(option) => option.code}
                             renderOption={(props, option) => (
                                 <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
@@ -141,18 +161,6 @@ export default function AddObserveModal(props) {
                             fullWidth
                             onChange={(e) => {
                                 handleChange('price', e.target.value);
-                            }}
-                        />
-                        <TextField
-                            margin='dense'
-                            label={'原因'}
-                            type='text'
-                            size='small'
-                            disabled={loading}
-                            value={addData.reason}
-                            fullWidth
-                            onChange={(e) => {
-                                handleChange('reason', e.target.value);
                             }}
                         />
                         <DatePicker

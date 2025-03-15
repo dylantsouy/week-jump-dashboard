@@ -21,9 +21,9 @@ const useJumps = (props) => {
     const { data, mutate, isValidating } = useSWR([fullUrl, {}, 'GET'], swrFetcher, {
         revalidateOnFocus: false,
     });
-    let updatedDate = data?.data?.[0]?.Stock?.updatedAt;
-
-    return { data: data?.data, mutate, updatedDate, isLoading: isValidating };
+    let updatedDate = data?.data?.result?.[0]?.Stock?.updatedAt;
+    let maxIndustry = data?.data?.maxIndustry;
+    return { data: data?.data?.result, maxIndustry, mutate, updatedDate, isLoading: isValidating };
 };
 
 export default useJumps;

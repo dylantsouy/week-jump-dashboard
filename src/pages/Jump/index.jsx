@@ -20,6 +20,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { AddCircleOutline } from '@mui/icons-material';
 import CustomToolbar from '@/components/CustomToolbar';
 import { localeText } from '@/helpers/datagridHelper';
+import { createStock } from '@/services/stockApi';
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 
 function Jump() {
     const dashboardRef = useRef(null);
@@ -138,6 +140,20 @@ function Jump() {
         });
     };
 
+    const refreshHandler = async () => {
+        setLoadingAction(true);
+        try {
+            let result = await createStock();
+            const { success } = result;
+            if (success) {
+                enqueueSnackbar('更新成功', { variant: 'success' });
+                setLoadingAction(false);
+            }
+        } catch (err) {
+            enqueueSnackbar('更新失敗', { variant: 'error' });
+            setLoadingAction(false);
+        }
+    };
     return (
         <div className='Dashboard'>
             <div className='dashboard-header'>
@@ -163,7 +179,10 @@ function Jump() {
                     >
                         抓取
                     </Button>
-                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' startIcon={<CloudSyncIcon />} onClick={checkHandler}>
+                    <Button disabled={loadingAction || !actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+                        更新收盤價
+                    </Button>
+                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
                         檢查補上
                     </Button>
                 </div>

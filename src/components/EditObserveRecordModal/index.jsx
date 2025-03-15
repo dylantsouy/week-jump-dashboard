@@ -105,9 +105,9 @@ export default function EditObserveRecordModal(props) {
                 <FormControl sx={{ m: 1, minWidth: 120 }} size='small' required>
                     <InputLabel id='type-label'>類別</InputLabel>
                     <Select labelId='type-label' id='type' value={addData.type} label='類別' onChange={(e) => handleChange('type', e.target.value)}>
-                        <MenuItem value={1}>觀察</MenuItem>
-                        <MenuItem value={2}>稍微</MenuItem>
-                        <MenuItem value={3}>其他</MenuItem>
+                        <MenuItem value={1}>冷水</MenuItem>
+                        <MenuItem value={2}>溫水</MenuItem>
+                        <MenuItem value={3}>熱水</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField

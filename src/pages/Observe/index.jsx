@@ -27,7 +27,7 @@ function Observe() {
     const [loadingAction, setLoadingAction] = useState(false);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
-    const [type, setType] = useState(1);
+    const [type, setType] = useState(2);
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [editData, setEditData] = useState(null);
     const [showAddDialog, setShowAddDialog] = useState(false);
@@ -138,13 +138,13 @@ function Observe() {
                 <div className='date'>
                     <ToggleButtonGroup color='primary' value={type} exclusive onChange={handleTypeChange} aria-label='Platform'>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={1}>
-                            觀察
+                            冷水
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={2}>
-                            稍微
+                            溫水
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
-                            其他
+                            熱水
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={4}>
                             全部
@@ -169,7 +169,7 @@ function Observe() {
                         }}
                         initialState={{
                             sorting: {
-                                sortModel: [{ field: 'newestDate', sort: 'desc' }],
+                                sortModel: [{ field: 'latestDate', sort: 'desc' }],
                             },
                         }}
                         localeText={localeText()}
