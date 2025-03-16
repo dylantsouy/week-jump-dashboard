@@ -1,7 +1,12 @@
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 import { rateMapping, profitHandler, dateGap, generateMeasureDate, calculateTargetPriceRange, targetColorHandler } from './format';
 import { Tooltip } from '@mui/material';
-import { Delete, Edit, MonetizationOn, ReceiptLong } from '@mui/icons-material';
+import { Delete, Edit, MonetizationOn } from '@mui/icons-material';
+import { Billion, Dog } from '@/assets/icons';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import { Link } from 'react-router-dom';
+import MessageIcon from '@mui/icons-material/Message';
 
 export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, actionPermission) => {
     return [
@@ -11,8 +16,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            minWidth: 90,
+            width: 90,
             renderCell: RenderCellExpand,
         },
         {
@@ -21,8 +26,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
+            minWidth: 58,
+            width: 58,
             renderCell: RenderCellExpand,
         },
         {
@@ -102,7 +107,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                 return (
                     <div className='action text-center'>
                         <Tooltip title={'看消息'} placement='bottom'>
-                            <ReceiptLong className='action-icon' onClick={() => newsHandler(params.row)} />
+                            <MessageIcon className='action-icon' onClick={() => newsHandler(params.row)} />
                         </Tooltip>
                     </div>
                 );
@@ -110,33 +115,13 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         },
         {
             field: 'deadline',
-            headerName: '高峰點',
+            headerName: '題材',
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
             minWidth: 98,
             width: 98,
             renderCell: RenderCellExpand,
-        },
-        {
-            field: 'eps2023',
-            headerName: '2023 EPS',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2023</div>
-                    <div>EPS</div>
-                </div>
-            ),
-            headerClassName: 'eps2023',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2023',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.eps?.eps2023 || '-';
-            },
         },
         {
             field: 'eps2024',
@@ -156,59 +141,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             renderCell: (params) => {
                 const { row } = params;
                 return row?.eps?.eps2024 || '-';
-            },
-        },
-        {
-            field: 'pe2024',
-            headerName: '2024 PE',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2024</div>
-                    <div>PE</div>
-                </div>
-            ),
-            headerClassName: 'eps2024',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2024',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.price && row?.eps?.eps2024) {
-                    if (row?.eps?.eps2024 < 0) {
-                        return 'N/A';
-                    }
-                    return (row?.price / row?.eps?.eps2024).toFixed(2);
-                }
-                return '-';
-            },
-        },
-        {
-            field: 'grow2024',
-            headerName: '2024 成長',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2024</div>
-                    <div>成長</div>
-                </div>
-            ),
-            headerClassName: 'eps2024',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2024',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2023 && row?.eps?.eps2024) {
-                    if (row?.eps?.eps2023 < 0 && row?.eps?.eps2024 > 0) {
-                        return '虧轉盈';
-                    }
-                    const growthRate = ((row.eps.eps2024 - row.eps.eps2023) / row.eps.eps2023) * 100;
-                    return growthRate.toFixed(1) + '%';
-                }
-                return '-';
             },
         },
         {
@@ -284,79 +216,79 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                 return '-';
             },
         },
-        // {
-        //     field: 'eps2026',
-        //     headerName: '2026 EPS',
-        //     renderHeader: () => (
-        //         <div className='column_center_center'>
-        //             <div>2026</div>
-        //             <div>EPS</div>
-        //         </div>
-        //     ),
-        //     headerClassName: 'eps2026',
-        //     align: 'center',
-        //     headerAlign: 'center',
-        //     cellClassName: 'eps2026',
-        //     minWidth: 56,
-        //     width: 56,
-        //     renderCell: (params) => {
-        //         const { row } = params;
-        //         return row?.eps?.eps2026 || '-';
-        //     },
-        // },
-        // {
-        //     field: 'pe2026',
-        //     headerName: '2026 PE',
-        //     renderHeader: () => (
-        //         <div className='column_center_center'>
-        //             <div>2026</div>
-        //             <div>PE</div>
-        //         </div>
-        //     ),
-        //     headerClassName: 'eps2026',
-        //     align: 'center',
-        //     headerAlign: 'center',
-        //     cellClassName: 'eps2026',
-        //     minWidth: 56,
-        //     width: 56,
-        //     renderCell: (params) => {
-        //         const { row } = params;
-        //         if (row?.price && row?.eps?.eps2026) {
-        //             if (row?.eps?.eps2026 < 0) {
-        //                 return 'N/A';
-        //             }
-        //             return (row?.price / row?.eps?.eps2026).toFixed(2);
-        //         }
-        //         return '-';
-        //     },
-        // },
-        // {
-        //     field: 'grow2026',
-        //     headerName: '2026 成長',
-        //     renderHeader: () => (
-        //         <div className='column_center_center'>
-        //             <div>2026</div>
-        //             <div>成長</div>
-        //         </div>
-        //     ),
-        //     headerClassName: 'eps2026',
-        //     align: 'center',
-        //     headerAlign: 'center',
-        //     cellClassName: 'eps2026',
-        //     minWidth: 56,
-        //     width: 56,
-        //     renderCell: (params) => {
-        //         const { row } = params;
-        //         if (row?.eps?.eps2025 && row?.eps?.eps2026) {
-        //             if (row?.eps?.eps2025 < 0 && row?.eps?.eps2025 > 0) {
-        //                 return '虧轉盈';
-        //             }
-        //             const growthRate = ((row.eps.eps2026 - row.eps.eps2025) / row.eps.eps2025) * 100;
-        //             return growthRate.toFixed(1) + '%';
-        //         }
-        //         return '-';
-        //     },
-        // },
+        {
+            field: 'eps2026',
+            headerName: '2026 EPS',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>2026</div>
+                    <div>EPS</div>
+                </div>
+            ),
+            headerClassName: 'eps2026',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2026',
+            minWidth: 56,
+            width: 56,
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.eps?.eps2026 || '-';
+            },
+        },
+        {
+            field: 'pe2026',
+            headerName: '2026 PE',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>2026</div>
+                    <div>PE</div>
+                </div>
+            ),
+            headerClassName: 'eps2026',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2026',
+            minWidth: 56,
+            width: 56,
+            renderCell: (params) => {
+                const { row } = params;
+                if (row?.price && row?.eps?.eps2026) {
+                    if (row?.eps?.eps2026 < 0) {
+                        return 'N/A';
+                    }
+                    return (row?.price / row?.eps?.eps2026).toFixed(2);
+                }
+                return '-';
+            },
+        },
+        {
+            field: 'grow2026',
+            headerName: '2026 成長',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>2026</div>
+                    <div>成長</div>
+                </div>
+            ),
+            headerClassName: 'eps2026',
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'eps2026',
+            minWidth: 56,
+            width: 56,
+            renderCell: (params) => {
+                const { row } = params;
+                if (row?.eps?.eps2025 && row?.eps?.eps2026) {
+                    if (row?.eps?.eps2025 < 0 && row?.eps?.eps2025 > 0) {
+                        return '虧轉盈';
+                    }
+                    const growthRate = ((row.eps.eps2026 - row.eps.eps2025) / row.eps.eps2025) * 100;
+                    return growthRate.toFixed(1) + '%';
+                }
+                return '-';
+            },
+        },
         {
             field: 'editEps',
             headerName: '營收',
@@ -393,30 +325,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             renderCell: RenderCellExpand,
         },
         {
-            field: 'targetPrice24',
-            headerName: '2024股價',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2024</div>
-                    <div>股價</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
-            width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2024 && row?.eps?.eps2024 > 0 && row?.averagePE) {
-                    const now = row?.price;
-                    const targetPrice = calculateTargetPriceRange(row?.eps?.eps2024, row?.averagePE);
-                    return targetColorHandler(now, targetPrice[0], targetPrice[1]);
-                }
-                return '-';
-            },
-        },
-        {
             field: 'targetPrice25',
             headerName: '2025股價',
             renderHeader: () => (
@@ -435,6 +343,30 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                 if (row?.eps?.eps2025 && row?.eps?.eps2025 > 0 && row?.averagePE) {
                     const now = row?.price;
                     const targetPrice = calculateTargetPriceRange(row?.eps?.eps2025, row?.averagePE);
+                    return targetColorHandler(now, targetPrice[0], targetPrice[1]);
+                }
+                return '-';
+            },
+        },
+        {
+            field: 'targetPrice26',
+            headerName: '2026股價',
+            renderHeader: () => (
+                <div className='column_center_center'>
+                    <div>2026</div>
+                    <div>股價</div>
+                </div>
+            ),
+            align: 'center',
+            headerAlign: 'center',
+            cellClassName: 'border-cell',
+            minWidth: 56,
+            width: 56,
+            renderCell: (params) => {
+                const { row } = params;
+                if (row?.eps?.eps2026 && row?.eps?.eps2026 > 0 && row?.averagePE) {
+                    const now = row?.price;
+                    const targetPrice = calculateTargetPriceRange(row?.eps?.eps2026, row?.averagePE);
                     return targetColorHandler(now, targetPrice[0], targetPrice[1]);
                 }
                 return '-';
@@ -491,22 +423,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             renderCell: RenderCellExpand,
         },
         {
-            field: 'yield',
-            headerName: '殖利率',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>平均</div>
-                    <div>殖利率</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
-            width: 56,
-            renderCell: RenderCellExpand,
-        },
-        {
             field: 'action',
             filterable: false,
             sortable: false,
@@ -528,13 +444,33 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                         )}
                         {actionPermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
-                                <Delete className='action-icon warning' onClick={() => deleteHandler(params.row)} />
+                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
                                 <Delete className='action-icon disabled mr-2' />
                             </Tooltip>
                         )}
+                        <Tooltip title={'合約負債'} placement='bottom'>
+                            <Link target='_blank' to={`https://www.istock.tw/stock/${params?.row?.code}/contract-liability`}>
+                                <ShowChartIcon className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'股權結構'} placement='bottom'>
+                            <Link target='_blank' to={`https://norway.twsthr.info/StockHolders.aspx?stock=${params?.row?.code}`}>
+                                <BarChartIcon className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'財務分析'} placement='bottom'>
+                            <Link target='_blank' to={`https://www.findbillion.com/twstock/${params?.row?.code}/financial_statement`}>
+                                <Billion className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'財報狗'} placement='bottom'>
+                            <Link target='_blank' to={`https://statementdog.com/analysis/${params?.row?.code}`}>
+                                <Dog className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
                     </div>
                 );
             },

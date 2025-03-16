@@ -7,5 +7,7 @@ import { ReactComponent as EditGlucose } from './editGlucose.svg';
 import { ReactComponent as PredictMan } from './predictMan.svg';
 import { ReactComponent as NoDataIcon } from './NoDataIcon.svg';
 import { ReactComponent as Jump } from './jump.svg';
+import { ReactComponent as Dog } from './dog.svg';
+import { ReactComponent as Billion } from './billion.svg';
 
-export { Account, Logo, Password, EditGlucose, LogoSM, PredictMan, Arrow, NoDataIcon, Jump };
+export { Account, Logo, Password, EditGlucose, LogoSM, PredictMan, Arrow, NoDataIcon, Jump, Dog, Billion };

@@ -1,9 +1,11 @@
 import { Tooltip } from '@mui/material';
-import { RemoveRedEye } from '@mui/icons-material';
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 import { Link } from 'react-router-dom';
+import { Billion, Dog } from '@/assets/icons';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 
-export const listColumn = (showRecord) => {
+export const listColumn = () => {
     return [
         {
             field: 'name',
@@ -37,7 +39,7 @@ export const listColumn = (showRecord) => {
             renderCell: (params) => {
                 const { row } = params;
                 return (
-                    <a href={`https://www.istock.tw/stock/${row?.code}/contract-liability`} target='_blank' rel='noreferrer'>
+                    <a href={`https://tw.stock.yahoo.com/quote/${row?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
                         {row?.code}
                     </a>
                 );
@@ -133,11 +135,28 @@ export const listColumn = (showRecord) => {
             flex: 1,
             renderCell: (params) => {
                 return (
-                    <Link target='_blank' to={`https://www.istock.tw/stock/${params?.row?.code}/contract-liability`} className='action'>
-                        <Tooltip title={'合約明細'} placement='bottom'>
-                            <RemoveRedEye className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
+                    <div className='action'>
+                        <Tooltip title={'合約負債'} placement='bottom'>
+                            <Link target='_blank' to={`https://www.istock.tw/stock/${params?.row?.code}/contract-liability`}>
+                                <ShowChartIcon className='action-icon primary mr-2' />
+                            </Link>
                         </Tooltip>
-                    </Link>
+                        <Tooltip title={'股權結構'} placement='bottom'>
+                            <Link target='_blank' to={`https://norway.twsthr.info/StockHolders.aspx?stock=${params?.row?.code}`}>
+                                <BarChartIcon className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'財務分析'} placement='bottom'>
+                            <Link target='_blank' to={`https://www.findbillion.com/twstock/${params?.row?.code}/financial_statement`}>
+                                <Billion className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'財報狗'} placement='bottom'>
+                            <Link target='_blank' to={`https://statementdog.com/analysis/${params?.row?.code}`}>
+                                <Dog className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                    </div>
                 );
             },
         },

@@ -1,14 +1,14 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsContracts';
 import { DataGrid } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import NoResultsOverlay from '@/components/NoResultsOverlay';
 import DataGridSkeleton from '@/components/DataGridSkeleton';
-import { Button, Skeleton } from '@mui/material';
+import { Button, Skeleton, Typography, IconButton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutline, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import useContracts from '@/services/useContracts';
 import { addContracts } from '@/services/contractApi';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -24,16 +24,35 @@ import CustomToolbar from '@/components/CustomToolbar';
 function Contract() {
     const dashboardRef = useRef(null);
     const actionPermission = usePermissionCheck('action');
-    const [loadingAction, setLoadingAction] = useState(false);
     const [range, setRange] = useState(50);
     const [rank, setRank] = useState('percentage');
     const { enqueueSnackbar } = useSnackbar();
-    const getCurrentQuarter = () => {
+
+    // 獲取當前日期和設置預設季度
+    const getDefaultQuarter = () => {
         const now = new Date();
-        const year = now.getFullYear().toString().slice(2); // 取後兩位，如 2024 -> "24"
+        const year = now.getFullYear();
+        const shortYear = year.toString().slice(2); // 取後兩位，如 2024 -> "24"
         const month = now.getMonth() + 1; // getMonth() 從 0 開始
-        const quarter = Math.ceil(month / 3); // 計算季度
-        return `${year}Q${quarter}`;
+        const day = now.getDate();
+
+        // 根據日期判斷預設顯示的季度
+        if (month < 3 || (month === 3 && day <= 31)) {
+            // 1月-3月底前，顯示上一年的Q3
+            return `${(year - 1).toString().slice(2)}Q3`;
+        } else if (month < 5 || (month === 5 && day < 15)) {
+            // 4月-5月15日前，顯示上一年的Q4
+            return `${(year - 1).toString().slice(2)}Q4`;
+        } else if (month < 8 || (month === 8 && day < 14)) {
+            // 5月15日-8月14日前，顯示當年Q1
+            return `${shortYear}Q1`;
+        } else if (month < 11 || (month === 11 && day < 14)) {
+            // 8月14日-11月14日前，顯示當年Q2
+            return `${shortYear}Q2`;
+        } else {
+            // 11月14日後，顯示當年Q3
+            return `${shortYear}Q3`;
+        }
     };
 
     const getQuarterOptions = () => {
@@ -42,34 +61,81 @@ function Contract() {
         const yearList = [currentYear - 2, currentYear - 1, currentYear]; // 包含前年、去年、今年
         const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
 
-        return yearList.flatMap((year) => quarters.map((q) => `${year.toString().slice(2)}${q}`));
+        return yearList.flatMap((year) =>
+            quarters.map((q) => ({
+                value: `${year.toString().slice(2)}${q}`,
+                label: `${year.toString().slice(2)}${q}`,
+                year: year,
+                quarter: q,
+            }))
+        );
     };
 
-    const [quarter, setQuarter] = useState(getCurrentQuarter());
+    const getQuarterDeadline = (quarterValue) => {
+        if (!quarterValue) return '';
+
+        const q = quarterValue.slice(-2); // 獲取季度部分 Q1, Q2, Q3, Q4
+
+        switch (q) {
+            case 'Q1':
+                return '5/15前公布';
+            case 'Q2':
+                return '8/14前公布';
+            case 'Q3':
+                return '11/14前公布';
+            case 'Q4':
+                return '次年3/31前公布';
+            default:
+                return '';
+        }
+    };
+
+    const [quarter, setQuarter] = useState(getDefaultQuarter());
     const quarterOptions = getQuarterOptions();
     const { isLoading: loading, data: listData, updatedDate } = useContracts({ range, rank, quarter });
 
+    // 查找當前季度在選項中的索引
+    const getCurrentQuarterIndex = () => {
+        return quarterOptions.findIndex((q) => q.value === quarter);
+    };
+
+    // 切換到上一個季度
+    const handlePrevQuarter = () => {
+        const currentIndex = getCurrentQuarterIndex();
+        if (currentIndex > 0) {
+            setQuarter(quarterOptions[currentIndex - 1].value);
+        }
+    };
+
+    // 切換到下一個季度
+    const handleNextQuarter = () => {
+        const currentIndex = getCurrentQuarterIndex();
+        if (currentIndex < quarterOptions.length - 1) {
+            setQuarter(quarterOptions[currentIndex + 1].value);
+        }
+    };
+
     const addHandler = async () => {
-        setLoadingAction(true);
         try {
             let result = await addContracts({ quarter });
             const { success } = result;
             if (success) {
                 enqueueSnackbar('抓取成功', { variant: 'success' });
-                setLoadingAction(false);
             }
         } catch (err) {
             enqueueSnackbar('抓取失敗', { variant: 'error' });
-            setLoadingAction(false);
         }
     };
+
     const handleRankChange = (e) => {
         const newRank = e.target.value;
         setRank(newRank);
     };
+
     const handleRange = (event) => {
         setRange(event.target.value);
     };
+
     const handleQuarter = (event) => {
         setQuarter(event.target.value);
     };
@@ -89,14 +155,7 @@ function Contract() {
             </div>
             <div className='title-action'>
                 <div className='title-btns'>
-                    <Button
-                        className='act'
-                        disabled={loadingAction || !actionPermission || range === 3}
-                        variant='contained'
-                        color='warning'
-                        startIcon={<AddCircleOutline />}
-                        onClick={addHandler}
-                    >
+                    <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         抓取
                     </Button>
                 </div>
@@ -135,17 +194,36 @@ function Contract() {
                                     </FormControl>
                                 </Box>
                             )}
-                            <Box>
-                                <FormControl fullWidth>
-                                    <InputLabel id='quarter-label'>季度</InputLabel>
-                                    <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
-                                        {quarterOptions.map((q) => (
-                                            <MenuItem key={q} value={q}>
-                                                {q}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <IconButton size='small' onClick={handlePrevQuarter} disabled={getCurrentQuarterIndex() <= 0}>
+                                        <ArrowBackIos fontSize='small' />
+                                    </IconButton>
+                                    <FormControl fullWidth>
+                                        <InputLabel id='quarter-label'>季度</InputLabel>
+                                        <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
+                                            {quarterOptions.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                    <IconButton size='small' onClick={handleNextQuarter} disabled={getCurrentQuarterIndex() >= quarterOptions.length - 1}>
+                                        <ArrowForwardIos fontSize='small' />
+                                    </IconButton>
+                                </Box>
+                                <Typography
+                                    variant='caption'
+                                    sx={{
+                                        textAlign: 'center',
+                                        mt: 0.5,
+                                        color: 'text.secondary',
+                                        fontSize: '0.7rem',
+                                    }}
+                                >
+                                    {getQuarterDeadline(quarter)}
+                                </Typography>
                             </Box>
                         </div>
                     </div>

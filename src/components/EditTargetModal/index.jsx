@@ -17,7 +17,6 @@ const initValid = {
     initPrice: { valid: true, error: '' },
     createdAt: { valid: true, error: '' },
     sort: { valid: true, error: '' },
-    yield: { valid: true, error: '' },
     averagePE: { valid: true, error: '' },
     CAGR: { valid: true, error: '' },
     deadline: { valid: true, error: '' },
@@ -32,7 +31,6 @@ export default function EditTargetModal(props) {
         initPrice: 0,
         createdAt: '',
         sort: 0,
-        yield: '',
         averagePE: '',
         CAGR: '',
         deadline: '',
@@ -55,13 +53,12 @@ export default function EditTargetModal(props) {
                 initPrice: editData?.initPrice,
                 createdAt: dayjs(editData?.createdAt),
                 sort: editData?.sort,
-                yield: editData?.yield,
                 averagePE: editData?.averagePE,
                 CAGR: editData?.CAGR,
                 deadline: editData?.deadline,
             });
         }
-    }, [editData?.CAGR, editData?.averagePE, editData?.createdAt, editData?.deadline, editData?.initPrice, editData?.rate, editData?.sort, editData?.yield, open]);
+    }, [editData?.CAGR, editData?.averagePE, editData?.createdAt, editData?.deadline, editData?.initPrice, editData?.rate, editData?.sort, open]);
 
     const handlerOk = async () => {
         let data = {
@@ -70,7 +67,6 @@ export default function EditTargetModal(props) {
             initPrice: +addData.initPrice,
             createdAt: addData.createdAt,
             sort: addData.sort,
-            yield: addData.yield.trim(),
             averagePE: addData.averagePE.trim(),
             CAGR: addData.CAGR.trim(),
             deadline: addData.deadline.trim(),
@@ -191,7 +187,7 @@ export default function EditTargetModal(props) {
                 />
                 <TextField
                     margin='dense'
-                    label={'高峰點'}
+                    label={'題材    '}
                     type='text'
                     size='small'
                     disabled={loading}
@@ -205,21 +201,7 @@ export default function EditTargetModal(props) {
                 />
                 <TextField
                     margin='dense'
-                    label={'平均殖利率'}
-                    type='text'
-                    size='small'
-                    disabled={loading}
-                    error={!validation.yield.valid}
-                    helperText={validation.yield.error}
-                    value={addData.yield}
-                    fullWidth
-                    onChange={(e) => {
-                        handleChange('yield', e.target.value);
-                    }}
-                />
-                <TextField
-                    margin='dense'
-                    label={'平均 PE'}
+                    label={'歷史 PE'}
                     type='text'
                     size='small'
                     disabled={loading}

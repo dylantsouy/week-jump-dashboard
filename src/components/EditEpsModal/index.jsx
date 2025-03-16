@@ -12,7 +12,6 @@ export default function EditEpsModal(props) {
     const [loading, setLoading] = useState(false);
     const [addData, setAddData] = useState({
         id: '',
-        eps2023: '',
         eps2024: '',
         revenue2024: '',
         margin2024: '',
@@ -33,7 +32,6 @@ export default function EditEpsModal(props) {
     useEffect(() => {
         if (open) {
             setAddData({
-                eps2023: epsData?.eps?.eps2023 || '',
                 eps2024: epsData?.eps?.eps2024 || '',
                 revenue2024: epsData?.eps?.revenue2024 || '',
                 margin2024: epsData?.eps?.margin2024 || '',
@@ -47,7 +45,6 @@ export default function EditEpsModal(props) {
             });
         }
     }, [
-        epsData?.eps?.eps2023,
         epsData?.eps?.eps2024,
         epsData?.eps?.eps2025,
         epsData?.eps?.eps2026,
@@ -63,7 +60,6 @@ export default function EditEpsModal(props) {
 
     const handlerOk = async () => {
         let eps = {
-            eps2023: addData?.eps2023,
             eps2024: addData?.eps2024,
             revenue2024: addData?.revenue2024,
             margin2024: addData?.margin2024,
@@ -107,25 +103,6 @@ export default function EditEpsModal(props) {
                         <div className='stock-name'>{epsData?.name}</div> <div className='stock-code'>{epsData?.code}</div>
                     </div>
                     <div className='stock-price'>{epsData?.price}</div>
-                </div>
-                <div className='flex_center g-10'>
-                    <TextField
-                        autoFocus
-                        margin='dense'
-                        label={'2023 EPS'}
-                        type='number'
-                        size='small'
-                        InputProps={{ readOnly: !actionPermission }}
-                        style={{ width: '33.33%' }}
-                        disabled={loading}
-                        value={addData.eps2023}
-                        fullWidth
-                        onChange={(e) => {
-                            handleChange('eps2023', e.target.value);
-                        }}
-                    />
-                    <div style={{ width: '33.33%' }}></div>
-                    <div style={{ width: '33.33%' }}></div>
                 </div>
                 <div className='flex_center g-10'>
                     <TextField

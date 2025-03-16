@@ -22,7 +22,6 @@ const initValid = {
     initPrice: { valid: true, error: '' },
     createdAt: { valid: true, error: '' },
     sort: { valid: true, error: '' },
-    yield: { valid: true, error: '' },
     averagePE: { valid: true, error: '' },
     CAGR: { valid: true, error: '' },
     deadline: { valid: true, error: '' },
@@ -33,7 +32,6 @@ const initValue = {
     initPrice: '',
     createdAt: dayjs(),
     sort: '',
-    yield: '',
     averagePE: '',
     CAGR: '',
     deadline: '',
@@ -69,7 +67,6 @@ export default function AddTargetModal(props) {
             initPrice: +addData.initPrice,
             createdAt: addData.createdAt,
             sort: addData.sort,
-            yield: addData.yield.trim(),
             averagePE: addData.averagePE.trim(),
             CAGR: addData.CAGR.trim(),
             deadline: addData.deadline.trim(),
@@ -208,7 +205,7 @@ export default function AddTargetModal(props) {
                         />
                         <TextField
                             margin='dense'
-                            label={'高峰點'}
+                            label={'題材'}
                             type='text'
                             size='small'
                             disabled={loading}
@@ -222,21 +219,7 @@ export default function AddTargetModal(props) {
                         />
                         <TextField
                             margin='dense'
-                            label={'平均殖利率'}
-                            type='text'
-                            size='small'
-                            disabled={loading}
-                            error={!validation.yield.valid}
-                            helperText={validation.yield.error}
-                            value={addData.yield}
-                            fullWidth
-                            onChange={(e) => {
-                                handleChange('yield', e.target.value);
-                            }}
-                        />
-                        <TextField
-                            margin='dense'
-                            label={'平均 PE'}
+                            label={'歷史 PE'}
                             type='text'
                             size='small'
                             disabled={loading}

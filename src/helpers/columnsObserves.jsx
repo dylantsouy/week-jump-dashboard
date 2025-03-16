@@ -1,8 +1,13 @@
 import { Tooltip } from '@mui/material';
-import { Delete, Edit, RemoveRedEye } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import moment from 'moment';
 import { dateGap, observeReasonMapping, observeTypeMapping, profitHandler } from './format';
 import { RenderCellExpand } from '@/components/RenderCellExpand';
+import { Link } from 'react-router-dom';
+import { Billion, Dog } from '@/assets/icons';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 export const listColumn = (showRecord, deleteHandler, editHandler, actionPermission) => {
     return [
@@ -275,8 +280,17 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             renderCell: (params) => {
                 return (
                     <div className='action'>
-                        <Tooltip title={'觀察明細'} placement='bottom'>
-                            <RemoveRedEye className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
+                        {actionPermission ? (
+                            <Tooltip title={'刪除'} placement='bottom'>
+                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title={'沒有權限'} placement='bottom'>
+                                <Delete className='action-icon disabled mr-2' />
+                            </Tooltip>
+                        )}
+                        <Tooltip title={'動能歷史'} placement='bottom'>
+                            <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
                         </Tooltip>
                         {/* {actionPermission ? (
                             <Tooltip title={'編輯'} placement='bottom'>
@@ -287,15 +301,26 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                                 <Delete className='action-icon disabled mr-2' />
                             </Tooltip>
                         )} */}
-                        {actionPermission ? (
-                            <Tooltip title={'刪除'} placement='bottom'>
-                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title={'沒有權限'} placement='bottom'>
-                                <Delete className='action-icon disabled mr-2' />
-                            </Tooltip>
-                        )}
+                        <Tooltip title={'合約負債'} placement='bottom'>
+                            <Link target='_blank' to={`https://www.istock.tw/stock/${params?.row?.code}/contract-liability`}>
+                                <ShowChartIcon className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'股權結構'} placement='bottom'>
+                            <Link target='_blank' to={`https://norway.twsthr.info/StockHolders.aspx?stock=${params?.row?.code}`}>
+                                <BarChartIcon className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'財務分析'} placement='bottom'>
+                            <Link target='_blank' to={`https://www.findbillion.com/twstock/${params?.row?.code}/financial_statement`}>
+                                <Billion className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
+                        <Tooltip title={'財報狗'} placement='bottom'>
+                            <Link target='_blank' to={`https://statementdog.com/analysis/${params?.row?.code}`}>
+                                <Dog className='action-icon primary mr-2' />
+                            </Link>
+                        </Tooltip>
                     </div>
                 );
             },
