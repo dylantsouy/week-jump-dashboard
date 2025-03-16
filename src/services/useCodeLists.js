@@ -2,9 +2,9 @@ import { swrFetcher } from './apiSetup';
 import useSWR from 'swr';
 
 const useCodeLists = (props) => {
-    const { open } = props;
+    const { open, codeLists } = props;
 
-    const { data, mutate, isValidating } = useSWR(open && [`/stocks/codes`, {}, 'GET'], swrFetcher, {
+    const { data, mutate, isValidating } = useSWR(open && !codeLists?.length && [`/stocks/codes`, {}, 'GET'], swrFetcher, {
         revalidateOnFocus: false,
     });
 

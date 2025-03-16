@@ -12,7 +12,9 @@ import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CalculateModal from '../CalculateModal';
+import FastSearchModal from '../FastSearchModal';
 import { useState } from 'react';
+import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -20,6 +22,7 @@ export default function Sidebar() {
     const { enqueueSnackbar } = useSnackbar();
     const { setAuthValue, ifRememberAccount } = useAuthStore();
     const [showCalculateDialog, setShowCalculateDialog] = useState(false);
+    const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
     const { pathname } = useLocation();
 
     const sidebarItems = [
@@ -56,6 +59,13 @@ export default function Sidebar() {
         setShowCalculateDialog(false);
     };
 
+    const showFastSearchHandler = () => {
+        setShowFastSearchDialog(true);
+    };
+
+    const handleCloseFastSearch = () => {
+        setShowFastSearchDialog(false);
+    };
     const goHandler = (r) => {
         navigate(r);
     };
@@ -95,6 +105,13 @@ export default function Sidebar() {
                 ))}
             </div>
             <div className='logout'>
+                <Tooltip title='快速查詢' placement='left'>
+                    <div className='sidebar-item mb-3' onClick={showFastSearchHandler}>
+                        <IconButton color='white'>
+                            <ScreenSearchDesktopIcon />
+                        </IconButton>
+                    </div>
+                </Tooltip>
                 <Tooltip title='計算工具' placement='left'>
                     <div className='sidebar-item mb-3' onClick={showCalculateHandler}>
                         <IconButton color='white'>
@@ -111,6 +128,7 @@ export default function Sidebar() {
                 </Tooltip>
             </div>
             <CalculateModal open={showCalculateDialog} handleClose={handleCloseCalculate} />
+            <FastSearchModal open={showFastSearchDialog} handleClose={handleCloseFastSearch} />
         </div>
     );
 }
