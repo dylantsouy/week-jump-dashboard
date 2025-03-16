@@ -116,6 +116,12 @@ export default function FastSearchModal(props) {
     const handleCloseRun = () => {
         setShowRunDialog(false);
     };
+
+    const filterOptions = (options, { inputValue }) => {
+        const filterValue = inputValue.toLowerCase();
+        return options.filter((option) => option.code.toLowerCase().includes(filterValue) || option.name.toLowerCase().includes(filterValue));
+    };
+
     return (
         <Dialog className='FastSearchModal' open={open} onClose={handleClose} maxWidth='sm' fullWidth>
             <DialogTitle>{'快速查詢'}</DialogTitle>
@@ -123,7 +129,8 @@ export default function FastSearchModal(props) {
                 <Autocomplete
                     id='stock-search'
                     options={stockOptions}
-                    getOptionLabel={(option) => option.code}
+                    getOptionLabel={(option) => `${option.name} (${option.code})`}
+                    filterOptions={filterOptions}
                     renderOption={(props, option) => (
                         <Box component='li' sx={{ img: { mr: 2, flexShrink: 0 } }} {...props}>
                             {option.name} ({option.code})

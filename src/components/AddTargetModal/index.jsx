@@ -144,6 +144,10 @@ export default function AddTargetModal(props) {
         }
     };
 
+    const filterOptions = (options, { inputValue }) => {
+        const filterValue = inputValue.toLowerCase();
+        return options.filter((option) => option.code.toLowerCase().includes(filterValue) || option.name.toLowerCase().includes(filterValue));
+    };
     return (
         <Dialog className='editDialog EditTargetModal' open={open} onClose={() => (loading ? () => {} : handleClose())}>
             <DialogTitle>
@@ -163,6 +167,7 @@ export default function AddTargetModal(props) {
                             size='small'
                             options={stockOptions}
                             getOptionLabel={(option) => option.code}
+                            filterOptions={filterOptions}
                             renderOption={(props, option) => (
                                 <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                                     {option.name} ({option.code})
