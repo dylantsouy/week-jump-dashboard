@@ -10,7 +10,7 @@ import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import { AddCircleOutline, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import useContracts from '@/services/useContracts';
-import { addContracts } from '@/services/contractApi';
+import { addContracts, bulkDeleteContract } from '@/services/contractApi';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
@@ -20,13 +20,16 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { localeText } from '@/helpers/datagridHelper';
 import CustomToolbar from '@/components/CustomToolbar';
+import { useStore } from '@/stores/store';
 
 function Contract() {
     const dashboardRef = useRef(null);
+    const { setModalHandler, closeModal, setValue } = useStore();
     const actionPermission = usePermissionCheck('action');
     const [range, setRange] = useState(50);
     const [rank, setRank] = useState('percentage');
     const { enqueueSnackbar } = useSnackbar();
+    const [selectedRows, setSelectedRows] = useState([]);
 
     // 獲取當前日期和設置預設季度
     const getDefaultQuarter = () => {
@@ -92,7 +95,7 @@ function Contract() {
 
     const [quarter, setQuarter] = useState(getDefaultQuarter());
     const quarterOptions = getQuarterOptions();
-    const { isLoading: loading, data: listData, updatedDate } = useContracts({ range, rank, quarter });
+    const { isLoading: loading, data: listData, updatedDate, mutate } = useContracts({ range, rank, quarter });
 
     // 查找當前季度在選項中的索引
     const getCurrentQuarterIndex = () => {
@@ -140,6 +143,50 @@ function Contract() {
         setQuarter(event.target.value);
     };
 
+    const handleCloseDelete = (refresh) => {
+        closeModal(false);
+        if (refresh) {
+            mutate();
+        }
+    };
+    const confirmBulkDelete = async () => {
+        setValue('modalLoading', true);
+        try {
+            let result = await bulkDeleteContract(selectedRows);
+            const { success, deletedCount } = result;
+            if (success) {
+                enqueueSnackbar(`成功刪除 ${deletedCount} 條記錄`, { variant: 'success' });
+                handleCloseDelete(true);
+                setSelectedRows([]);
+                setValue('modalLoading', false);
+            }
+        } catch (err) {
+            enqueueSnackbar('批量刪除失敗', { variant: 'error' });
+            setValue('modalLoading', false);
+        }
+    };
+    const bulkDeleteHandler = () => {
+        if (selectedRows.length === 0) {
+            enqueueSnackbar('請至少選擇一條記錄', { variant: 'warning' });
+            return;
+        }
+
+        setModalHandler({
+            func: confirmBulkDelete,
+            text: (
+                <div className='delete-content'>
+                    <div className='delete-title'>
+                        <div className='stock-set'>
+                            <div className='stock-name-code'>
+                                <div className='stock-name'>{'請確認是否刪除'}</div>
+                                <div className='stock-code mr-1'>{`已選擇 ${selectedRows.length} 條跳空紀錄`}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ),
+        });
+    };
     return (
         <div className='Dashboard'>
             <div className='dashboard-header'>
@@ -157,6 +204,9 @@ function Contract() {
                 <div className='title-btns'>
                     <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         抓取
+                    </Button>
+                    <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                        批量刪除 ({selectedRows.length})
                     </Button>
                 </div>
                 <div className='date'>
@@ -235,10 +285,15 @@ function Contract() {
                         className='table-root'
                         ref={dashboardRef}
                         rows={loading ? [] : listData || []}
-                        getRowId={(row) => row.code}
+                        getRowId={(row) => row.ContractsRecords?.id}
                         columns={listColumn()}
                         loading={loading}
-                        disableSelectionOnClick
+                        checkboxSelection
+                        disableSelectionOnClick={false}
+                        onSelectionModelChange={(newSelectionModel) => {
+                            setSelectedRows(newSelectionModel);
+                        }}
+                        selectionModel={selectedRows}
                         componentsProps={{
                             pagination: {
                                 labelRowsPerPage: '每頁筆數:',

@@ -6,3 +6,9 @@ export const addContracts = async (props) => {
 
     return data;
 };
+
+export const bulkDeleteContract = async (ids) => {
+    const data = await fetcher(`/bulkDeleteContract`, 'DELETE', { ids });
+
+    return data;
+};

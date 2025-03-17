@@ -29,14 +29,13 @@ export const deleteJumpRecord = async (id) => {
     return data;
 };
 
-export const updateIfClosed = async () => {
-    const data = await fetcher(`/jumps/updateIfClosed`, 'POST');
+export const bulkDeleteJumps = async (ids) => {
+    const data = await fetcher(`/bulkDeleteJumps`, 'DELETE', { ids });
 
     return data;
 };
-
-export const bulkDelete = async (ids) => {
-    const data = await fetcher(`/bulkDelete/jumpRecords`, 'DELETE', { ids });
+export const updateIfClosed = async () => {
+    const data = await fetcher(`/jumps/updateIfClosed`, 'POST');
 
     return data;
 };

@@ -12,7 +12,7 @@ import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import useJumps from '@/services/useJumps';
 import JumpModal from '@/components/JumpModal';
-import { addJumps, deleteJump, updateIfClosed } from '@/services/jumpApi';
+import { addJumps, bulkDeleteJumps, deleteJump, updateIfClosed } from '@/services/jumpApi';
 import DateRange from '@/components/DateRange';
 import dayjs from 'dayjs';
 import Switch from '@mui/material/Switch';
@@ -28,6 +28,7 @@ function Jump() {
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
     const [loadingAction, setLoadingAction] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
     const [selectDate, setSelectDate] = useState(new Date());
@@ -38,6 +39,44 @@ function Jump() {
     const { enqueueSnackbar } = useSnackbar();
     const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate, closed: checked });
 
+    const confirmBulkDelete = async () => {
+        setValue('modalLoading', true);
+        try {
+            let result = await bulkDeleteJumps(selectedRows);
+            const { success, deletedCount } = result;
+            if (success) {
+                enqueueSnackbar(`成功刪除 ${deletedCount} 條記錄`, { variant: 'success' });
+                handleCloseDelete(true);
+                setSelectedRows([]);
+                setValue('modalLoading', false);
+            }
+        } catch (err) {
+            enqueueSnackbar('批量刪除失敗', { variant: 'error' });
+            setValue('modalLoading', false);
+        }
+    };
+    const bulkDeleteHandler = () => {
+        if (selectedRows.length === 0) {
+            enqueueSnackbar('請至少選擇一條記錄', { variant: 'warning' });
+            return;
+        }
+
+        setModalHandler({
+            func: confirmBulkDelete,
+            text: (
+                <div className='delete-content'>
+                    <div className='delete-title'>
+                        <div className='stock-set'>
+                            <div className='stock-name-code'>
+                                <div className='stock-name'>{'請確認是否刪除'}</div>
+                                <div className='stock-code mr-1'>{`已選擇 ${selectedRows.length} 條跳空紀錄`}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ),
+        });
+    };
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
@@ -178,6 +217,9 @@ function Jump() {
                     <Button className='act' disabled={!actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
                         檢查補上
                     </Button>
+                    <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                        批量刪除 ({selectedRows.length})
+                    </Button>
                 </div>
                 <div className='date'>
                     <DateRange
@@ -206,7 +248,12 @@ function Jump() {
                         getRowId={(row) => row.id}
                         columns={listColumn(showRecord, deleteHandler, actionPermission, range)}
                         loading={loading}
-                        disableSelectionOnClick
+                        checkboxSelection
+                        disableSelectionOnClick={false}
+                        onSelectionModelChange={(newSelectionModel) => {
+                            setSelectedRows(newSelectionModel);
+                        }}
+                        selectionModel={selectedRows}
                         componentsProps={{
                             pagination: {
                                 labelRowsPerPage: '每頁筆數:',
