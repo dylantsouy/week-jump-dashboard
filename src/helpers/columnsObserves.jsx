@@ -122,7 +122,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             },
         },
         {
-            field: 'observe1Count',
+            field: 'typeCount1',
             headerName: '冷水',
             renderHeader: () => (
                 <div className='column_center_center'>
@@ -135,10 +135,14 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             cellClassName: 'border-cell',
             minWidth: 50,
             width: 50,
-            renderCell: RenderCellExpand,
+            valueGetter: (params) => params?.row?.typeCount?.[1],
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.params?.row?.typeCount?.[1];
+            },
         },
         {
-            field: 'observe2Count',
+            field: 'typeCount2',
             headerName: '溫水',
             renderHeader: () => (
                 <div className='column_center_center'>
@@ -151,10 +155,14 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             cellClassName: 'border-cell',
             minWidth: 50,
             width: 50,
-            renderCell: RenderCellExpand,
+            valueGetter: (params) => params?.row?.typeCount?.[2],
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.params?.row?.typeCount?.[2];
+            },
         },
         {
-            field: 'observe3Count',
+            field: 'typeCount3',
             headerName: '熱水',
             renderHeader: () => (
                 <div className='column_center_center'>
@@ -167,7 +175,11 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             cellClassName: 'border-cell',
             minWidth: 50,
             width: 50,
-            renderCell: RenderCellExpand,
+            valueGetter: (params) => params?.row?.typeCount?.[3],
+            renderCell: (params) => {
+                const { row } = params;
+                return row?.params?.row?.typeCount?.[3];
+            },
         },
         {
             field: 'latestDate',
