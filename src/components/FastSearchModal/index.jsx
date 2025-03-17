@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, TextField, Box } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, TextField, Box, useMediaQuery } from '@mui/material';
 import DialogTitle from '@mui/material/DialogTitle';
 import Autocomplete from '@mui/material/Autocomplete';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import { Link } from 'react-router-dom';
 import './styles.scss';
 import useCodeLists from '@/services/useCodeLists';
@@ -16,9 +15,11 @@ import { useSnackbar } from 'notistack';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import ObserveRecordModal from '../ObserveRecordModal';
 import useObserve from '@/services/useObserve';
+import CoPresentIcon from '@mui/icons-material/CoPresent';
+import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 
 export default function FastSearchModal(props) {
-    const { open, handleClose } = props;
+    const { open, handleClose, propsStock } = props;
     const { codeLists, setValue } = useStore();
     const { enqueueSnackbar } = useSnackbar();
     const [skipFetch, setSkipFetch] = useState(false);
@@ -28,6 +29,7 @@ export default function FastSearchModal(props) {
     const [showRunDialog, setShowRunDialog] = useState(false);
     const [showRunData, setShowRunData] = useState(null);
     const [selectedStock, setSelectedStock] = useState(null);
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
 
     // Check if we already have codeLists in the store
     useEffect(() => {
@@ -53,9 +55,13 @@ export default function FastSearchModal(props) {
 
     useEffect(() => {
         if (open) {
-            setSelectedStock(null);
+            if (propsStock) {
+                setSelectedStock(propsStock);
+            } else {
+                setSelectedStock(null);
+            }
         }
-    }, [open]);
+    }, [propsStock, open]);
 
     const stockOptions = codeLists || [];
     const loading = codeListsLoading && codeLists.length === 0;
@@ -121,9 +127,14 @@ export default function FastSearchModal(props) {
         const filterValue = inputValue.toLowerCase();
         return options.filter((option) => option.code.toLowerCase().includes(filterValue) || option.name.toLowerCase().includes(filterValue));
     };
-
+    const closeHandler = () => {
+        if (isSmallScreen) {
+            return;
+        }
+        handleClose();
+    };
     return (
-        <Dialog className='FastSearchModal' open={open} onClose={handleClose} maxWidth='sm' fullWidth>
+        <Dialog className='FastSearchModal' open={open} onClose={closeHandler} maxWidth='md' fullWidth>
             <DialogTitle>{'快速查詢'}</DialogTitle>
             <DialogContent>
                 <Autocomplete
@@ -136,6 +147,7 @@ export default function FastSearchModal(props) {
                             {option.name} ({option.code})
                         </Box>
                     )}
+                    value={selectedStock}
                     loading={loading}
                     onChange={(event, value) => setSelectedStock(value)}
                     renderInput={(params) => (
@@ -170,14 +182,16 @@ export default function FastSearchModal(props) {
 
                         <Button
                             variant='contained'
-                            startIcon={<BarChartIcon />}
+                            startIcon={<ReduceCapacityIcon />}
                             component={Link}
                             target='_blank'
                             to={`https://norway.twsthr.info/StockHolders.aspx?stock=${selectedStock?.code}`}
                         >
                             股權結構
                         </Button>
-
+                        <Button variant='contained' startIcon={<CoPresentIcon />} component={Link} target='_blank' to={`https://agdstock.club/iic/${selectedStock?.code}`}>
+                            法說會
+                        </Button>
                         <Button
                             variant='contained'
                             startIcon={<Billion />}
@@ -187,7 +201,6 @@ export default function FastSearchModal(props) {
                         >
                             財務分析
                         </Button>
-
                         <Button variant='contained' startIcon={<Dog />} component={Link} target='_blank' to={`https://statementdog.com/analysis/${selectedStock?.code}`}>
                             財報狗
                         </Button>

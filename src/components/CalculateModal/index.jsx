@@ -53,7 +53,7 @@ export default function CalculateModal(props) {
     }, [open]);
 
     return (
-        <Dialog className='editDialog CalculateModal' open={open} onClose={() => handleClose()}>
+        <Dialog className='editDialog CalculateModal' open={open}>
             <DialogTitle>
                 <span className='title-text'>{'計算工具'}</span>
             </DialogTitle>

@@ -1,0 +1,11 @@
+.RichEditor {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+    .label{
+        color: $gray_text;
+        font-size: 13px;
+        margin: 0 0 1px 12px;
+    }
+    .ql-editor { min-height: 100px }
+}

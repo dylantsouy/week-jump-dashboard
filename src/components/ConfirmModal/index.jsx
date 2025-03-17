@@ -20,7 +20,6 @@ export default function ConfirmModal() {
         <Modal
             className='confirmModal-wrapper'
             open={showModal}
-            onClose={handleClose}
             closeAfterTransition
             slots={{ backdrop: Backdrop }}
             slotprops={{
@@ -34,7 +33,7 @@ export default function ConfirmModal() {
                     <div className='content'>{modalText}</div>
                     {!noModalBtn && (
                         <div className='footer'>
-                            <ConfirmButton loading={modalLoading} variant='contained' onClick={handlerOk} text={"確認"} />
+                            <ConfirmButton loading={modalLoading} variant='contained' onClick={handlerOk} text={'確認'} />
                             <Button onClick={() => handleClose()} role='cancelButton'>
                                 取消
                             </Button>

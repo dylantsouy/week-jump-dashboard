@@ -248,8 +248,8 @@ function Jump() {
                         getRowId={(row) => row.id}
                         columns={listColumn(showRecord, deleteHandler, actionPermission, range)}
                         loading={loading}
-                        checkboxSelection
-                        disableSelectionOnClick={false}
+                        checkboxSelection={actionPermission}
+                        disableSelectionOnClick
                         onSelectionModelChange={(newSelectionModel) => {
                             setSelectedRows(newSelectionModel);
                         }}

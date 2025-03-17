@@ -2,13 +2,10 @@ import { RenderCellExpand } from '@/components/RenderCellExpand';
 import { rateMapping, profitHandler, dateGap, generateMeasureDate, calculateTargetPriceRange, targetColorHandler } from './format';
 import { Tooltip } from '@mui/material';
 import { Delete, Edit, MonetizationOn } from '@mui/icons-material';
-import { Billion, Dog } from '@/assets/icons';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { Link } from 'react-router-dom';
 import MessageIcon from '@mui/icons-material/Message';
+import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
 
-export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, actionPermission) => {
+export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, actionPermission, showFastSearchHandler) => {
     return [
         {
             field: 'name',
@@ -119,8 +116,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             align: 'center',
             headerAlign: 'center',
             cellClassName: 'border-cell',
-            minWidth: 98,
-            width: 98,
+            minWidth: 120,
+            width: 120,
             renderCell: RenderCellExpand,
         },
         {
@@ -433,6 +430,9 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             renderCell: (params) => {
                 return (
                     <div className='action'>
+                        <Tooltip title={'快速查詢'} placement='bottom'>
+                            <ScreenSearchDesktopIcon className='action-icon mr-2' onClick={() => showFastSearchHandler({ code: params?.row?.code, name: params?.row?.name })} />
+                        </Tooltip>
                         {actionPermission ? (
                             <Tooltip title={'編輯基本'} placement='bottom'>
                                 <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
@@ -451,26 +451,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                                 <Delete className='action-icon disabled mr-2' />
                             </Tooltip>
                         )}
-                        <Tooltip title={'合約負債'} placement='bottom'>
-                            <Link target='_blank' to={`https://www.istock.tw/stock/${params?.row?.code}/contract-liability`}>
-                                <ShowChartIcon className='action-icon primary mr-2' />
-                            </Link>
-                        </Tooltip>
-                        <Tooltip title={'股權結構'} placement='bottom'>
-                            <Link target='_blank' to={`https://norway.twsthr.info/StockHolders.aspx?stock=${params?.row?.code}`}>
-                                <BarChartIcon className='action-icon primary mr-2' />
-                            </Link>
-                        </Tooltip>
-                        <Tooltip title={'財務分析'} placement='bottom'>
-                            <Link target='_blank' to={`https://www.findbillion.com/twstock/${params?.row?.code}/financial_statement`}>
-                                <Billion className='action-icon primary mr-2' />
-                            </Link>
-                        </Tooltip>
-                        <Tooltip title={'財報狗'} placement='bottom'>
-                            <Link target='_blank' to={`https://statementdog.com/analysis/${params?.row?.code}`}>
-                                <Dog className='action-icon primary mr-2' />
-                            </Link>
-                        </Tooltip>
                     </div>
                 );
             },

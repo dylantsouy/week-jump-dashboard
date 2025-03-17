@@ -10,6 +10,14 @@
         text-transform: none;
     }
     .buttons{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        @media screen and (max-width: 700px) {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        @media screen and (max-width: 360px) {
+            grid-template-columns: 1fr 1fr;
+        }
         .MuiButtonBase-root{
             white-space: nowrap;
             flex: 1;

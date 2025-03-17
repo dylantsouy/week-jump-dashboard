@@ -1,7 +1,7 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsContracts';
 import { DataGrid } from '@mui/x-data-grid';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import NoResultsOverlay from '@/components/NoResultsOverlay';
 import DataGridSkeleton from '@/components/DataGridSkeleton';
 import { Button, Skeleton, Typography, IconButton } from '@mui/material';
@@ -61,7 +61,7 @@ function Contract() {
     const getQuarterOptions = () => {
         const now = new Date();
         const currentYear = now.getFullYear();
-        const yearList = [currentYear - 2, currentYear - 1, currentYear]; // 包含前年、去年、今年
+        const yearList = [currentYear - 1, currentYear]; // 包含去年、今年
         const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
 
         return yearList.flatMap((year) =>
@@ -179,7 +179,7 @@ function Contract() {
                         <div className='stock-set'>
                             <div className='stock-name-code'>
                                 <div className='stock-name'>{'請確認是否刪除'}</div>
-                                <div className='stock-code mr-1'>{`已選擇 ${selectedRows.length} 條跳空紀錄`}</div>
+                                <div className='stock-code mr-1'>{`已選擇 ${selectedRows.length} 條合約紀錄`}</div>
                             </div>
                         </div>
                     </div>
@@ -288,8 +288,8 @@ function Contract() {
                         getRowId={(row) => row.ContractsRecords?.id}
                         columns={listColumn()}
                         loading={loading}
-                        checkboxSelection
-                        disableSelectionOnClick={false}
+                        checkboxSelection={actionPermission}
+                        disableSelectionOnClick
                         onSelectionModelChange={(newSelectionModel) => {
                             setSelectedRows(newSelectionModel);
                         }}

@@ -20,6 +20,7 @@ import NewsModal from '@/components/NewsModal';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import { localeText } from '@/helpers/datagridHelper';
+import FastSearchModal from '@/components/FastSearchModal';
 
 function Dashboard() {
     const dashboardRef = useRef(null);
@@ -32,10 +33,21 @@ function Dashboard() {
     const [showNewsDialog, setShowNewsDialog] = useState(false);
     const [editData, setEditData] = useState(null);
     const [epsData, setEpsData] = useState(null);
+    const [propsStock, setPropsStock] = useState('');
     const [newsData, setNewsData] = useState(null);
+    const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
     const { isLoading: loading, data: listData, mutate, updatedDate } = useTargets();
+
+    const showFastSearchHandler = (stock) => {
+        setPropsStock(stock);
+        setShowFastSearchDialog(true);
+    };
+
+    const handleCloseFastSearch = () => {
+        setShowFastSearchDialog(false);
+    };
 
     const editHandler = (e) => {
         setEditData(e);
@@ -164,7 +176,7 @@ function Dashboard() {
                         ref={dashboardRef}
                         rows={loading ? [] : listData || []}
                         getRowId={(row) => row.id}
-                        columns={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission)}
+                        columns={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission, showFastSearchHandler)}
                         loading={loading}
                         disableSelectionOnClick
                         componentsProps={{
@@ -193,6 +205,7 @@ function Dashboard() {
             <EditTargetModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
             <EditEpsModal actionPermission={actionPermission} open={showEpsDialog} handleClose={handleCloseEps} epsData={epsData} />
             <NewsModal actionPermission={actionPermission} open={showNewsDialog} handleClose={handleCloseNews} targetData={newsData} />
+            <FastSearchModal open={showFastSearchDialog} handleClose={handleCloseFastSearch} propsStock={propsStock} />
         </div>
     );
 }
