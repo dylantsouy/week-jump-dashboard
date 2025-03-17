@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, TextField, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import './styles.scss';
@@ -29,6 +29,7 @@ export default function CalculateModal(props) {
     const [bondPrice, setBondPrice] = useState(0);
     const [transferPrice, setTransferPrice] = useState(0);
     const [value, setValue] = useState(0);
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -52,8 +53,14 @@ export default function CalculateModal(props) {
         }
     }, [open]);
 
+    const closeHandler = () => {
+        if (isSmallScreen) {
+            return;
+        }
+        handleClose();
+    };
     return (
-        <Dialog className='editDialog CalculateModal' open={open}>
+        <Dialog className='editDialog CalculateModal' open={open} onClose={closeHandler}>
             <DialogTitle>
                 <span className='title-text'>{'計算工具'}</span>
             </DialogTitle>
