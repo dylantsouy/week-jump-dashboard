@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import NoData from '../NoData';
 import { addObserve } from '@/services/observe';
+import { useStore } from '@/stores/store';
 
 const initValid = {
     stockCode: { valid: true, error: '' },
@@ -22,13 +23,6 @@ const initValid = {
     date: { valid: true, error: '' },
 };
 
-const initValue = {
-    price: '',
-    reason: '列入觀察',
-    date: dayjs(),
-    stockCode: null,
-    type: 1,
-};
 const reasonOptions = {
     1: ['列入觀察', '等待資金'],
     2: ['偏多整理', '帶量發動'],
@@ -37,9 +31,37 @@ const reasonOptions = {
 export default function AddObserveModal(props) {
     const { open, handleClose } = props;
     const { enqueueSnackbar } = useSnackbar();
-    const { isLoading: codeListsLoading, data: codeLists } = useCodeLists({ open });
+    const { codeLists, setValue } = useStore();
+    const [skipFetch, setSkipFetch] = useState(false);
+    // Check if we already have codeLists in the store
+    useEffect(() => {
+        if (open && codeLists && codeLists.length > 0) {
+            setSkipFetch(true);
+        } else if (open) {
+            setSkipFetch(false);
+        }
+    }, [open, codeLists]);
+
+    // Only fetch when open and we don't have data already
+    const { isLoading: codeListsLoading, data } = useCodeLists({
+        open: open && !skipFetch,
+    });
+    // Update store with fetched data if needed
+    useEffect(() => {
+        if (data && !skipFetch && (!codeLists || codeLists.length === 0)) {
+            setValue('codeLists', data);
+        }
+    }, [data, skipFetch, setValue, codeLists]);
+    const stockOptions = codeLists || [];
+    const isCodeListsLoading = codeListsLoading && (!codeLists || codeLists.length === 0);
     const [loading, setLoading] = useState(false);
-    const [addData, setAddData] = useState(initValue);
+    const [addData, setAddData] = useState({
+        price: '',
+        reason: '列入觀察',
+        date: dayjs(),
+        stockCode: null,
+        type: 1,
+    });
     const [validation, setValidation] = useState(initValid);
 
     const handleChange = (key, value) => {
@@ -51,9 +73,22 @@ export default function AddObserveModal(props) {
         setValidation(initValid);
     };
 
+    const handleChangeStockCode = (value) => {
+        setAddData((prevState) => ({
+            ...prevState,
+            stockCode: value?.code,
+            price: value?.price,
+        }));
+        setValidation(initValid);
+    };
+
     useEffect(() => {
         if (open) {
-            setAddData(initValue);
+            setAddData((prevState) => ({
+                ...prevState,
+                price: '',
+                stockCode: null,
+            }));
         }
     }, [open]);
 
@@ -112,7 +147,7 @@ export default function AddObserveModal(props) {
                 <span className='title-text'>{'新增觀察目標'}</span>
             </DialogTitle>
             <DialogContent>
-                {!codeLists?.length ? (
+                {!stockOptions.length && !isCodeListsLoading ? (
                     <div className='nodata'>
                         <NoData text='請先獲取股票清單' />
                     </div>
@@ -138,11 +173,11 @@ export default function AddObserveModal(props) {
                             </Select>
                         </FormControl>
                         <Autocomplete
-                            disabled={codeListsLoading}
+                            disabled={isCodeListsLoading}
                             disablePortal
                             id='stockCode-lists'
                             size='small'
-                            options={codeLists || []}
+                            options={stockOptions}
                             getOptionLabel={(option) => option.code}
                             filterOptions={filterOptions}
                             renderOption={(props, option) => (
@@ -150,7 +185,7 @@ export default function AddObserveModal(props) {
                                     {option.name} ({option.code})
                                 </Box>
                             )}
-                            onChange={(event, value) => handleChange('stockCode', value ? +value.code : null)}
+                            onChange={(event, value) => handleChangeStockCode(value ? value : null)}
                             renderInput={(params) => <TextField {...params} required error={!validation.stockCode.valid} helperText={validation.stockCode.error} label='代碼' />}
                         />
                         <TextField
@@ -181,7 +216,7 @@ export default function AddObserveModal(props) {
                 <div className='mt-2 mb-2' />
             </DialogContent>
             <DialogActions>
-                {codeLists?.length ? <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} /> : ''}
+                {stockOptions.length ? <ConfirmButton variant='contained' onClick={handlerOk} loading={loading} text={'確認'} /> : ''}
                 <Button disabled={loading} onClick={() => handleClose()}>
                     取消
                 </Button>

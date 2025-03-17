@@ -201,7 +201,7 @@ function Dashboard() {
                     />
                 </div>
             </div>
-            <AddTargetModal open={showAddDialog} handleClose={handleCloseAdd} />
+            <AddTargetModal open={showAddDialog} handleClose={handleCloseAdd} listData={listData} />
             <EditTargetModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
             <EditEpsModal actionPermission={actionPermission} open={showEpsDialog} handleClose={handleCloseEps} epsData={epsData} />
             <NewsModal actionPermission={actionPermission} open={showNewsDialog} handleClose={handleCloseNews} targetData={newsData} />

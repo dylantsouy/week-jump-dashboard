@@ -40,7 +40,7 @@ const initValue = {
 };
 
 export default function AddTargetModal(props) {
-    const { open, handleClose } = props;
+    const { open, handleClose, listData } = props;
     const { enqueueSnackbar } = useSnackbar();
     const { codeLists, setValue } = useStore();
     const [skipFetch, setSkipFetch] = useState(false);
@@ -79,6 +79,16 @@ export default function AddTargetModal(props) {
             ...prevState,
             [type]: e,
         }));
+    };
+
+    const handleChangeStockCode = (value) => {
+        setAddData((prevState) => ({
+            ...prevState,
+            stockCode: value?.code,
+            initPrice: value?.price,
+            sort: listData?.length + 1,
+        }));
+        setValidation(initValid);
     };
 
     useEffect(() => {
@@ -173,7 +183,7 @@ export default function AddTargetModal(props) {
                                     {option.name} ({option.code})
                                 </Box>
                             )}
-                            onChange={(event, value) => handleChange('stockCode', value ? +value.code : null)}
+                            onChange={(event, value) => handleChangeStockCode(value ? value : null)}
                             renderInput={(params) => <TextField {...params} required error={!validation.stockCode.valid} helperText={validation.stockCode.error} label='代碼' />}
                         />
                         <TextField

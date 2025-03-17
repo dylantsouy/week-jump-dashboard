@@ -137,14 +137,14 @@ function Observe() {
                 </div>
                 <div className='date'>
                     <ToggleButtonGroup color='primary' value={type} exclusive onChange={handleTypeChange} aria-label='Platform'>
-                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={1}>
-                            冷水
+                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
+                            熱水
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={2}>
                             溫水
                         </ToggleButton>
-                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
-                            熱水
+                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={1}>
+                            冷水
                         </ToggleButton>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={4}>
                             全部

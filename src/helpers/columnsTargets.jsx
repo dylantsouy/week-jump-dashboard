@@ -38,7 +38,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             renderCell: (params) => {
                 const { row } = params;
                 return (
-                    <a href={`https://agdstock.club/stock/${row?.code}`} target='_blank' rel='noreferrer'>
+                    <a href={`https://tw.stock.yahoo.com/quote/${row?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
                         {row?.code}
                     </a>
                 );
