@@ -4,14 +4,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import NoResultsOverlay from '@/components/NoResultsOverlay';
 import DataGridSkeleton from '@/components/DataGridSkeleton';
-import { Button, Skeleton } from '@mui/material';
+import { Button, Skeleton, TextField, IconButton, Tooltip } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutline, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
 import useObserves from '@/services/useObserves';
 import ObserveRecordModal from '@/components/ObserveRecordModal';
 import { deleteObserve } from '@/services/observe';
@@ -24,17 +24,70 @@ function Observe() {
     const dashboardRef = useRef(null);
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
-    const [loadingAction, setLoadingAction] = useState(false);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
     const [type, setType] = useState(2);
+
+    // 獲取今天的日期，格式為 YYYY-MM-DD
+    const getTodayDate = () => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    };
+    const todayDate = getTodayDate();
+
+    const [date, setDate] = useState(getTodayDate());
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [editData, setEditData] = useState(null);
     const [showAddDialog, setShowAddDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
 
-    const { isLoading: loading, data: listData, mutate, updatedDate } = useObserves({ type });
+    // 修改 useObserves 的調用，只在 usingDate 為真時加入 date 參數
+    const {
+        isLoading: loading,
+        data: listData,
+        mutate,
+        updatedDate,
+    } = useObserves({
+        type,
+        date: date,
+    });
 
+    // 處理日期變更的函數
+    const handleDateChange = (e) => {
+        const newDate = e.target.value;
+        // 檢查新日期是否大於今天
+        if (newDate > todayDate) {
+            enqueueSnackbar('不能選擇未來的日期', { variant: 'warning' });
+            return;
+        }
+        setDate(newDate);
+    };
+
+    // 日期前進一天
+    const handleNextDay = () => {
+        const currentDate = new Date(date);
+        currentDate.setDate(currentDate.getDate() + 1);
+        setDate(currentDate.toISOString().split('T')[0]);
+    };
+
+    // 日期後退一天
+    const handlePrevDay = () => {
+        const currentDate = new Date(date);
+        currentDate.setDate(currentDate.getDate() - 1);
+        setDate(currentDate.toISOString().split('T')[0]);
+    };
+
+    // 返回今天
+    const handleToday = () => {
+        setDate(todayDate);
+    };
+
+    // 清除日期過濾
+    const handleClearDate = () => {
+        setDate('');
+    };
+
+    // 其他原有的函數保持不變
     const editHandler = (e) => {
         setEditData(e);
         setShowEditDialog(true);
@@ -73,6 +126,7 @@ function Observe() {
             mutate();
         }
     };
+    const isToday = date === todayDate;
 
     const handleTypeChange = (e) => {
         const newRange = +e.target.value;
@@ -131,11 +185,46 @@ function Observe() {
             </div>
             <div className='title-action'>
                 <div className='title-btns'>
-                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
+                    <Button className='act' disabled={!actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         新增
                     </Button>
                 </div>
                 <div className='date'>
+                    <div className='date-picker-container' style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+                        <Tooltip title='前一天'>
+                            <IconButton size='small' onClick={handlePrevDay} disabled={loading}>
+                                <ArrowBackIos fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                        <TextField
+                            id='date'
+                            label={'觀察日期'}
+                            type='date'
+                            value={date}
+                            onChange={handleDateChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            inputProps={{
+                                max: todayDate,
+                            }}
+                            size='small'
+                            disabled={loading}
+                        />
+                        <Tooltip title={isToday ? '已是今天' : '後一天'}>
+                            <IconButton size='small' onClick={handleNextDay} disabled={loading || isToday}>
+                                <ArrowForwardIos fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                        <div>
+                            <Button variant='outlined' size='small' onClick={handleToday} disabled={loading || isToday} style={{ marginRight: '8px' }}>
+                                今天
+                            </Button>
+                            <Button variant='outlined' size='small' onClick={handleClearDate} disabled={loading} color='secondary'>
+                                不過濾
+                            </Button>
+                        </div>
+                    </div>
                     <ToggleButtonGroup color='primary' value={type} exclusive onChange={handleTypeChange} aria-label='Platform'>
                         <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
                             熱水
