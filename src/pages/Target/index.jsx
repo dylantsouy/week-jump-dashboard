@@ -1,10 +1,6 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsTargets';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
-import NoResultsOverlay from '@/components/NoResultsOverlay';
-import DataGridSkeleton from '@/components/DataGridSkeleton';
-import CustomToolbar from '@/components/CustomToolbar';
+import { useState } from 'react';
 import { Button, Skeleton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import useTargets from '@/services/useTargets';
@@ -19,11 +15,10 @@ import EditEpsModal from '@/components/EditEpsModal';
 import NewsModal from '@/components/NewsModal';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
-import { localeText } from '@/helpers/datagridHelper';
 import FastSearchModal from '@/components/FastSearchModal';
+import DataGrid from '@/components/DataGrid';
 
-function Dashboard() {
-    const dashboardRef = useRef(null);
+function Target() {
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
     const [showEditDialog, setShowEditDialog] = useState(false);
@@ -149,58 +144,33 @@ function Dashboard() {
     };
 
     return (
-        <div className='Dashboard'>
-            <div className='dashboard-header'>
-                <div className='header-left'>
-                    <div className='title'>觀察清單</div>
-                </div>
-                <div className='header-right'>
-                    <div className='title'>
-                        收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
-                        <span className='mins'>(每日 14:00 後更新)</span>
-                    </div>
+        <div className='TablePage Target'>
+            <div className='title'>
+                <div className='title-left'>觀察清單</div>
+                <div className='title-right'>
+                    收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
+                    <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
-            <div className='title-switch'>
-                <Button disabled={loadingAction || !actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
-                    新增
-                </Button>
-                <Button disabled={!actionPermission} className='ml-2' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
-                    更新收盤價
-                </Button>
+            <div className='title-action'>
+                <div className='action-left'></div>
+                <div className='action-right'></div>
             </div>
-            <div className='container'>
-                <div className='table-wrapper'>
-                    <DataGrid
-                        className='table-root'
-                        ref={dashboardRef}
-                        rows={loading ? [] : listData || []}
-                        getRowId={(row) => row.id}
-                        columns={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission, showFastSearchHandler)}
-                        loading={loading}
-                        disableSelectionOnClick
-                        componentsProps={{
-                            pagination: {
-                                labelRowsPerPage: '每頁筆數:',
-                            },
-                        }}
-                        localeText={localeText()}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: 'sort', sort: 'asc' }],
-                            },
-                        }}
-                        density='compact'
-                        sortingOrder={['desc', 'asc']}
-                        components={{
-                            Toolbar: CustomToolbar,
-                            NoRowsOverlay: NoResultsOverlay,
-                            NoResultsOverlay: NoResultsOverlay,
-                            LoadingOverlay: DataGridSkeleton,
-                        }}
-                    />
+            <DataGrid
+                select={true}
+                isLoading={loading}
+                rowData={listData}
+                columnDefs={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission, showFastSearchHandler)}
+            >
+                <div>
+                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
+                        新增
+                    </Button>
+                    <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+                        更新收盤價
+                    </Button>
                 </div>
-            </div>
+            </DataGrid>
             <AddTargetModal open={showAddDialog} handleClose={handleCloseAdd} listData={listData} />
             <EditTargetModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
             <EditEpsModal actionPermission={actionPermission} open={showEpsDialog} handleClose={handleCloseEps} epsData={epsData} />
@@ -210,4 +180,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Target;

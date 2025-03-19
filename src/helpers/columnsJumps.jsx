@@ -4,275 +4,234 @@ import { Delete } from '@mui/icons-material';
 import moment from 'moment';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ActionButtons from '@/components/ActionButtons';
+import MultiLineHeader from './MultiLineHeader';
 
 export const listColumn = (showRecord, deleteHandler, actionPermission, range) => {
     return [
         {
             field: 'name',
-            headerName: '名稱',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 80,
-            width: 80,
-            valueGetter: (params) => params.row.Stock.name,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.Stock?.name;
+            headerName: '股票',
+            width: 100,
+            valueGetter: (params) => `${params.data.Stock.name} ${params.data.Stock.code}`,
+            pinned: 'left',
+            cellRenderer: (params) => {
+                const { data } = params;
+                return (
+                    <div className='column_center_center'>
+                        <div>{data?.Stock?.name}</div>
+                        <a href={`https://tw.stock.yahoo.com/quote/${data?.Stock?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
+                            {data?.Stock?.code}
+                        </a>
+                    </div>
+                );
             },
         },
         {
             field: 'industry',
             headerName: '產業',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
-            valueGetter: (params) => params.row.Stock.industry,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.Stock?.industry;
-            },
-        },
-        {
-            field: 'code',
-            headerName: '代碼',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
-            width: 50,
-            valueGetter: (params) => params.row.Stock.code,
-            renderCell: (params) => {
-                const { row } = params;
-                return (
-                    <a href={`https://tw.stock.yahoo.com/quote/${row?.Stock?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
-                        {row?.Stock?.code}
-                    </a>
-                );
+            width: 90,
+            valueGetter: (params) => params.data.Stock.industry,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.Stock?.industry;
             },
         },
         {
             field: 'jumpCount_w',
             headerName: '周跳次數',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>周跳</div>
-                    <div>未補 / 總數</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 78,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>周跳</div>
+                        <div>未補 / 總數</div>
+                    </div>
+                ),
+            },
             width: 78,
-            valueGetter: (params) => params.row.details.jumpCount_w,
-            renderCell: (params) => {
-                const { row } = params;
-                return `${row?.details.jumpCount_w - row?.details.jumpCount_w_c} / ${row?.details.jumpCount_w}`;
+            valueGetter: (params) => params.data.details.jumpCount_w,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return `${data?.details.jumpCount_w - data?.details.jumpCount_w_c} / ${data?.details.jumpCount_w}`;
             },
         },
         {
             field: 'jumpCount_m',
             headerName: '月跳次數',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>月跳</div>
-                    <div>未補 / 總數</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 78,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>月跳</div>
+                        <div>未補 / 總數</div>
+                    </div>
+                ),
+            },
             width: 78,
-            valueGetter: (params) => params.row.details.jumpCount_m,
-            renderCell: (params) => {
-                const { row } = params;
-                return `${row?.details.jumpCount_m - row?.details.jumpCount_m_c} / ${row?.details.jumpCount_m}`;
+            valueGetter: (params) => params.data.details.jumpCount_m,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return `${data?.details.jumpCount_m - data?.details.jumpCount_m_c} / ${data?.details.jumpCount_m}`;
             },
         },
         {
             field: 'newestDate',
             headerName: '最新跳空',
-            renderHeader: () =>
-                range === 3 ? (
-                    <div className='column_center_center'>
-                        <div>最新</div>
-                        <div>跳空</div>
-                    </div>
-                ) : (
-                    <div className='column_center_center'>日期</div>
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <>
+                        {range === 3 ? (
+                            <div className='column_center_center'>
+                                <div>最新</div>
+                                <div>跳空</div>
+                            </div>
+                        ) : (
+                            <div className='column_center_center'>日期</div>
+                        )}
+                    </>
                 ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 80,
+            },
             width: 80,
-            valueGetter: (params) => params.row.newest.date,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.newest?.date ? moment(row?.newest?.date).format('YYYY/MM/DD') : '';
+            valueGetter: (params) => params.data.newest.date,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.newest?.date ? moment(data?.newest?.date).format('YYYY/MM/DD') : '';
             },
         },
         {
             field: 'newestType',
             headerName: '類型',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
             width: 56,
-            valueGetter: (params) => params.row.newest.type,
-            renderCell: (params) => {
-                const { row } = params;
-                return jumpTypeMapping(row?.newest?.type);
+            valueGetter: (params) => params.data.newest.type,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return jumpTypeMapping(data?.newest?.type);
             },
         },
         {
             field: 'jumpPrice',
             headerName: '開盤價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
-            valueGetter: (params) => params.row.newest.jumpPrice,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.newest?.jumpPrice;
+            width: 80,
+            valueGetter: (params) => params.data.newest.jumpPrice,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.newest?.jumpPrice;
             },
         },
         {
             field: 'price',
             headerName: '現價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
-            valueGetter: (params) => params.row.Stock.price,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.Stock?.price;
+            width: 80,
+            valueGetter: (params) => params.data.Stock.price,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.Stock?.price;
             },
         },
         {
             field: 'newestLastPrice',
             headerName: '補上價格',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>補上</div>
-                    <div>價格</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
-            valueGetter: (params) => params.row.newest.lastPrice,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.newest?.lastPrice;
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>補上</div>
+                        <div>價格</div>
+                    </div>
+                ),
+            },
+            width: 80,
+            valueGetter: (params) => params.data.newest.lastPrice,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.newest?.lastPrice;
             },
         },
         {
             field: 'gap',
             headerName: '距離',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
             width: 60,
             valueGetter: (params) => {
-                const { row } = params;
-                const gap = +(+row?.Stock?.price - row?.newest?.lastPrice).toFixed(2);
+                const { data } = params;
+                const gap = +(+data?.Stock?.price - data?.newest?.lastPrice).toFixed(2);
                 return gap > 0 ? gap : '-';
             },
-            renderCell: (params) => {
-                const { row } = params;
-                const gap = +(+row?.Stock?.price - row?.newest?.lastPrice).toFixed(2);
+            cellRenderer: (params) => {
+                const { data } = params;
+                const gap = +(+data?.Stock?.price - data?.newest?.lastPrice).toFixed(2);
                 return gap > 0 ? gap : '-';
             },
         },
         {
             field: 'gapPercent',
             headerName: '距離 %',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>距離</div>
-                    <div>(%)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>距離</div>
+                        <div>(%)</div>
+                    </div>
+                ),
+            },
             width: 60,
             valueGetter: (params) => {
-                const { row } = params;
-                const gap = Math.round((((row?.Stock?.price - row?.newest?.lastPrice) / row?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
+                const { data } = params;
+                const gap = Math.round((((data?.Stock?.price - data?.newest?.lastPrice) / data?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
                 return gap;
             },
-            renderCell: (params) => {
-                const { row } = params;
-                const gap = Math.round((((row?.Stock?.price - row?.newest?.lastPrice) / row?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
+            cellRenderer: (params) => {
+                const { data } = params;
+                const gap = Math.round((((data?.Stock?.price - data?.newest?.lastPrice) / data?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
                 return gap > 0 ? profitHandler(gap) : '-';
             },
         },
         {
             field: 'newestClosed',
             headerName: '是否補上',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>是否</div>
-                    <div>補上</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>是否</div>
+                        <div>補上</div>
+                    </div>
+                ),
+            },
             width: 60,
-            valueGetter: (params) => params.row.newest.closed,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.newest?.closed ? <span className='bad-text bold'>是</span> : <span className='best-text bold'>否</span>;
+            valueGetter: (params) => params.data.newest.closed,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.newest?.closed ? <span className='bad-text bold'>是</span> : <span className='best-text bold'>否</span>;
             },
         },
         {
             field: 'lastValue',
             headerName: '前量',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
             width: 60,
             valueGetter: (params) => {
-                const { row } = params;
-                return row?.newest?.lastValue;
+                const { data } = params;
+                return data?.newest?.lastValue;
             },
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.newest?.lastValue;
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.newest?.lastValue;
             },
         },
         {
             field: 'action',
-            filterable: false,
-            sortable: false,
-            disableExport: true,
             headerName: '操作',
-            minWidth: 130,
+            minWidth: 280,
             flex: 1,
-            renderCell: (params) => {
+            headerClass: 'left',
+            cellClass: 'left',
+            cellRenderer: (params) => {
                 return (
                     <div className='action'>
                         {actionPermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
-                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />
+                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
@@ -280,9 +239,9 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
                             </Tooltip>
                         )}
                         <Tooltip title={'跳空歷史'} placement='bottom'>
-                            <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
+                            <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.data)} />
                         </Tooltip>
-                        <ActionButtons code={params?.row?.code} />
+                        <ActionButtons code={params?.data?.code} />
                     </div>
                 );
             },

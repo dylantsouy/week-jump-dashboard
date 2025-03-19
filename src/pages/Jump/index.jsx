@@ -1,9 +1,6 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsJumps';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
-import NoResultsOverlay from '@/components/NoResultsOverlay';
-import DataGridSkeleton from '@/components/DataGridSkeleton';
+import { useState } from 'react';
 import { Button, Skeleton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
@@ -18,16 +15,13 @@ import dayjs from 'dayjs';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { AddCircleOutline } from '@mui/icons-material';
-import CustomToolbar from '@/components/CustomToolbar';
-import { localeText } from '@/helpers/datagridHelper';
 import { createStock } from '@/services/stockApi';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
+import DataGrid from '@/components/DataGrid';
 
 function Jump() {
-    const dashboardRef = useRef(null);
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
-    const [loadingAction, setLoadingAction] = useState(false);
     const [selectedRows, setSelectedRows] = useState([]);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
@@ -42,7 +36,8 @@ function Jump() {
     const confirmBulkDelete = async () => {
         setValue('modalLoading', true);
         try {
-            let result = await bulkDeleteJumps(selectedRows);
+            let ids = selectedRows?.map((e) => e?.id);
+            let result = await bulkDeleteJumps(ids);
             const { success, deletedCount } = result;
             if (success) {
                 enqueueSnackbar(`成功刪除 ${deletedCount} 條記錄`, { variant: 'success' });
@@ -82,32 +77,26 @@ function Jump() {
     };
 
     const addHandler = async () => {
-        setLoadingAction(true);
         try {
             let result = await addJumps({ range, startDate });
             const { success } = result;
             if (success) {
                 enqueueSnackbar('抓取成功', { variant: 'success' });
-                setLoadingAction(false);
             }
         } catch (err) {
             enqueueSnackbar('抓取失敗', { variant: 'error' });
-            setLoadingAction(false);
         }
     };
 
     const checkHandler = async () => {
-        setLoadingAction(true);
         try {
             let result = await updateIfClosed({ range, startDate });
             const { success } = result;
             if (success) {
                 enqueueSnackbar('檢查成功', { variant: 'success' });
-                setLoadingAction(false);
             }
         } catch (err) {
             enqueueSnackbar('檢查失敗', { variant: 'error' });
-            setLoadingAction(false);
         }
     };
 
@@ -180,34 +169,27 @@ function Jump() {
     };
 
     const refreshHandler = async () => {
-        setLoadingAction(true);
         try {
             let result = await createStock();
             const { success } = result;
             if (success) {
                 enqueueSnackbar('更新成功', { variant: 'success' });
-                setLoadingAction(false);
             }
         } catch (err) {
             enqueueSnackbar('更新失敗', { variant: 'error' });
-            setLoadingAction(false);
         }
     };
     return (
-        <div className='Dashboard'>
-            <div className='dashboard-header'>
-                <div className='header-left'>
-                    <div className='title'>跳空清單</div>
-                </div>
-                <div className='header-right'>
-                    <div className='title'>
-                        收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
-                        <span className='mins'>(每日 14:00 後更新)</span>
-                    </div>
+        <div className='TablePage Jump'>
+            <div className='title'>
+                <div className='title-left'>跳空清單</div>
+                <div className='title-right'>
+                    收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
+                    <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
             <div className='title-action'>
-                <div className='title-btns'>
+                <div className='action-left'>
                     <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         抓取
                     </Button>
@@ -221,7 +203,7 @@ function Jump() {
                         批量刪除 ({selectedRows.length})
                     </Button>
                 </div>
-                <div className='date'>
+                <div className='action-right'>
                     <DateRange
                         loading={loading}
                         selectDate={selectDate}
@@ -239,43 +221,15 @@ function Jump() {
                     </div>
                 </div>
             </div>
-            <div className='container'>
-                <div className='table-wrapper'>
-                    <DataGrid
-                        className='table-root'
-                        ref={dashboardRef}
-                        rows={loading ? [] : listData || []}
-                        getRowId={(row) => row.id}
-                        columns={listColumn(showRecord, deleteHandler, actionPermission, range)}
-                        loading={loading}
-                        checkboxSelection={actionPermission}
-                        disableSelectionOnClick
-                        onSelectionModelChange={(newSelectionModel) => {
-                            setSelectedRows(newSelectionModel);
-                        }}
-                        selectionModel={selectedRows}
-                        componentsProps={{
-                            pagination: {
-                                labelRowsPerPage: '每頁筆數:',
-                            },
-                        }}
-                        localeText={localeText()}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: 'gapPercent', sort: 'desc' }],
-                            },
-                        }}
-                        density='compact'
-                        sortingOrder={['desc', 'asc']}
-                        components={{
-                            Toolbar: CustomToolbar,
-                            NoRowsOverlay: NoResultsOverlay,
-                            NoResultsOverlay: NoResultsOverlay,
-                            LoadingOverlay: DataGridSkeleton,
-                        }}
-                    />
-                </div>
-            </div>
+            <DataGrid
+                ifShowSelect={true}
+                setSelectedRows={setSelectedRows}
+                isLoading={loading}
+                rowData={listData}
+                columnDefs={listColumn(showRecord, deleteHandler, actionPermission, range)}
+            >
+                <div></div>
+            </DataGrid>
             <JumpModal loading={loading} actionPermission={actionPermission} open={showRecordDialog} handleClose={handleCloseRecord} recordData={recordData} mutate={mutate} />
         </div>
     );

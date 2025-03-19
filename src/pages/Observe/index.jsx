@@ -1,9 +1,6 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsObserves';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
-import NoResultsOverlay from '@/components/NoResultsOverlay';
-import DataGridSkeleton from '@/components/DataGridSkeleton';
+import { useState } from 'react';
 import { Button, Skeleton, TextField, IconButton, Tooltip } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useStore } from '@/stores/store';
@@ -17,11 +14,9 @@ import ObserveRecordModal from '@/components/ObserveRecordModal';
 import { deleteObserve } from '@/services/observe';
 import AddObserveModal from '@/components/AddObserveModal';
 import EditObserveModal from '@/components/EditObserveModal';
-import { localeText } from '@/helpers/datagridHelper';
-import CustomToolbar from '@/components/CustomToolbar';
+import DataGrid from '@/components/DataGrid';
 
 function Observe() {
-    const dashboardRef = useRef(null);
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
     const [showRecordDialog, setShowRecordDialog] = useState(false);
@@ -34,6 +29,9 @@ function Observe() {
         return today.toISOString().split('T')[0];
     };
     const todayDate = getTodayDate();
+
+    // 設定最小允許日期為 2025-03-16
+    const minDate = '2025-03-16';
 
     const [date, setDate] = useState(getTodayDate());
     const [showEditDialog, setShowEditDialog] = useState(false);
@@ -60,6 +58,11 @@ function Observe() {
             enqueueSnackbar('不能選擇未來的日期', { variant: 'warning' });
             return;
         }
+        // 檢查新日期是否小於最小允許日期
+        if (newDate < minDate) {
+            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'warning' });
+            return;
+        }
         setDate(newDate);
     };
 
@@ -67,14 +70,22 @@ function Observe() {
     const handleNextDay = () => {
         const currentDate = new Date(date);
         currentDate.setDate(currentDate.getDate() + 1);
-        setDate(currentDate.toISOString().split('T')[0]);
+        const newDate = currentDate.toISOString().split('T')[0];
+        if (newDate <= todayDate) {
+            setDate(newDate);
+        }
     };
 
     // 日期後退一天
     const handlePrevDay = () => {
         const currentDate = new Date(date);
         currentDate.setDate(currentDate.getDate() - 1);
-        setDate(currentDate.toISOString().split('T')[0]);
+        const newDate = currentDate.toISOString().split('T')[0];
+        if (newDate >= minDate) {
+            setDate(newDate);
+        } else {
+            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'warning' });
+        }
     };
 
     // 返回今天
@@ -127,6 +138,7 @@ function Observe() {
         }
     };
     const isToday = date === todayDate;
+    const isMinDate = date === minDate;
 
     const handleTypeChange = (e) => {
         const newRange = +e.target.value;
@@ -171,28 +183,25 @@ function Observe() {
     };
 
     return (
-        <div className='Observe'>
-            <div className='dashboard-header'>
-                <div className='header-left'>
-                    <div className='title'>動能清單</div>
-                </div>
-                <div className='header-right'>
-                    <div className='title'>
-                        收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
-                        <span className='mins'>(每日 14:00 後更新)</span>
-                    </div>
+        <div className='TablePage Observe'>
+            <div className='title'>
+                <div className='title-left'>動能清單</div>
+
+                <div className='title-right'>
+                    收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
+                    <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
             <div className='title-action'>
-                <div className='title-btns'>
+                <div className='action-left'>
                     <Button className='act' disabled={!actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         新增
                     </Button>
                 </div>
-                <div className='date'>
+                <div className='action-right'>
                     <div className='date-picker-container' style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-                        <Tooltip title='前一天'>
-                            <IconButton size='small' onClick={handlePrevDay} disabled={loading}>
+                        <Tooltip title={isMinDate ? '已到可選最早日期' : '前一天'}>
+                            <IconButton size='small' onClick={handlePrevDay} disabled={loading || isMinDate}>
                                 <ArrowBackIos fontSize='small' />
                             </IconButton>
                         </Tooltip>
@@ -207,6 +216,7 @@ function Observe() {
                             }}
                             inputProps={{
                                 max: todayDate,
+                                min: minDate,
                             }}
                             size='small'
                             disabled={loading}
@@ -241,38 +251,9 @@ function Observe() {
                     </ToggleButtonGroup>
                 </div>
             </div>
-            <div className='container'>
-                <div className='table-wrapper'>
-                    <DataGrid
-                        className='table-root'
-                        ref={dashboardRef}
-                        rows={loading ? [] : listData || []}
-                        getRowId={(row) => row.id}
-                        columns={listColumn(showRecord, deleteHandler, editHandler, actionPermission)}
-                        loading={loading}
-                        disableSelectionOnClick
-                        componentsProps={{
-                            pagination: {
-                                labelRowsPerPage: '每頁筆數:',
-                            },
-                        }}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: 'latestDate', sort: 'desc' }],
-                            },
-                        }}
-                        localeText={localeText()}
-                        density='compact'
-                        sortingOrder={['desc', 'asc']}
-                        components={{
-                            Toolbar: CustomToolbar,
-                            NoRowsOverlay: NoResultsOverlay,
-                            NoResultsOverlay: NoResultsOverlay,
-                            LoadingOverlay: DataGridSkeleton,
-                        }}
-                    />
-                </div>
-            </div>
+            <DataGrid rowData={listData} columnDefs={listColumn(showRecord, deleteHandler, editHandler, actionPermission)} isLoading={loading}>
+                <div></div>
+            </DataGrid>
             <AddObserveModal open={showAddDialog} handleClose={handleCloseAdd} />
             <EditObserveModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
             <ObserveRecordModal

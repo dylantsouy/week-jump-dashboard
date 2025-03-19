@@ -5,100 +5,71 @@ import { dateGap, observeReasonMapping, observeTypeMapping, profitHandler } from
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ActionButtons from '@/components/ActionButtons';
+import MultiLineHeader from './MultiLineHeader';
 
 export const listColumn = (showRecord, deleteHandler, editHandler, actionPermission) => {
     return [
         {
             field: 'name',
-            headerName: '名稱',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 80,
-            width: 80,
-            renderCell: RenderCellExpand,
-        },
-        {
-            field: 'industry',
-            headerName: '產業',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 70,
-            width: 70,
-            renderCell: RenderCellExpand,
-        },
-        {
-            field: 'code',
-            headerName: '代碼',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
-            width: 50,
-            valueGetter: (params) => params.row.code,
-            renderCell: (params) => {
-                const { row } = params;
+            headerName: '股票',
+            width: 100,
+            valueGetter: (params) => `${params.data.name} ${params.data.code}`,
+            pinned: 'left',
+            cellRenderer: (params) => {
+                const { data } = params;
                 return (
-                    <a href={`https://tw.stock.yahoo.com/quote/${row?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
-                        {row?.code}
-                    </a>
+                    <div className='column_center_center'>
+                        <div>{data?.name}</div>
+                        <a href={`https://tw.stock.yahoo.com/quote/${data?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
+                            {data?.code}
+                        </a>
+                    </div>
                 );
             },
         },
         {
+            field: 'industry',
+            headerName: '產業',
+            width: 80,
+            cellRenderer: RenderCellExpand,
+        },
+        {
             field: 'initPrice',
             headerName: '初始價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
-            renderCell: RenderCellExpand,
+            width: 80,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'price',
             headerName: '收盤價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
-            valueGetter: (params) => params.row.price,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.price;
+            width: 80,
+            valueGetter: (params) => params.data.price,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.price;
             },
         },
         {
             field: 'profit',
             headerName: '損益',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: (params) => {
-                const { row } = params;
-                const profit = Math.round((((row?.price - row?.initPrice) / row?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
+            width: 70,
+            cellRenderer: (params) => {
+                const { data } = params;
+                const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
                 return profitHandler(profit);
             },
         },
         {
             field: 'createdAt',
             headerName: '首次觀察',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 100,
             width: 100,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.createdAt ? moment(row?.createdAt).format('YYYY/MM/DD') : '';
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.createdAt ? moment(data?.createdAt).format('YYYY/MM/DD') : '';
             },
             valueGetter: (params) => {
-                const { row } = params;
-                return row?.createdAt ? moment(row?.createdAt).format('YYYY/MM/DD') : '';
+                const { data } = params;
+                return data?.createdAt ? moment(data?.createdAt).format('YYYY/MM/DD') : '';
             },
         },
         {
@@ -110,75 +81,72 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>(天)</div>
                 </div>
             ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
             width: 56,
             editable: false,
-            renderCell: (params) => {
-                const { row } = params;
-                return dateGap(row?.createdAt);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return dateGap(data?.createdAt);
+            },
+            valueGetter: (params) => {
+                const { data } = params;
+                return dateGap(data?.createdAt);
             },
         },
         {
             field: 'typeCount1',
             headerName: '冷水',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>冷水</div>
-                    <div>(次)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>冷水</div>
+                        <div>(次)</div>
+                    </div>
+                ),
+            },
             width: 50,
-            valueGetter: (params) => params?.row?.typeCount?.[1],
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.params?.row?.typeCount?.[1];
+            valueGetter: (params) => params?.data?.typeCount?.[1],
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.typeCount?.[1];
             },
         },
         {
             field: 'typeCount2',
             headerName: '溫水',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>溫水</div>
-                    <div>(次)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>溫水</div>
+                        <div>(次)</div>
+                    </div>
+                ),
+            },
             width: 50,
-            valueGetter: (params) => params?.row?.typeCount?.[2],
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.params?.row?.typeCount?.[2];
+            valueGetter: (params) => params?.data?.typeCount?.[2],
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.typeCount?.[2];
             },
         },
         {
             field: 'typeCount3',
             headerName: '熱水',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>熱水</div>
-                    <div>(次)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>熱水</div>
+                        <div>(次)</div>
+                    </div>
+                ),
+            },
             width: 50,
-            valueGetter: (params) => params?.row?.typeCount?.[3],
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.params?.row?.typeCount?.[3];
+            valueGetter: (params) => params?.data?.typeCount?.[3],
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.typeCount?.[3];
             },
         },
         {
@@ -190,15 +158,14 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>觀察</div>
                 </div>
             ),
-            cellClassName: 'border-cell',
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 100,
             width: 100,
-            valueGetter: (params) => params.row.latestRecord.date,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.latestRecord?.date ? moment(row?.latestRecord?.date).format('YYYY/MM/DD') : '';
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.latestRecord?.date ? moment(data?.latestRecord?.date).format('YYYY/MM/DD') : '';
+            },
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.latestRecord?.date ? moment(data?.latestRecord?.date).format('YYYY/MM/DD') : '';
             },
         },
         {
@@ -210,14 +177,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>類別</div>
                 </div>
             ),
-            cellClassName: 'border-cell',
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 60,
             width: 60,
-            renderCell: (params) => {
-                const { row } = params;
-                return observeTypeMapping(row?.latestRecord?.type);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return observeTypeMapping(data?.latestRecord?.type);
             },
         },
         {
@@ -229,14 +192,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>位階</div>
                 </div>
             ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'cell-wrap border-cell',
-            minWidth: 150,
             width: 150,
-            renderCell: (params) => {
-                const { row } = params;
-                return observeReasonMapping(row?.latestRecord?.reason);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return observeReasonMapping(data?.latestRecord?.reason);
             },
         },
         {
@@ -248,14 +207,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>價格</div>
                 </div>
             ),
-            cellClassName: 'border-cell',
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 60,
-            width: 60,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.latestRecord?.price;
+            width: 80,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.latestRecord?.price;
             },
         },
         {
@@ -267,31 +222,26 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>損益</div>
                 </div>
             ),
-            cellClassName: 'border-cell',
-            align: 'center',
-            headerAlign: 'center',
-            minWidth: 58,
-            width: 58,
-            renderCell: (params) => {
-                const { row } = params;
-                const profit = Math.round((((row?.price - row?.latestRecord?.price) / row?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
+            width: 70,
+            cellRenderer: (params) => {
+                const { data } = params;
+                const profit = Math.round((((data?.price - data?.latestRecord?.price) / data?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
                 return profitHandler(profit);
             },
         },
         {
             field: 'action',
-            filterable: false,
-            sortable: false,
-            disableExport: true,
             headerName: '操作',
-            minWidth: 130,
+            minWidth: 280,
             flex: 1,
-            renderCell: (params) => {
+            headerClass: 'left',
+            cellClass: 'left',
+            cellRenderer: (params) => {
                 return (
                     <div className='action'>
                         {actionPermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
-                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />
+                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
@@ -299,18 +249,18 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                             </Tooltip>
                         )}
                         <Tooltip title={'動能歷史'} placement='bottom'>
-                            <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.row)} />
+                            <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.data)} />
                         </Tooltip>
                         {/* {actionPermission ? (
                             <Tooltip title={'編輯'} placement='bottom'>
-                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
+                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
                                 <Delete className='action-icon disabled mr-2' />
                             </Tooltip>
                         )} */}
-                        <ActionButtons code={params?.row?.code} />
+                        <ActionButtons code={params?.data?.code} />
                     </div>
                 );
             },

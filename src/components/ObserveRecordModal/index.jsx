@@ -1,23 +1,19 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import './styles.scss';
 import Divider from '@mui/material/Divider';
 import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
-import ModalSkeleton from '../ModalSkeleton';
-import DataGridSkeleton from '../DataGridSkeleton';
-import { DataGrid } from '@mui/x-data-grid';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import { listColumn } from '@/helpers/columnsObservesRecord';
-import NoResultsText from '../NoResultsText';
 import useObservesRecords from '@/services/useObservesRecords';
 import { deleteObserveRecord } from '@/services/observe';
 import EditObserveRecordModal from '../EditObserveRecordModal';
+import DataGrid from '../DataGrid';
 
 export default function ObserveRecordModal(props) {
     const actionPermission = usePermissionCheck('action');
-    const dashboardRef = useRef(null);
     const { open, handleClose, recordData, mutate } = props;
     const { setModalHandler, closeModal, setValue } = useStore();
     const [showEditDialog, setShowEditDialog] = useState(false);
@@ -92,45 +88,14 @@ export default function ObserveRecordModal(props) {
                     </div>
                     <div className='stock-price'>{recordData?.price}</div>
                 </div>
-                {loading ? (
-                    <ModalSkeleton />
-                ) : (
-                    <div className='datagrid-wrapper'>
-                        <div className='datagrid-set'>
-                            <div className='container'>
-                                <div className='table-wrapper'>
-                                    <DataGrid
-                                        className='table-root'
-                                        ref={dashboardRef}
-                                        rows={loading ? [] : data || []}
-                                        getRowId={(row) => row.id}
-                                        columns={listColumn(deleteHandler, editHandler, actionPermission, recordData)}
-                                        loading={loading}
-                                        disableSelectionOnClick
-                                        componentsProps={{
-                                            pagination: {
-                                                labelRowsPerPage: '每頁筆數:',
-                                            },
-                                        }}
-                                        initialState={{
-                                            sorting: {
-                                                sortModel: [{ field: 'date', sort: 'desc' }],
-                                            },
-                                        }}
-                                        density='compact'
-                                        sortingOrder={['desc', 'asc']}
-                                        components={{
-                                            NoRowsOverlay: NoResultsText,
-                                            NoResultsOverlay: NoResultsText,
-                                            LoadingOverlay: DataGridSkeleton,
-                                        }}
-                                    />
-                                    <Divider />
-                                </div>
-                            </div>
-                        </div>
+                <div className='TablePage datagrid-wrapper'>
+                    <div className='datagrid-set'>
+                        <DataGrid isLoading={loading} rowData={data} columnDefs={listColumn(deleteHandler, editHandler, actionPermission, recordData)}>
+                            <div></div>
+                        </DataGrid>
+                        <Divider />
                     </div>
-                )}
+                </div>
                 <div className='mt-2 mb-2' />
             </DialogContent>
             <DialogActions>

@@ -8,10 +8,10 @@ export default function ModalSkeleton() {
                 .fill(1)
                 .map((e, i) => (
                     <div key={i}>
-                        <Skeleton data-testid='data-grid-skeleton' variant='text' sx={{ my: 1 }} width={100} height={34} />
-                        <Skeleton data-testid='data-grid-skeleton' variant='rectangular' sx={{ my: 1 }} height={16} />
-                        <Skeleton data-testid='data-grid-skeleton' variant='rectangular' sx={{ my: 1 }} height={16} />
-                        <Skeleton data-testid='data-grid-skeleton' variant='rectangular' sx={{ my: 1 }} height={16} />
+                        <Skeleton variant='text' sx={{ my: 1 }} width={100} height={34} />
+                        <Skeleton variant='rectangular' sx={{ my: 1 }} height={16} />
+                        <Skeleton variant='rectangular' sx={{ my: 1 }} height={16} />
+                        <Skeleton variant='rectangular' sx={{ my: 1 }} height={16} />
                     </div>
                 ))}
         </>

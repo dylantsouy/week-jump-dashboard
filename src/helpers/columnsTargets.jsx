@@ -4,107 +4,75 @@ import { Tooltip } from '@mui/material';
 import { Delete, Edit, MonetizationOn } from '@mui/icons-material';
 import MessageIcon from '@mui/icons-material/Message';
 import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
+import MultiLineHeader from './MultiLineHeader';
 
 export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, actionPermission, showFastSearchHandler) => {
     return [
         {
             field: 'name',
-            headerName: '名稱',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 90,
-            width: 90,
-            renderCell: RenderCellExpand,
-        },
-        {
-            field: 'industry',
-            headerName: '產業',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: RenderCellExpand,
-        },
-        {
-            field: 'code',
-            headerName: '代碼',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
-            width: 50,
-            renderCell: (params) => {
-                const { row } = params;
+            headerName: '股票',
+            width: 100,
+            valueGetter: (params) => `${params.data.name} ${params.data.code}`,
+            pinned: 'left',
+            cellRenderer: (params) => {
+                const { data } = params;
                 return (
-                    <a href={`https://tw.stock.yahoo.com/quote/${row?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
-                        {row?.code}
-                    </a>
+                    <div className='column_center_center'>
+                        <div>{data?.name}</div>
+                        <a href={`https://tw.stock.yahoo.com/quote/${data?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
+                            {data?.code}
+                        </a>
+                    </div>
                 );
             },
         },
         {
+            field: 'industry',
+            headerName: '產業',
+            width: 90,
+            cellRenderer: RenderCellExpand,
+        },
+        {
             field: 'rate',
             headerName: '評等',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
-            renderCell: (params) => {
-                const { row } = params;
-                return rateMapping(row?.rate);
+            width: 40,
+            cellRenderer: (params) => {
+                const { data } = params;
+                return rateMapping(data?.rate);
             },
         },
         {
             field: 'initPrice',
             headerName: '觀察價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: RenderCellExpand,
+            width: 80,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'price',
             headerName: '收盤價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: RenderCellExpand,
+            width: 80,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'profit',
             headerName: '損益',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: (params) => {
-                const { row } = params;
-                const profit = Math.round((((row?.price - row?.initPrice) / row?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
+            width: 70,
+            cellRenderer: (params) => {
+                const { data } = params;
+                const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
                 return profitHandler(profit);
             },
         },
         {
             field: 'news',
             headerName: '消息',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
-            width: 50,
+            width: 40,
             editable: false,
-            renderCell: (params) => {
+            cellRenderer: (params) => {
                 return (
                     <div className='action text-center'>
                         <Tooltip title={'看消息'} placement='bottom'>
-                            <MessageIcon className='action-icon' onClick={() => newsHandler(params.row)} />
+                            <MessageIcon className='action-icon' onClick={() => newsHandler(params.data)} />
                         </Tooltip>
                     </div>
                 );
@@ -113,102 +81,98 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'deadline',
             headerName: '題材',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 120,
-            width: 120,
-            renderCell: RenderCellExpand,
+            width: 150,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'eps2024',
             headerName: '2024 EPS',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2024</div>
-                    <div>EPS</div>
-                </div>
-            ),
-            headerClassName: 'eps2024',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2024',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2024</div>
+                        <div>EPS</div>
+                    </div>
+                ),
+            },
+            headerClass: 'primary',
+            cellClass: 'primary',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.eps?.eps2024 || '-';
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.eps?.eps2024 || '-';
             },
         },
         {
             field: 'eps2025',
             headerName: '2025 EPS',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2025</div>
-                    <div>EPS</div>
-                </div>
-            ),
-            headerClassName: 'eps2025',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2025',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2025</div>
+                        <div>EPS</div>
+                    </div>
+                ),
+            },
+            headerClass: 'warning',
+            cellClass: 'warning',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.eps?.eps2025 || '-';
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.eps?.eps2025 || '-';
             },
         },
         {
             field: 'pe2025',
             headerName: '2025 PE',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2025</div>
-                    <div>PE</div>
-                </div>
-            ),
-            headerClassName: 'eps2025',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2025',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2025</div>
+                        <div>PE</div>
+                    </div>
+                ),
+            },
+            headerClass: 'warning',
+            cellClass: 'warning',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.price && row?.eps?.eps2025) {
-                    if (row?.eps?.eps2025 < 0) {
+            cellRenderer: (params) => {
+                const { data } = params;
+                if (data?.price && data?.eps?.eps2025) {
+                    if (data?.eps?.eps2025 < 0) {
                         return 'N/A';
                     }
-                    return (row?.price / row?.eps?.eps2025).toFixed(2);
+                    return (data?.price / data?.eps?.eps2025).toFixed(2);
                 }
                 return '-';
             },
         },
         {
-            field: 'grow2025',
+            field: 'gdata2025',
             headerName: '2025 成長',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2025</div>
-                    <div>成長</div>
-                </div>
-            ),
-            headerClassName: 'eps2025',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2025',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2025</div>
+                        <div>成長</div>
+                    </div>
+                ),
+            },
+            headerClass: 'warning',
+            cellClass: 'warning',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2024 && row?.eps?.eps2025) {
-                    if (row?.eps?.eps2024 < 0 && row?.eps?.eps2025 > 0) {
+            cellRenderer: (params) => {
+                const { data } = params;
+                if (data?.eps?.eps2024 && data?.eps?.eps2025) {
+                    if (data?.eps?.eps2024 < 0 && data?.eps?.eps2025 > 0) {
                         return '虧轉盈';
                     }
-                    const growthRate = ((row.eps.eps2025 - row.eps.eps2024) / row.eps.eps2024) * 100;
-                    return growthRate.toFixed(1) + '%';
+                    const gdatathRate = ((data.eps.eps2025 - data.eps.eps2024) / data.eps.eps2024) * 100;
+                    return gdatathRate.toFixed(1) + '%';
                 }
                 return '-';
             },
@@ -216,72 +180,72 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'eps2026',
             headerName: '2026 EPS',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>EPS</div>
-                </div>
-            ),
-            headerClassName: 'eps2026',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2026',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2026</div>
+                        <div>EPS</div>
+                    </div>
+                ),
+            },
+            headerClass: 'primary',
+            cellClass: 'primary',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.eps?.eps2026 || '-';
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.eps?.eps2026 || '-';
             },
         },
         {
             field: 'pe2026',
             headerName: '2026 PE',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>PE</div>
-                </div>
-            ),
-            headerClassName: 'eps2026',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2026',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2026</div>
+                        <div>PE</div>
+                    </div>
+                ),
+            },
+            headerClass: 'primary',
+            cellClass: 'primary',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.price && row?.eps?.eps2026) {
-                    if (row?.eps?.eps2026 < 0) {
+            cellRenderer: (params) => {
+                const { data } = params;
+                if (data?.price && data?.eps?.eps2026) {
+                    if (data?.eps?.eps2026 < 0) {
                         return 'N/A';
                     }
-                    return (row?.price / row?.eps?.eps2026).toFixed(2);
+                    return (data?.price / data?.eps?.eps2026).toFixed(2);
                 }
                 return '-';
             },
         },
         {
-            field: 'grow2026',
+            field: 'gdata2026',
             headerName: '2026 成長',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>成長</div>
-                </div>
-            ),
-            headerClassName: 'eps2026',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'eps2026',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2026</div>
+                        <div>成長</div>
+                    </div>
+                ),
+            },
+            headerClass: 'primary',
+            cellClass: 'primary',
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2025 && row?.eps?.eps2026) {
-                    if (row?.eps?.eps2025 < 0 && row?.eps?.eps2025 > 0) {
+            cellRenderer: (params) => {
+                const { data } = params;
+                if (data?.eps?.eps2025 && data?.eps?.eps2026) {
+                    if (data?.eps?.eps2025 < 0 && data?.eps?.eps2025 > 0) {
                         return '虧轉盈';
                     }
-                    const growthRate = ((row.eps.eps2026 - row.eps.eps2025) / row.eps.eps2025) * 100;
-                    return growthRate.toFixed(1) + '%';
+                    const gdatathRate = ((data.eps.eps2026 - data.eps.eps2025) / data.eps.eps2025) * 100;
+                    return gdatathRate.toFixed(1) + '%';
                 }
                 return '-';
             },
@@ -289,17 +253,13 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'editEps',
             headerName: '營收',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 50,
             width: 50,
             editable: false,
-            renderCell: (params) => {
+            cellRenderer: (params) => {
                 return (
                     <div className='action text-center'>
                         <Tooltip title={'營收明細'} placement='bottom'>
-                            <MonetizationOn className='action-icon' onClick={() => epsHandler(params.row)} />
+                            <MonetizationOn className='action-icon' onClick={() => epsHandler(params.data)} />
                         </Tooltip>
                     </div>
                 );
@@ -308,38 +268,36 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'averagePE',
             headerName: '歷史 PE',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>歷史</div>
-                    <div>PE</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>歷史</div>
+                        <div>PE</div>
+                    </div>
+                ),
+            },
             width: 56,
-            renderCell: RenderCellExpand,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'targetPrice25',
             headerName: '2025股價',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2025</div>
-                    <div>股價</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2025</div>
+                        <div>股價</div>
+                    </div>
+                ),
+            },
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2025 && row?.eps?.eps2025 > 0 && row?.averagePE) {
-                    const now = row?.price;
-                    const targetPrice = calculateTargetPriceRange(row?.eps?.eps2025, row?.averagePE);
+            cellRenderer: (params) => {
+                const { data } = params;
+                if (data?.eps?.eps2025 && data?.eps?.eps2025 > 0 && data?.averagePE) {
+                    const now = data?.price;
+                    const targetPrice = calculateTargetPriceRange(data?.eps?.eps2025, data?.averagePE);
                     return targetColorHandler(now, targetPrice[0], targetPrice[1]);
                 }
                 return '-';
@@ -348,22 +306,21 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'targetPrice26',
             headerName: '2026股價',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>2026</div>
-                    <div>股價</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>2026</div>
+                        <div>股價</div>
+                    </div>
+                ),
+            },
             width: 56,
-            renderCell: (params) => {
-                const { row } = params;
-                if (row?.eps?.eps2026 && row?.eps?.eps2026 > 0 && row?.averagePE) {
-                    const now = row?.price;
-                    const targetPrice = calculateTargetPriceRange(row?.eps?.eps2026, row?.averagePE);
+            cellRenderer: (params) => {
+                const { data } = params;
+                if (data?.eps?.eps2026 && data?.eps?.eps2026 > 0 && data?.averagePE) {
+                    const now = data?.price;
+                    const targetPrice = calculateTargetPriceRange(data?.eps?.eps2026, data?.averagePE);
                     return targetColorHandler(now, targetPrice[0], targetPrice[1]);
                 }
                 return '-';
@@ -372,70 +329,63 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'createdAt',
             headerName: '觀察日期',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 80,
             width: 80,
             editable: false,
-            renderCell: (params) => {
-                const { row } = params;
-                return generateMeasureDate(row?.createdAt);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return generateMeasureDate(data?.createdAt);
             },
         },
         {
             field: 'gap',
             headerName: '過多久',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>過多久</div>
-                    <div>(天)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>過多久</div>
+                        <div>(天)</div>
+                    </div>
+                ),
+            },
             width: 56,
             editable: false,
-            renderCell: (params) => {
-                const { row } = params;
-                return dateGap(row?.createdAt);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return dateGap(data?.createdAt);
             },
         },
         {
             field: 'CAGR',
             headerName: 'CAGR',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>CAGR</div>
-                    <div>(%)</div>
-                </div>
-            ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 54,
+            headerComponent: MultiLineHeader,
+            headerComponentParams: {
+                text: (
+                    <div className='column_center_center'>
+                        <div>CAGR</div>
+                        <div>(%)</div>
+                    </div>
+                ),
+            },
             width: 54,
-            renderCell: RenderCellExpand,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'action',
-            filterable: false,
-            sortable: false,
-            disableExport: true,
             headerName: '操作',
-            minWidth: 130,
+            minWidth: 280,
             flex: 1,
-            renderCell: (params) => {
+            headerClass: 'left',
+            cellClass: 'left',
+            cellRenderer: (params) => {
                 return (
                     <div className='action'>
                         <Tooltip title={'快速查詢'} placement='bottom'>
-                            <ScreenSearchDesktopIcon className='action-icon mr-2' onClick={() => showFastSearchHandler({ code: params?.row?.code, name: params?.row?.name })} />
+                            <ScreenSearchDesktopIcon className='action-icon mr-2' onClick={() => showFastSearchHandler({ code: params?.data?.code, name: params?.data?.name })} />
                         </Tooltip>
                         {actionPermission ? (
                             <Tooltip title={'編輯基本'} placement='bottom'>
-                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
+                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
@@ -444,7 +394,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                         )}
                         {actionPermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
-                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.row)} />
+                                <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>

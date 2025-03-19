@@ -75,9 +75,6 @@ p {
 
 .action {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
     .action-icon {
         cursor: pointer;
         transition: 0.3s !important;
@@ -232,43 +229,43 @@ strong {
     border-radius: 5px;
     font-size: 14px;
     background-color: $primary;
-    svg{
+    svg {
         margin-right: 2px;
         font-size: 18px;
     }
     &.water1 {
-        color:#e1ebef;  
+        color: #e1ebef;
         svg {
             color: #e1ebef;
         }
     }
     &.water2 {
-        color:#7ea2ea;  
+        color: #7ea2ea;
         svg {
             color: #7ea2ea;
         }
     }
     &.water3 {
-        color:#e4d57d;  
+        color: #e4d57d;
         svg {
             color: #e4d57d;
         }
     }
 
     &.water4 {
-        color:#ffc400;  
+        color: #ffc400;
         svg {
             color: #ffc400;
         }
     }
     &.water5 {
-        color:#ff6f1c;  
+        color: #ff6f1c;
         svg {
             color: #ff6f1c;
         }
     }
     &.water6 {
-        color:#f74c4c;  
+        color: #f74c4c;
         svg {
             color: #f74c4c;
         }

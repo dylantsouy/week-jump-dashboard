@@ -2,17 +2,13 @@ import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { useRef } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import './styles.scss';
-import NoData from '../NoData';
 import Divider from '@mui/material/Divider';
 import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
-import ModalSkeleton from '../ModalSkeleton';
 import { deleteJumpRecord } from '@/services/jumpApi';
-import DataGridSkeleton from '../DataGridSkeleton';
-import { DataGrid } from '@mui/x-data-grid';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import { listColumn } from '@/helpers/columnsJumpsRecord';
-import NoResultsText from '../NoResultsText';
+import DataGrid from '../DataGrid';
 
 export default function JumpModal(props) {
     const actionPermission = usePermissionCheck('action');
@@ -64,44 +60,17 @@ export default function JumpModal(props) {
         });
     };
 
-    const content = (data, title, ref) => {
+    const content = (data, title) => {
         return (
-            <div className='datagrid-set'>
+            <div className='TablePage datagrid-set'>
                 <div className='jump-title'>
                     <span className='title-text'>{title}</span>
                     <span className='title-count'>{}</span>
                 </div>
-                <div className='container'>
-                    <div className='table-wrapper'>
-                        <DataGrid
-                            className='table-root'
-                            ref={ref}
-                            rows={loading ? [] : data || []}
-                            getRowId={(row) => row.id}
-                            columns={listColumn(deleteHandler, actionPermission, recordData)}
-                            loading={loading}
-                            disableSelectionOnClick
-                            componentsProps={{
-                                pagination: {
-                                    labelRowsPerPage: '每頁筆數:',
-                                },
-                            }}
-                            initialState={{
-                                sorting: {
-                                    sortModel: [{ field: 'date', sort: 'desc' }],
-                                },
-                            }}
-                            density='compact'
-                            sortingOrder={['desc', 'asc']}
-                            components={{
-                                NoRowsOverlay: NoResultsText,
-                                NoResultsOverlay: NoResultsText,
-                                LoadingOverlay: DataGridSkeleton,
-                            }}
-                        />
-                        <Divider />
-                    </div>
-                </div>
+                <DataGrid isLoading={loading} rowData={data} columnDefs={listColumn(deleteHandler, actionPermission, recordData)}>
+                    <div></div>
+                </DataGrid>
+                <Divider />
             </div>
         );
     };
@@ -118,18 +87,10 @@ export default function JumpModal(props) {
                     </div>
                     <div className='stock-price'>{recordData?.Stock?.price}</div>
                 </div>
-                {loading ? (
-                    <ModalSkeleton />
-                ) : recordData?.JumpsRecords?.length ? (
-                    <div className='datagrid-wrapper'>
-                        {content(recordData?.m, '月跳', dashboardRefm)}
-                        {content(recordData?.w, '周跳', dashboardRefw)}
-                    </div>
-                ) : (
-                    <div className='nodata'>
-                        <NoData text='' />
-                    </div>
-                )}
+                <div className='datagrid-wrapper'>
+                    {content(recordData?.m, '月跳', dashboardRefm)}
+                    {content(recordData?.w, '周跳', dashboardRefw)}
+                </div>
                 <div className='mt-2 mb-2' />
             </DialogContent>
             <DialogActions>

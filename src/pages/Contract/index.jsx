@@ -1,9 +1,6 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsContracts';
-import { DataGrid } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
-import NoResultsOverlay from '@/components/NoResultsOverlay';
-import DataGridSkeleton from '@/components/DataGridSkeleton';
+import { useState } from 'react';
 import { Button, Skeleton, Typography, IconButton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useSnackbar } from 'notistack';
@@ -18,12 +15,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { localeText } from '@/helpers/datagridHelper';
-import CustomToolbar from '@/components/CustomToolbar';
 import { useStore } from '@/stores/store';
+import DataGrid from '@/components/DataGrid';
 
 function Contract() {
-    const dashboardRef = useRef(null);
     const { setModalHandler, closeModal, setValue } = useStore();
     const actionPermission = usePermissionCheck('action');
     const [range, setRange] = useState(50);
@@ -152,7 +147,8 @@ function Contract() {
     const confirmBulkDelete = async () => {
         setValue('modalLoading', true);
         try {
-            let result = await bulkDeleteContract(selectedRows);
+            let ids = selectedRows?.map((e) => e.ContractsRecords?.id);
+            let result = await bulkDeleteContract(ids);
             const { success, deletedCount } = result;
             if (success) {
                 enqueueSnackbar(`成功刪除 ${deletedCount} 條記錄`, { variant: 'success' });
@@ -188,20 +184,16 @@ function Contract() {
         });
     };
     return (
-        <div className='Dashboard'>
-            <div className='dashboard-header'>
-                <div className='header-left'>
-                    <div className='title'>合約清單</div>
-                </div>
-                <div className='header-right'>
-                    <div className='title'>
-                        收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
-                        <span className='mins'>(每日 14:00 後更新)</span>
-                    </div>
+        <div className='TablePage Contract'>
+            <div className='title'>
+                <div className='title-left'>合約清單</div>
+                <div className='title-right'>
+                    收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
+                    <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
             <div className='title-action'>
-                <div className='title-btns'>
+                <div className='action-left'>
                     <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                         抓取
                     </Button>
@@ -209,7 +201,7 @@ function Contract() {
                         批量刪除 ({selectedRows.length})
                     </Button>
                 </div>
-                <div className='date'>
+                <div className='action-right'>
                     <div className='date-range-outer'>
                         <div className='date-range'>
                             <ToggleButtonGroup color='primary' value={rank} exclusive onChange={handleRankChange} aria-label='Platform'>
@@ -244,7 +236,7 @@ function Contract() {
                                     </FormControl>
                                 </Box>
                             )}
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 2 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                     <IconButton size='small' onClick={handlePrevQuarter} disabled={getCurrentQuarterIndex() <= 0}>
                                         <ArrowBackIos fontSize='small' />
@@ -279,43 +271,9 @@ function Contract() {
                     </div>
                 </div>
             </div>
-            <div className='container'>
-                <div className='table-wrapper'>
-                    <DataGrid
-                        className='table-root'
-                        ref={dashboardRef}
-                        rows={loading ? [] : listData || []}
-                        getRowId={(row) => row.ContractsRecords?.id}
-                        columns={listColumn()}
-                        loading={loading}
-                        checkboxSelection={actionPermission}
-                        disableSelectionOnClick
-                        onSelectionModelChange={(newSelectionModel) => {
-                            setSelectedRows(newSelectionModel);
-                        }}
-                        selectionModel={selectedRows}
-                        componentsProps={{
-                            pagination: {
-                                labelRowsPerPage: '每頁筆數:',
-                            },
-                        }}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: 'percentage', sort: 'desc' }],
-                            },
-                        }}
-                        localeText={localeText()}
-                        density='compact'
-                        sortingOrder={['desc', 'asc']}
-                        components={{
-                            Toolbar: () => CustomToolbar(),
-                            NoRowsOverlay: NoResultsOverlay,
-                            NoResultsOverlay: NoResultsOverlay,
-                            LoadingOverlay: DataGridSkeleton,
-                        }}
-                    />
-                </div>
-            </div>
+            <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn()} isLoading={loading}>
+                <div></div>
+            </DataGrid>
         </div>
     );
 }

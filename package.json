@@ -16,12 +16,13 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@ag-grid-community/locale": "^33.1.1",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
         "@mui/icons-material": "^5.13.7",
         "@mui/material": "^5.14.5",
-        "@mui/x-data-grid": "^5.16.0",
         "@mui/x-date-pickers": "^6.9.2",
+        "ag-grid-react": "^32.3.3",
         "axios": "^1.4.0",
         "dayjs": "^1.11.9",
         "echarts": "^5.4.3",

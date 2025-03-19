@@ -1,7 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import Login from '@/pages/Login';
-import Dashboard from '@/pages/Dashboard';
 import NotFound from '@/pages/NotFound';
 import { useRoutes } from 'react-router-dom';
 import Compose from '@/providers/Compose';
@@ -13,6 +12,9 @@ import ConfirmModal from './components/ConfirmModal';
 import Jump from './pages/Jump';
 import Observe from './pages/Observe';
 import Contract from './pages/Contract';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-material.min.css';
+import Target from './pages/Target';
 
 function App() {
     let element = useRoutes([
@@ -20,7 +22,7 @@ function App() {
             path: '/dashboard',
             element: (
                 <ProtectedRoute>
-                    <Dashboard />
+                    <Target />
                 </ProtectedRoute>
             ),
         },

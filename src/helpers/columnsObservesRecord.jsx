@@ -9,81 +9,57 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
         {
             field: 'type',
             headerName: '類型',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
             width: 60,
-            renderCell: (params) => {
-                const { row } = params;
-                return observeTypeMapping(row?.type);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return observeTypeMapping(data?.type);
             },
         },
         {
             field: 'reason',
             headerName: '位階',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'cell-wrap border-cell',
-            minWidth: 150,
             width: 150,
-            renderCell: (params) => {
-                const { row } = params;
-                return observeReasonMapping(row?.reason);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return observeReasonMapping(data?.reason);
             },
         },
         {
             field: 'price',
             headerName: '觀察價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: RenderCellExpand,
+            width: 80,
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'priceNow',
             headerName: '收盤價',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 60,
-            width: 60,
+            width: 80,
             valueGetter: () => recordData.price,
-            renderCell: () => {
+            cellRenderer: () => {
                 return recordData?.price;
             },
         },
         {
             field: 'profit',
             headerName: '損益',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 58,
-            width: 58,
-            renderCell: (params) => {
-                const { row } = params;
-                const profit = Math.round((((recordData?.price - row?.price) / row?.price) * 100 + Number.EPSILON) * 10) / 10;
+            width: 70,
+            cellRenderer: (params) => {
+                const { data } = params;
+                const profit = Math.round((((recordData?.price - data?.price) / data?.price) * 100 + Number.EPSILON) * 10) / 10;
                 return profitHandler(profit);
             },
         },
         {
             field: 'date',
             headerName: '觀察日期',
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 90,
             width: 90,
-            renderCell: (params) => {
-                const { row } = params;
-                return row?.date ? moment(row?.date).format('YYYY/MM/DD') : '';
+            cellRenderer: (params) => {
+                const { data } = params;
+                return data?.date ? moment(data?.date).format('YYYY/MM/DD') : '';
             },
             valueGetter: (params) => {
-                const { row } = params;
-                return row?.date ? moment(row?.date).format('YYYY/MM/DD') : '';
+                const { data } = params;
+                return data?.date ? moment(data?.date).format('YYYY/MM/DD') : '';
             },
         },
         {
@@ -95,31 +71,25 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
                     <div>(天)</div>
                 </div>
             ),
-            align: 'center',
-            headerAlign: 'center',
-            cellClassName: 'border-cell',
-            minWidth: 56,
             width: 56,
-            editable: false,
-            renderCell: (params) => {
-                const { row } = params;
-                return dateGap(row?.date);
+            cellRenderer: (params) => {
+                const { data } = params;
+                return dateGap(data?.date);
             },
         },
         {
             field: 'action',
-            filterable: false,
-            sortable: false,
-            disableExport: true,
             headerName: '操作',
+            minWidth: 50,
             flex: 1,
-            minWidth: 130,
-            renderCell: (params) => {
+            headerClass: 'left',
+            cellClass: 'left',
+            cellRenderer: (params) => {
                 return (
                     <div className='action'>
                         {actionPermission ? (
                             <Tooltip title={'編輯'} placement='bottom'>
-                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.row)} />
+                                <Edit className='action-icon mr-2' onClick={() => editHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
@@ -128,7 +98,7 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
                         )}
                         {actionPermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
-                                <Delete className='action-icon warning' onClick={() => deleteHandler(params.row)} />
+                                <Delete className='action-icon warning' onClick={() => deleteHandler(params.data)} />
                             </Tooltip>
                         ) : (
                             <Tooltip title={'沒有權限'} placement='bottom'>
