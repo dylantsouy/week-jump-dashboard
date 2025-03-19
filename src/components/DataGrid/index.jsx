@@ -57,6 +57,7 @@ export default function DataGrid({ rowData, columnDefs, isLoading, children, set
                 ...(actionPermission
                     ? [
                           {
+                              sortable: false,
                               headerCheckboxSelection: true,
                               checkboxSelection: true,
                               width: 50,

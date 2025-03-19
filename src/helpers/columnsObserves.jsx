@@ -30,7 +30,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         {
             field: 'industry',
             headerName: '產業',
-            width: 80,
+            width: 90,
             cellRenderer: RenderCellExpand,
         },
         {
@@ -43,11 +43,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             field: 'price',
             headerName: '收盤價',
             width: 80,
-            valueGetter: (params) => params.data.price,
-            cellRenderer: (params) => {
-                const { data } = params;
-                return data?.price;
-            },
+            cellRenderer: RenderCellExpand,
         },
         {
             field: 'profit',
@@ -61,7 +57,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             valueGetter: (params) => {
                 const { data } = params;
                 const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
-                return profit + '%';
+                return profit;
             },
         },
         {
@@ -79,13 +75,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'gap',
-            headerName: '過多久 (天)',
-            renderHeader: () => (
-                <div className='column_center_center'>
-                    <div>過多久</div>
-                    <div>(天)</div>
-                </div>
-            ),
+            headerName: '過多久',
             width: 56,
             editable: false,
             cellRenderer: (params) => {
@@ -99,16 +89,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'typeCount1',
-            headerName: '冷水 (次)',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>冷水</div>
-                        <div>(次)</div>
-                    </div>
-                ),
-            },
+            headerName: '冷水',
             width: 50,
             valueGetter: (params) => params?.data?.typeCount?.[1],
             cellRenderer: (params) => {
@@ -118,16 +99,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'typeCount2',
-            headerName: '溫水 (次)',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>溫水</div>
-                        <div>(次)</div>
-                    </div>
-                ),
-            },
+            headerName: '溫水',
             width: 50,
             valueGetter: (params) => params?.data?.typeCount?.[2],
             cellRenderer: (params) => {
@@ -138,15 +110,6 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         {
             field: 'typeCount3',
             headerName: '熱水',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>熱水</div>
-                        <div>(次)</div>
-                    </div>
-                ),
-            },
             width: 50,
             valueGetter: (params) => params?.data?.typeCount?.[3],
             cellRenderer: (params) => {
@@ -245,7 +208,8 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>損益</div>
                 </div>
             ),
-            width: 70,
+            sort: 'desc',
+            width: 80,
             cellRenderer: (params) => {
                 const { data } = params;
                 const profit = Math.round((((data?.price - data?.latestRecord?.price) / data?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
@@ -254,7 +218,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             valueGetter: (params) => {
                 const { data } = params;
                 const profit = Math.round((((data?.price - data?.latestRecord?.price) / data?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
-                return profit + '%';
+                return profit;
             },
         },
         {
@@ -264,6 +228,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
+            sortable: false,
             cellRenderer: (params) => {
                 return (
                     <div className='action'>

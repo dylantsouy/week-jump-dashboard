@@ -6,7 +6,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ActionButtons from '@/components/ActionButtons';
 import MultiLineHeader from './MultiLineHeader';
 
-export const listColumn = (showRecord, deleteHandler, actionPermission, range) => {
+export const listColumn = (showRecord, deleteHandler, actionPermission) => {
     return [
         {
             field: 'name',
@@ -82,22 +82,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
         },
         {
             field: 'newestDate',
-            headerName: '最新跳空',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <>
-                        {range === 3 ? (
-                            <div className='column_center_center'>
-                                <div>最新</div>
-                                <div>跳空</div>
-                            </div>
-                        ) : (
-                            <div className='column_center_center'>日期</div>
-                        )}
-                    </>
-                ),
-            },
+            headerName: '日期',
             width: 80,
             valueGetter: (params) => {
                 const { data } = params;
@@ -150,15 +135,6 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
         {
             field: 'newestLastPrice',
             headerName: '補上價格',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>補上</div>
-                        <div>價格</div>
-                    </div>
-                ),
-            },
             width: 80,
             valueGetter: (params) => params.data.newest.lastPrice,
             cellRenderer: (params) => {
@@ -184,16 +160,8 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
         {
             field: 'gapPercent',
             headerName: '距離 (%)',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>距離</div>
-                        <div>(%)</div>
-                    </div>
-                ),
-            },
-            width: 60,
+            width: 78,
+            sort: 'desc',
             valueGetter: (params) => {
                 const { data } = params;
                 const gap = Math.round((((data?.Stock?.price - data?.newest?.lastPrice) / data?.newest?.lastPrice) * 100 + Number.EPSILON) * 10) / 10;
@@ -247,6 +215,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
+            sortable: false,
             cellRenderer: (params) => {
                 return (
                     <div className='action'>

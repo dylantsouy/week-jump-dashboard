@@ -38,6 +38,10 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             field: 'price',
             headerName: '觀察價',
             width: 80,
+            valueGetter: (params) => {
+                const { data } = params;
+                return +data?.price;
+            },
             cellRenderer: RenderCellExpand,
         },
         {
@@ -53,10 +57,11 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             field: 'profit',
             headerName: '損益',
             width: 70,
+            sort: 'desc',
             valueGetter: (params) => {
                 const { data } = params;
                 const profit = Math.round((((recordData?.price - data?.price) / data?.price) * 100 + Number.EPSILON) * 10) / 10;
-                return profit + '%';
+                return profit;
             },
             cellRenderer: (params) => {
                 const { data } = params;
@@ -103,6 +108,7 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
+            sortable: false,
             cellRenderer: (params) => {
                 return (
                     <div className='action'>

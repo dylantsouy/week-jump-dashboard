@@ -77,7 +77,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             valueGetter: (params) => {
                 const { data } = params;
                 const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
-                return profit + '%';
+                return profit;
             },
             cellRenderer: (params) => {
                 const { data } = params;
@@ -89,7 +89,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             field: 'news',
             headerName: '消息',
             width: 40,
-            editable: false,
+            sortable: false,
             valueGetter: () => {
                 return '詳情請查看網站';
             },
@@ -333,7 +333,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             field: 'editEps',
             headerName: '營收',
             width: 50,
-            editable: false,
+            sortable: false,
             valueGetter: () => {
                 return '詳情請查看網站';
             },
@@ -350,15 +350,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'averagePE',
             headerName: '歷史 PE',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>歷史</div>
-                        <div>PE</div>
-                    </div>
-                ),
-            },
             width: 90,
             cellRenderer: RenderCellExpand,
         },
@@ -422,7 +413,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             field: 'createdAt',
             headerName: '觀察日期',
             width: 80,
-            editable: false,
+            sort: 'desc',
             valueGetter: (params) => {
                 const { data } = params;
                 return generateMeasureDate(data?.createdAt);
@@ -435,15 +426,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'gap',
             headerName: '過多久',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>過多久</div>
-                        <div>(天)</div>
-                    </div>
-                ),
-            },
             width: 56,
             editable: false,
             valueGetter: (params) => {
@@ -458,15 +440,6 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'CAGR',
             headerName: 'CAGR',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>CAGR</div>
-                        <div>(%)</div>
-                    </div>
-                ),
-            },
             width: 70,
             valueGetter: (params) => {
                 const { data } = params;
@@ -481,6 +454,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
+            sortable: false,
             cellRenderer: (params) => {
                 return (
                     <div className='action'>

@@ -48,16 +48,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'lastPrice',
             headerName: '補上價格',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>補上</div>
-                        <div>價格</div>
-                    </div>
-                ),
-            },
-            width: 70,
+            width: 80,
         },
         {
             field: 'gap',
@@ -77,20 +68,12 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'gapPercent',
             headerName: '距離 (%)',
-            headerComponent: MultiLineHeader,
-            headerComponentParams: {
-                text: (
-                    <div className='column_center_center'>
-                        <div>距離</div>
-                        <div>(%)</div>
-                    </div>
-                ),
-            },
-            width: 70,
+            width: 78,
+            sort: 'desc',
             valueGetter: (params) => {
                 const { data } = params;
                 const gap = +(+recordData?.Stock?.price - data?.lastPrice).toFixed(2);
-                return gap > 0 ? `${+((gap / recordData?.Stock?.price) * 100).toFixed(2)}%` : '-';
+                return gap > 0 ? `${+((gap / recordData?.Stock?.price) * 100).toFixed(2)}` : '-';
             },
             cellRenderer: (params) => {
                 const { data } = params;
@@ -127,6 +110,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
+            sortable: false,
             cellRenderer: (params) => {
                 return (
                     <div className='action'>

@@ -38,6 +38,11 @@ export const listColumn = () => {
             headerName: '合約負債',
             width: 100,
             valueGetter: (params) => params?.data?.ContractsRecords?.contractValue + ' 億',
+            comparator: (valueA, valueB, nodeA, nodeB) => {
+                let a = nodeA?.data?.ContractsRecords?.contractValue;
+                let b = nodeB?.data?.ContractsRecords?.contractValue;
+                return a > b ? 1 : -1;
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.contractValue + ' 億';
@@ -48,6 +53,11 @@ export const listColumn = () => {
             headerName: '佔股本',
             width: 80,
             valueGetter: (params) => params?.data?.ContractsRecords?.percentage + '%',
+            comparator: (valueA, valueB, nodeA, nodeB) => {
+                let a = nodeA?.data?.ContractsRecords?.percentage;
+                let b = nodeB?.data?.ContractsRecords?.percentage;
+                return a > b ? 1 : -1;
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.percentage + '%';
@@ -56,8 +66,14 @@ export const listColumn = () => {
         {
             field: 'qoq',
             headerName: 'QoQ',
+            sort: 'desc',
             width: 80,
             valueGetter: (params) => params?.data?.ContractsRecords?.qoq + '%',
+            comparator: (valueA, valueB, nodeA, nodeB) => {
+                let a = nodeA?.data?.ContractsRecords?.qoq;
+                let b = nodeB?.data?.ContractsRecords?.qoq;
+                return a > b ? 1 : -1;
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.qoq + '%';
@@ -68,6 +84,11 @@ export const listColumn = () => {
             headerName: 'YoY',
             width: 80,
             valueGetter: (params) => params?.data?.ContractsRecords?.yoy + '%',
+            comparator: (valueA, valueB, nodeA, nodeB) => {
+                let a = nodeA?.data?.ContractsRecords?.yoy;
+                let b = nodeB?.data?.ContractsRecords?.yoy;
+                return a > b ? 1 : -1;
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.yoy + '%';
@@ -90,6 +111,7 @@ export const listColumn = () => {
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
+            sortable: false,
             cellRenderer: (params) => {
                 return (
                     <div className='action'>
