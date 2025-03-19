@@ -12,7 +12,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             field: 'name',
             headerName: '股票',
             width: 100,
-            valueGetter: (params) => `${params.data.Stock.name} ${params.data.Stock.code}`,
+            valueGetter: (params) => `${params.data.Stock.code} ${params.data.Stock.name}`,
             pinned: 'left',
             cellRenderer: (params) => {
                 const { data } = params;
@@ -49,7 +49,10 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
                 ),
             },
             width: 78,
-            valueGetter: (params) => params.data.details.jumpCount_w,
+            valueGetter: (params) => {
+                const { data } = params;
+                return `'${data?.details.jumpCount_w - data?.details.jumpCount_w_c} / ${data?.details.jumpCount_w}`;
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return `${data?.details.jumpCount_w - data?.details.jumpCount_w_c} / ${data?.details.jumpCount_w}`;
@@ -68,7 +71,10 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
                 ),
             },
             width: 78,
-            valueGetter: (params) => params.data.details.jumpCount_m,
+            valueGetter: (params) => {
+                const { data } = params;
+                return `'${data?.details.jumpCount_m - data?.details.jumpCount_m_c} / ${data?.details.jumpCount_m}`;
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return `${data?.details.jumpCount_m - data?.details.jumpCount_m_c} / ${data?.details.jumpCount_m}`;
@@ -93,7 +99,10 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
                 ),
             },
             width: 80,
-            valueGetter: (params) => params.data.newest.date,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.newest?.date ? moment(data?.newest?.date).format('YYYY/MM/DD') : '';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.newest?.date ? moment(data?.newest?.date).format('YYYY/MM/DD') : '';
@@ -103,7 +112,16 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
             field: 'newestType',
             headerName: '類型',
             width: 56,
-            valueGetter: (params) => params.data.newest.type,
+            valueGetter: (params) => {
+                const { data } = params;
+                const map = {
+                    d: '日',
+                    w: '周',
+                    m: '月',
+                };
+
+                return map[data?.newest?.type];
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return jumpTypeMapping(data?.newest?.type);
@@ -165,7 +183,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
         },
         {
             field: 'gapPercent',
-            headerName: '距離 %',
+            headerName: '距離 (%)',
             headerComponent: MultiLineHeader,
             headerComponentParams: {
                 text: (
@@ -200,7 +218,10 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, range) =
                 ),
             },
             width: 60,
-            valueGetter: (params) => params.data.newest.closed,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.newest?.closed ? '是' : '否';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.newest?.closed ? <span className='bad-text bold'>是</span> : <span className='best-text bold'>否</span>;

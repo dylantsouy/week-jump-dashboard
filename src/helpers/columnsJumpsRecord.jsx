@@ -9,6 +9,10 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             field: 'date',
             headerName: '日期',
             width: 100,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.date ? moment(data?.date).format('YYYY/MM/DD') : '';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.date ? moment(data?.date).format('YYYY/MM/DD') : '';
@@ -72,7 +76,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         },
         {
             field: 'gapPercent',
-            headerName: '距離 %',
+            headerName: '距離 (%)',
             headerComponent: MultiLineHeader,
             headerComponentParams: {
                 text: (
@@ -86,7 +90,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
             valueGetter: (params) => {
                 const { data } = params;
                 const gap = +(+recordData?.Stock?.price - data?.lastPrice).toFixed(2);
-                return gap > 0 ? +((gap / data?.Stock?.price) * 100) : -1;
+                return gap > 0 ? `${+((gap / recordData?.Stock?.price) * 100).toFixed(2)}%` : '-';
             },
             cellRenderer: (params) => {
                 const { data } = params;
@@ -107,6 +111,10 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
                 ),
             },
             width: 50,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.closed ? '是' : '否';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.closed ? <span className='bad-text bold'>是</span> : <span className='best-text bold'>否</span>;
@@ -115,7 +123,7 @@ export const listColumn = (deleteHandler, actionPermission, recordData) => {
         {
             field: 'action',
             headerName: '操作',
-            minWidth: 50,
+            minWidth: 80,
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',

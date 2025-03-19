@@ -13,7 +13,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             field: 'name',
             headerName: '股票',
             width: 100,
-            valueGetter: (params) => `${params.data.name} ${params.data.code}`,
+            valueGetter: (params) => `${params.data.code} ${params.data.name}`,
             pinned: 'left',
             cellRenderer: (params) => {
                 const { data } = params;
@@ -58,6 +58,11 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                 const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
                 return profitHandler(profit);
             },
+            valueGetter: (params) => {
+                const { data } = params;
+                const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
+                return profit + '%';
+            },
         },
         {
             field: 'createdAt',
@@ -74,7 +79,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'gap',
-            headerName: '過多久',
+            headerName: '過多久 (天)',
             renderHeader: () => (
                 <div className='column_center_center'>
                     <div>過多久</div>
@@ -94,7 +99,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'typeCount1',
-            headerName: '冷水',
+            headerName: '冷水 (次)',
             headerComponent: MultiLineHeader,
             headerComponentParams: {
                 text: (
@@ -113,7 +118,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
         },
         {
             field: 'typeCount2',
-            headerName: '溫水',
+            headerName: '溫水 (次)',
             headerComponent: MultiLineHeader,
             headerComponentParams: {
                 text: (
@@ -182,6 +187,16 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                 const { data } = params;
                 return observeTypeMapping(data?.latestRecord?.type);
             },
+            valueGetter: (params) => {
+                const { data } = params;
+                const map = {
+                    1: '冷水',
+                    2: '溫水',
+                    3: '熱水',
+                };
+
+                return map[data?.latestRecord?.type];
+            },
         },
         {
             field: 'latestReason',
@@ -197,6 +212,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                 const { data } = params;
                 return observeReasonMapping(data?.latestRecord?.reason);
             },
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.latestRecord?.reason;
+            },
         },
         {
             field: 'latestPrice',
@@ -209,6 +228,10 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
             ),
             width: 80,
             cellRenderer: (params) => {
+                const { data } = params;
+                return data?.latestRecord?.price;
+            },
+            valueGetter: (params) => {
                 const { data } = params;
                 return data?.latestRecord?.price;
             },
@@ -227,6 +250,11 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                 const { data } = params;
                 const profit = Math.round((((data?.price - data?.latestRecord?.price) / data?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
                 return profitHandler(profit);
+            },
+            valueGetter: (params) => {
+                const { data } = params;
+                const profit = Math.round((((data?.price - data?.latestRecord?.price) / data?.latestRecord?.price) * 100 + Number.EPSILON) * 10) / 10;
+                return profit + '%';
             },
         },
         {

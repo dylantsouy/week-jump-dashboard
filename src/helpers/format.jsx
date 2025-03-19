@@ -8,7 +8,7 @@ import { AlarmOff } from '@mui/icons-material';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 
 export const generateMeasureDate = (e) => {
-    return moment(e).format('YYYY-MM-DD');
+    return moment(e).format('YYYY/MM/DD');
 };
 
 export const calculateTargetPriceRange = (eps2025, averagePE) => {
@@ -60,7 +60,7 @@ export const targetColorHandler = (now, target1, target2) => {
 };
 
 export const generateMeasureTime = (e) => {
-    return moment(e).format('YYYY-MM-DD HH:mm:ss');
+    return moment(e).format('YYYY/MM/DD HH:mm:ss');
 };
 export const observeTypeMapping = (e) => {
     const map = {

@@ -10,6 +10,16 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             field: 'type',
             headerName: '類型',
             width: 60,
+            valueGetter: (params) => {
+                const { data } = params;
+                const map = {
+                    1: '冷水',
+                    2: '溫水',
+                    3: '熱水',
+                };
+
+                return map[data?.type];
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return observeTypeMapping(data?.type);
@@ -43,6 +53,11 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
             field: 'profit',
             headerName: '損益',
             width: 70,
+            valueGetter: (params) => {
+                const { data } = params;
+                const profit = Math.round((((recordData?.price - data?.price) / data?.price) * 100 + Number.EPSILON) * 10) / 10;
+                return profit + '%';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 const profit = Math.round((((recordData?.price - data?.price) / data?.price) * 100 + Number.EPSILON) * 10) / 10;
@@ -72,6 +87,10 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
                 </div>
             ),
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                return dateGap(data?.date);
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return dateGap(data?.date);
@@ -80,7 +99,7 @@ export const listColumn = (deleteHandler, editHandler, actionPermission, recordD
         {
             field: 'action',
             headerName: '操作',
-            minWidth: 50,
+            minWidth: 110,
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',

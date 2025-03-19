@@ -7,7 +7,7 @@ export const listColumn = () => {
             field: 'name',
             headerName: '股票',
             width: 100,
-            valueGetter: (params) => `${params.data.name} ${params.data.code}`,
+            valueGetter: (params) => `${params.data.code} ${params.data.name}`,
             pinned: 'left',
             cellRenderer: (params) => {
                 const { data } = params;
@@ -37,7 +37,7 @@ export const listColumn = () => {
             field: 'contractValue',
             headerName: '合約負債',
             width: 100,
-            valueGetter: (params) => params?.data?.ContractsRecords?.contractValue,
+            valueGetter: (params) => params?.data?.ContractsRecords?.contractValue + ' 億',
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.contractValue + ' 億';
@@ -47,7 +47,7 @@ export const listColumn = () => {
             field: 'percentage',
             headerName: '佔股本',
             width: 80,
-            valueGetter: (params) => params?.data?.ContractsRecords?.percentage,
+            valueGetter: (params) => params?.data?.ContractsRecords?.percentage + '%',
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.percentage + '%';
@@ -57,7 +57,7 @@ export const listColumn = () => {
             field: 'qoq',
             headerName: 'QoQ',
             width: 80,
-            valueGetter: (params) => params?.data?.ContractsRecords?.qoq,
+            valueGetter: (params) => params?.data?.ContractsRecords?.qoq + '%',
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.qoq + '%';
@@ -67,7 +67,7 @@ export const listColumn = () => {
             field: 'yoy',
             headerName: 'YoY',
             width: 80,
-            valueGetter: (params) => params?.data?.ContractsRecords?.yoy,
+            valueGetter: (params) => params?.data?.ContractsRecords?.yoy + '%',
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.ContractsRecords?.yoy + '%';
@@ -86,7 +86,7 @@ export const listColumn = () => {
         {
             field: 'action',
             headerName: '操作',
-            minWidth: 280,
+            minWidth: 210,
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',

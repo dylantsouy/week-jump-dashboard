@@ -12,8 +12,8 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             field: 'name',
             headerName: '股票',
             width: 100,
-            valueGetter: (params) => `${params.data.name} ${params.data.code}`,
             pinned: 'left',
+            valueGetter: (params) => `${params.data.code} ${params.data.name}`,
             cellRenderer: (params) => {
                 const { data } = params;
                 return (
@@ -36,6 +36,23 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             field: 'rate',
             headerName: '評等',
             width: 40,
+            valueGetter: (params) => {
+                const { data } = params;
+                const map = {
+                    1: '持有',
+                    2: '看好',
+                    3: '有機會',
+                    4: '需等待',
+                    5: '待觀察',
+                    6: '中立',
+                    7: '已反應',
+                    8: '有風險',
+                    9: '中立偏空',
+                    10: '不看好',
+                };
+
+                return map[data?.rate];
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return rateMapping(data?.rate);
@@ -57,6 +74,11 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             field: 'profit',
             headerName: '損益',
             width: 70,
+            valueGetter: (params) => {
+                const { data } = params;
+                const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
+                return profit + '%';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 const profit = Math.round((((data?.price - data?.initPrice) / data?.initPrice) * 100 + Number.EPSILON) * 10) / 10;
@@ -68,6 +90,9 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerName: '消息',
             width: 40,
             editable: false,
+            valueGetter: () => {
+                return '詳情請查看網站';
+            },
             cellRenderer: (params) => {
                 return (
                     <div className='action text-center'>
@@ -99,6 +124,10 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'primary',
             cellClass: 'primary',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.eps?.eps2024 || '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.eps?.eps2024 || '-';
@@ -119,6 +148,10 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'warning',
             cellClass: 'warning',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.eps?.eps2025 || '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.eps?.eps2025 || '-';
@@ -139,6 +172,16 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'warning',
             cellClass: 'warning',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                if (data?.price && data?.eps?.eps2025) {
+                    if (data?.eps?.eps2025 < 0) {
+                        return 'N/A';
+                    }
+                    return (data?.price / data?.eps?.eps2025).toFixed(2);
+                }
+                return '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 if (data?.price && data?.eps?.eps2025) {
@@ -165,6 +208,17 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'warning',
             cellClass: 'warning',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                if (data?.eps?.eps2024 && data?.eps?.eps2025) {
+                    if (data?.eps?.eps2024 < 0 && data?.eps?.eps2025 > 0) {
+                        return '虧轉盈';
+                    }
+                    const gdatathRate = ((data.eps.eps2025 - data.eps.eps2024) / data.eps.eps2024) * 100;
+                    return gdatathRate.toFixed(1) + '%';
+                }
+                return '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 if (data?.eps?.eps2024 && data?.eps?.eps2025) {
@@ -192,6 +246,10 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'primary',
             cellClass: 'primary',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.eps?.eps2026 || '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return data?.eps?.eps2026 || '-';
@@ -212,6 +270,16 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'primary',
             cellClass: 'primary',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                if (data?.price && data?.eps?.eps2026) {
+                    if (data?.eps?.eps2026 < 0) {
+                        return 'N/A';
+                    }
+                    return (data?.price / data?.eps?.eps2026).toFixed(2);
+                }
+                return '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 if (data?.price && data?.eps?.eps2026) {
@@ -238,6 +306,17 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerClass: 'primary',
             cellClass: 'primary',
             width: 56,
+            valueGetter: (params) => {
+                const { data } = params;
+                if (data?.eps?.eps2025 && data?.eps?.eps2026) {
+                    if (data?.eps?.eps2025 < 0 && data?.eps?.eps2025 > 0) {
+                        return '虧轉盈';
+                    }
+                    const gdatathRate = ((data.eps.eps2026 - data.eps.eps2025) / data.eps.eps2025) * 100;
+                    return gdatathRate.toFixed(1) + '%';
+                }
+                return '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 if (data?.eps?.eps2025 && data?.eps?.eps2026) {
@@ -255,6 +334,9 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerName: '營收',
             width: 50,
             editable: false,
+            valueGetter: () => {
+                return '詳情請查看網站';
+            },
             cellRenderer: (params) => {
                 return (
                     <div className='action text-center'>
@@ -277,7 +359,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     </div>
                 ),
             },
-            width: 56,
+            width: 90,
             cellRenderer: RenderCellExpand,
         },
         {
@@ -292,7 +374,12 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     </div>
                 ),
             },
-            width: 56,
+            width: 70,
+            valueGetter: (params) => {
+                const { data } = params;
+                const targetPrice = calculateTargetPriceRange(data?.eps?.eps2025, data?.averagePE);
+                return data?.eps?.eps2025 && data?.averagePE ? `${targetPrice[0]} ~ ${targetPrice[1]}` : '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 if (data?.eps?.eps2025 && data?.eps?.eps2025 > 0 && data?.averagePE) {
@@ -315,7 +402,12 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     </div>
                 ),
             },
-            width: 56,
+            width: 70,
+            valueGetter: (params) => {
+                const { data } = params;
+                const targetPrice = calculateTargetPriceRange(data?.eps?.eps2026, data?.averagePE);
+                return data?.eps?.eps2026 && data?.averagePE ? `${targetPrice[0]} ~ ${targetPrice[1]}` : '-';
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 if (data?.eps?.eps2026 && data?.eps?.eps2026 > 0 && data?.averagePE) {
@@ -331,6 +423,10 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             headerName: '觀察日期',
             width: 80,
             editable: false,
+            valueGetter: (params) => {
+                const { data } = params;
+                return generateMeasureDate(data?.createdAt);
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return generateMeasureDate(data?.createdAt);
@@ -350,6 +446,10 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
             },
             width: 56,
             editable: false,
+            valueGetter: (params) => {
+                const { data } = params;
+                return dateGap(data?.createdAt);
+            },
             cellRenderer: (params) => {
                 const { data } = params;
                 return dateGap(data?.createdAt);
@@ -367,13 +467,17 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     </div>
                 ),
             },
-            width: 54,
+            width: 70,
+            valueGetter: (params) => {
+                const { data } = params;
+                return data?.CAGR || '-';
+            },
             cellRenderer: RenderCellExpand,
         },
         {
             field: 'action',
             headerName: '操作',
-            minWidth: 280,
+            minWidth: 160,
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',
