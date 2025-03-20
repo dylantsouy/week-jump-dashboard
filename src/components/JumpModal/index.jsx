@@ -70,7 +70,6 @@ export default function JumpModal(props) {
             <div className='TablePage datagrid-set'>
                 <div className='jump-title'>
                     <span className='title-text'>{title}</span>
-                    <span className='title-count'>{data?.length || 0}</span>
                 </div>
                 <DataGrid isLoading={loading} rowData={data} columnDefs={listColumn(deleteHandler, actionPermission, recordData)} ref={ref}>
                     <div></div>
@@ -79,6 +78,10 @@ export default function JumpModal(props) {
             </div>
         );
     };
+
+    // 計算月跳和周跳的數量
+    const monthCount = recordData?.m?.length || 0;
+    const weekCount = recordData?.w?.length || 0;
 
     return (
         <Dialog className='editDialog JumpModal' open={open} onClose={() => handleClose()}>
@@ -94,8 +97,20 @@ export default function JumpModal(props) {
                 </div>
                 <div className='tab-container'>
                     <Tabs value={tabValue} onChange={handleTabChange} className='jump-tabs'>
-                        <Tab label='月跳' />
-                        <Tab label='周跳' />
+                        <Tab
+                            label={
+                                <div className='tab-with-badge'>
+                                    <span>月跳</span> ({monthCount})
+                                </div>
+                            }
+                        />
+                        <Tab
+                            label={
+                                <div className='tab-with-badge'>
+                                    <span>周跳</span> ({weekCount})
+                                </div>
+                            }
+                        />
                     </Tabs>
                 </div>
                 <div className='datagrid-wrapper'>
