@@ -1,5 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent } from '@mui/material';
-import { useRef } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, Tabs, Tab } from '@mui/material';
+import { useRef, useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle';
 import './styles.scss';
 import Divider from '@mui/material/Divider';
@@ -17,6 +17,7 @@ export default function JumpModal(props) {
     const { open, handleClose, recordData, mutate, loading } = props;
     const { setModalHandler, closeModal, setValue } = useStore();
     const { enqueueSnackbar } = useSnackbar();
+    const [tabValue, setTabValue] = useState(0);
 
     const confirmDelete = async (e) => {
         setValue('modalLoading', true);
@@ -60,14 +61,18 @@ export default function JumpModal(props) {
         });
     };
 
-    const content = (data, title) => {
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
+
+    const content = (data, title, ref) => {
         return (
             <div className='TablePage datagrid-set'>
                 <div className='jump-title'>
                     <span className='title-text'>{title}</span>
-                    <span className='title-count'>{}</span>
+                    <span className='title-count'>{data?.length || 0}</span>
                 </div>
-                <DataGrid isLoading={loading} rowData={data} columnDefs={listColumn(deleteHandler, actionPermission, recordData)}>
+                <DataGrid isLoading={loading} rowData={data} columnDefs={listColumn(deleteHandler, actionPermission, recordData)} ref={ref}>
                     <div></div>
                 </DataGrid>
                 <Divider />
@@ -87,9 +92,15 @@ export default function JumpModal(props) {
                     </div>
                     <div className='stock-price'>{recordData?.Stock?.price}</div>
                 </div>
+                <div className='tab-container'>
+                    <Tabs value={tabValue} onChange={handleTabChange} className='jump-tabs'>
+                        <Tab label='月跳' />
+                        <Tab label='周跳' />
+                    </Tabs>
+                </div>
                 <div className='datagrid-wrapper'>
-                    {content(recordData?.m, '月跳', dashboardRefm)}
-                    {content(recordData?.w, '周跳', dashboardRefw)}
+                    {tabValue === 0 && content(recordData?.m, '月跳', dashboardRefm)}
+                    {tabValue === 1 && content(recordData?.w, '周跳', dashboardRefw)}
                 </div>
                 <div className='mt-2 mb-2' />
             </DialogContent>
