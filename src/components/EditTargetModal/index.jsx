@@ -167,7 +167,7 @@ export default function EditTargetModal(props) {
                         <MenuItem value={6}>中立</MenuItem>
                         <MenuItem value={7}>已反應</MenuItem>
                         <MenuItem value={8}>有風險</MenuItem>
-                        <MenuItem value={9}>中立偏空</MenuItem>
+                        <MenuItem value={9}>偏空</MenuItem>
                         <MenuItem value={10}>不看好</MenuItem>
                     </Select>
                 </FormControl>

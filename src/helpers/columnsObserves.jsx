@@ -5,7 +5,6 @@ import { dateGap, observeReasonMapping, observeTypeMapping, profitHandler } from
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ActionButtons from '@/components/ActionButtons';
-import MultiLineHeader from './MultiLineHeader';
 
 export const listColumn = (showRecord, deleteHandler, editHandler, actionPermission) => {
     return [
@@ -170,7 +169,7 @@ export const listColumn = (showRecord, deleteHandler, editHandler, actionPermiss
                     <div>位階</div>
                 </div>
             ),
-            width: 150,
+            width: 90,
             cellRenderer: (params) => {
                 const { data } = params;
                 return observeReasonMapping(data?.latestRecord?.reason);

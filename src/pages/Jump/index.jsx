@@ -1,7 +1,7 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsJumps';
 import { useState } from 'react';
-import { Button, Skeleton } from '@mui/material';
+import { Button, Skeleton, useMediaQuery, Drawer, IconButton } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import CloudSyncIcon from '@mui/icons-material/CloudSync';
 import { useStore } from '@/stores/store';
@@ -14,7 +14,7 @@ import DateRange from '@/components/DateRange';
 import dayjs from 'dayjs';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutline, Close, TuneRounded } from '@mui/icons-material';
 import { createStock } from '@/services/stockApi';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import DataGrid from '@/components/DataGrid';
@@ -30,6 +30,8 @@ function Jump() {
     const [endDate, setEndDate] = useState(dayjs().add(1, 'week').endOf('week').day(0));
     const [range, setRange] = useState(1);
     const [checked, setChecked] = useState(false);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
     const { enqueueSnackbar } = useSnackbar();
     const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate, closed: checked });
 
@@ -179,6 +181,9 @@ function Jump() {
             enqueueSnackbar('更新失敗', { variant: 'error' });
         }
     };
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen);
+    };
     return (
         <div className='TablePage Jump'>
             <div className='title'>
@@ -188,39 +193,51 @@ function Jump() {
                     <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
-            <div className='title-action'>
-                <div className='action-left'>
-                    <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
-                        抓取
-                    </Button>
-                    <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
-                        更新收盤價
-                    </Button>
-                    <Button className='act' disabled={!actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
-                        檢查補上
-                    </Button>
-                    <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
-                        批量刪除 ({selectedRows.length})
-                    </Button>
-                </div>
-                <div className='action-right'>
-                    <DateRange
-                        loading={loading}
-                        selectDate={selectDate}
-                        setSelectDate={setSelectDate}
-                        startDate={startDate}
-                        setStartDate={setStartDate}
-                        endDate={endDate}
-                        setEndDate={setEndDate}
-                        range={range}
-                        setRange={setRange}
-                    />
-                    <div className='switch'>
-                        <FormControlLabel value='start' control={<Switch checked={checked} onChange={handleChange} color='primary' />} label='未補上' labelPlacement='start' />
-                        <div className='switch-label'>補上</div>
+            {isSmallScreen ? (
+                <div className='mb-1'></div>
+            ) : (
+                <div className='title-action'>
+                    <div className='action-left'>
+                        <Button
+                            className='act'
+                            disabled={!actionPermission || range === 3}
+                            variant='contained'
+                            color='warning'
+                            startIcon={<AddCircleOutline />}
+                            onClick={addHandler}
+                        >
+                            抓取
+                        </Button>
+                        <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+                            更新收盤價
+                        </Button>
+                        <Button className='act' disabled={!actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
+                            檢查補上
+                        </Button>
+                        <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                            批量刪除 ({selectedRows.length})
+                        </Button>
+                    </div>
+                    <div className='action-right'>
+                        <DateRange
+                            loading={loading}
+                            selectDate={selectDate}
+                            setSelectDate={setSelectDate}
+                            startDate={startDate}
+                            setStartDate={setStartDate}
+                            endDate={endDate}
+                            setEndDate={setEndDate}
+                            range={range}
+                            setRange={setRange}
+                        />
+                        <div className='switch'>
+                            <FormControlLabel value='start' control={<Switch checked={checked} onChange={handleChange} color='primary' />} label='未補上' labelPlacement='start' />
+                            <div className='switch-label'>補上</div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
+
             <DataGrid
                 ifShowSelect={true}
                 setSelectedRows={setSelectedRows}
@@ -228,7 +245,102 @@ function Jump() {
                 rowData={listData}
                 columnDefs={listColumn(showRecord, deleteHandler, actionPermission, range)}
             >
-                <div></div>
+                <div>
+                    {isSmallScreen && (
+                        <>
+                            <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer}>
+                                <div style={{ width: '320px', padding: '16px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                        <h3 style={{ margin: 0 }}>篩選選項</h3>
+                                        <IconButton onClick={toggleDrawer}>
+                                            <Close />
+                                        </IconButton>
+                                    </div>
+
+                                    <div style={{ marginBottom: '24px' }}>
+                                        <h4 style={{ marginBottom: '8px' }}>操作</h4>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            <Button
+                                                className='act'
+                                                disabled={!actionPermission || range === 3}
+                                                variant='contained'
+                                                color='warning'
+                                                startIcon={<AddCircleOutline />}
+                                                onClick={addHandler}
+                                                fullWidth
+                                            >
+                                                抓取
+                                            </Button>
+                                            <Button
+                                                disabled={!actionPermission}
+                                                className='act'
+                                                variant='contained'
+                                                startIcon={<CloudSyncIcon />}
+                                                onClick={refreshHandler}
+                                                fullWidth
+                                            >
+                                                更新收盤價
+                                            </Button>
+                                            <Button
+                                                className='act'
+                                                disabled={!actionPermission}
+                                                variant='contained'
+                                                startIcon={<CloseFullscreenIcon />}
+                                                onClick={checkHandler}
+                                                fullWidth
+                                            >
+                                                檢查補上
+                                            </Button>
+                                            <Button
+                                                className='act'
+                                                disabled={!actionPermission || selectedRows.length === 0}
+                                                variant='contained'
+                                                color='error'
+                                                onClick={bulkDeleteHandler}
+                                                fullWidth
+                                            >
+                                                批量刪除 ({selectedRows.length})
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ marginBottom: '24px' }}>
+                                        <h4 style={{ marginBottom: '8px' }}>日期設定</h4>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            <DateRange
+                                                loading={loading}
+                                                selectDate={selectDate}
+                                                setSelectDate={setSelectDate}
+                                                startDate={startDate}
+                                                setStartDate={setStartDate}
+                                                endDate={endDate}
+                                                setEndDate={setEndDate}
+                                                range={range}
+                                                setRange={setRange}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 style={{ marginBottom: '8px' }}>顯示選項</h4>
+                                        <div className='switch' style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                            <FormControlLabel
+                                                value='start'
+                                                control={<Switch checked={checked} onChange={handleChange} color='primary' />}
+                                                label='未補上'
+                                                labelPlacement='start'
+                                            />
+                                            <div className='switch-label'>補上</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Drawer>
+                            <IconButton color='primary' onClick={toggleDrawer} style={{ marginLeft: '10px' }}>
+                                <TuneRounded />
+                            </IconButton>
+                        </>
+                    )}
+                </div>
             </DataGrid>
             <JumpModal loading={loading} actionPermission={actionPermission} open={showRecordDialog} handleClose={handleCloseRecord} recordData={recordData} mutate={mutate} />
         </div>

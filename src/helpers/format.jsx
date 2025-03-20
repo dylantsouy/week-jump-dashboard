@@ -74,40 +74,40 @@ export const observeTypeMapping = (e) => {
 
 export const observeReasonMapping = (e) => {
     const map = {
-        列入觀察: (
+        '0°C': (
             <div className='water water1'>
                 <WaterDropIcon />
-                列入觀察
+                0°C
             </div>
         ),
-        等待資金: (
+        '10°C': (
             <div className='water water2'>
                 <WaterDropIcon />
-                等待資金
+                10°C
             </div>
         ),
-        偏多整理: (
+        '30°C': (
             <div className='water water3'>
                 <WaterDropIcon />
-                偏多整理
+                30°C
             </div>
         ),
-        帶量發動: (
+        '50°C': (
             <div className='water water4'>
                 <WaterDropIcon />
-                帶量發動
+                50°C
             </div>
         ),
-        行情噴發: (
+        '70°C': (
             <div className='water water5'>
                 <WaterDropIcon />
-                行情噴發
+                70°C
             </div>
         ),
-        過熱注意: (
+        '90°C': (
             <div className='water water6'>
                 <WaterDropIcon />
-                過熱注意
+                90°C
             </div>
         ),
     };
@@ -127,7 +127,7 @@ export const rateMapping = (e) => {
         6: <div className='bg neutral'>中立</div>,
         7: <div className='bg neutral'>已反應</div>,
         8: <div className='bg bad'>有風險</div>,
-        9: <div className='bg bad'>中立偏空</div>,
+        9: <div className='bg bad'>偏空</div>,
         10: <div className='bg worst'>不看好</div>,
     };
 

@@ -222,56 +222,6 @@ strong {
     }
 }
 
-.water {
-    display: flex;
-    align-items: center;
-    padding: 5px 10px 5% 8px;
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: $primary;
-    svg {
-        margin-right: 2px;
-        font-size: 18px;
-    }
-    &.water1 {
-        color: #e1ebef;
-        svg {
-            color: #e1ebef;
-        }
-    }
-    &.water2 {
-        color: #7ea2ea;
-        svg {
-            color: #7ea2ea;
-        }
-    }
-    &.water3 {
-        color: #e4d57d;
-        svg {
-            color: #e4d57d;
-        }
-    }
-
-    &.water4 {
-        color: #ffc400;
-        svg {
-            color: #ffc400;
-        }
-    }
-    &.water5 {
-        color: #ff6f1c;
-        svg {
-            color: #ff6f1c;
-        }
-    }
-    &.water6 {
-        color: #f74c4c;
-        svg {
-            color: #f74c4c;
-        }
-    }
-}
-
 .best-text {
     color: #ff0000;
 }
@@ -292,7 +242,15 @@ strong {
 .bold {
     font-weight: 600;
 }
+.ag-paging-panel{
+    font-size: 12px;
+}
+.ag-paging-page-size,.ag-paging-row-summary-panel{
+    @media screen and (max-width: 650px) {
+        display: none;
+    }
 
+}
 .stock-set {
     display: flex;
     justify-content: space-between;

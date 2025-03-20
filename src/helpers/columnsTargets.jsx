@@ -47,7 +47,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                     6: '中立',
                     7: '已反應',
                     8: '有風險',
-                    9: '中立偏空',
+                    9: '偏空',
                     10: '不看好',
                 };
 
@@ -440,7 +440,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'CAGR',
             headerName: 'CAGR',
-            width: 70,
+            width: 60,
             valueGetter: (params) => {
                 const { data } = params;
                 return data?.CAGR || '-';
@@ -450,7 +450,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
         {
             field: 'action',
             headerName: '操作',
-            minWidth: 160,
+            minWidth: 150,
             flex: 1,
             headerClass: 'left',
             cellClass: 'left',

@@ -1,10 +1,10 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsTargets';
 import { useState } from 'react';
-import { Button, Skeleton } from '@mui/material';
+import { Button, Drawer, IconButton, Skeleton, useMediaQuery } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import useTargets from '@/services/useTargets';
-import { AddCircleOutline } from '@mui/icons-material';
+import { AddCircleOutline, TuneRounded } from '@mui/icons-material';
 import EditTargetModal from '@/components/EditTargetModal';
 import AddTargetModal from '@/components/AddTargetModal';
 import { useStore } from '@/stores/store';
@@ -32,6 +32,8 @@ function Target() {
     const [newsData, setNewsData] = useState(null);
     const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
 
     const { isLoading: loading, data: listData, mutate, updatedDate } = useTargets();
 
@@ -142,6 +144,9 @@ function Target() {
             ),
         });
     };
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen);
+    };
 
     return (
         <div className='TablePage Target'>
@@ -152,10 +157,7 @@ function Target() {
                     <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
-            <div className='title-action'>
-                <div className='action-left'></div>
-                <div className='action-right'></div>
-            </div>
+            <div className='title-action mb-2'></div>
             <DataGrid
                 select={true}
                 isLoading={loading}
@@ -163,12 +165,47 @@ function Target() {
                 columnDefs={listColumn(editHandler, deleteHandler, epsHandler, newsHandler, actionPermission, showFastSearchHandler)}
             >
                 <div>
-                    <Button className='act' disabled={loadingAction || !actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
-                        新增
-                    </Button>
-                    <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
-                        更新收盤價
-                    </Button>
+                    {isSmallScreen ? (
+                        <>
+                            <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer}>
+                                <div style={{ width: '320px', padding: '16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                    <h4 style={{ marginBottom: '8px' }}>操作</h4>
+                                    <Button
+                                        className='act'
+                                        disabled={loadingAction || !actionPermission}
+                                        variant='contained'
+                                        color='warning'
+                                        startIcon={<AddCircleOutline />}
+                                        onClick={addHandler}
+                                    >
+                                        新增
+                                    </Button>
+                                    <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+                                        更新收盤價
+                                    </Button>
+                                </div>
+                            </Drawer>
+                            <IconButton color='primary' onClick={toggleDrawer} style={{ marginLeft: '10px' }}>
+                                <TuneRounded />
+                            </IconButton>
+                        </>
+                    ) : (
+                        <div>
+                            <Button
+                                className='act'
+                                disabled={loadingAction || !actionPermission}
+                                variant='contained'
+                                color='warning'
+                                startIcon={<AddCircleOutline />}
+                                onClick={addHandler}
+                            >
+                                新增
+                            </Button>
+                            <Button disabled={!actionPermission} className='act' variant='contained' startIcon={<CloudSyncIcon />} onClick={refreshHandler}>
+                                更新收盤價
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </DataGrid>
             <AddTargetModal open={showAddDialog} handleClose={handleCloseAdd} listData={listData} />

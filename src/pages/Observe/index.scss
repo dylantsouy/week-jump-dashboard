@@ -1,0 +1,56 @@
+
+.water {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    min-width: 68px;
+    svg {
+        margin-right: 2px;
+        font-size: 18px;
+    }
+    &.water1 {
+        color: #e1ebef;
+        text-shadow: 0 0 0 #000;
+        svg {
+            color: #e1ebef;
+        }
+    }
+    &.water2 {
+        color: #7ea2ea;
+        text-shadow: 0 0 0 #000;
+        svg {
+            color: #7ea2ea;
+        }
+    }
+    &.water3 {
+        color: #ffe75e;
+        text-shadow: 0 0 0 #000;
+        svg {
+            color: #ffe75e;
+        }
+    }
+
+    &.water4 {
+        color: #ffc400;
+        text-shadow: 0 0 0 #000;
+        svg {
+            color: #ffc400;
+        }
+    }
+    &.water5 {
+        color: #fd7323;
+        text-shadow: 0 0 0 #000;
+        svg {
+            color: #fd7323;
+        }
+    }
+    &.water6 {
+        color: #fc1b1b;
+        text-shadow: 0 0 0 #000;
+        svg {
+            color: #fc1b1b;
+        }
+    }
+}

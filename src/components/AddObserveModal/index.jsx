@@ -24,9 +24,9 @@ const initValid = {
 };
 
 const reasonOptions = {
-    1: ['列入觀察', '等待資金'],
-    2: ['偏多整理', '帶量發動'],
-    3: ['行情噴發', '過熱注意'],
+    1: ['0°C', '10°C'],
+    2: ['30°C', '50°C'],
+    3: ['70°C', '90°C'],
 };
 export default function AddObserveModal(props) {
     const { open, handleClose } = props;
@@ -57,7 +57,7 @@ export default function AddObserveModal(props) {
     const [loading, setLoading] = useState(false);
     const [addData, setAddData] = useState({
         price: '',
-        reason: '列入觀察',
+        reason: '0°C',
         date: dayjs(),
         stockCode: null,
         type: 1,

@@ -75,11 +75,19 @@
     .ag-header{
         height: 38px !important;
         min-height: 38px !important;
+        @media screen and (max-width: 750px) {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
     }
     .ag-header-cell{
         padding: 0;
         display: flex;
         height: 38px !important;
+        @media screen and (max-width: 750px) {
+            font-size: 12px;
+            height: 30px !important;
+        }
         .ag-header-cell-text{
             width: 100%;
             display: flex;
@@ -104,6 +112,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        @media screen and (max-width: 750px) {
+            font-size: 12px;
+        }
         &.left{
             justify-content: flex-start;
         }
@@ -136,6 +147,7 @@
             @media screen and (max-width: 750px) {
                 align-items: center;
                 margin-bottom: 5px;
+                font-size: 14px;
             }
         }
         .title-right {
@@ -148,6 +160,7 @@
             @media screen and (max-width: 750px) {
                 align-items: center;
                 margin-bottom: 5px;
+                font-size: 12px;
             }
             .flex-center {
                 color: $warning;
@@ -190,13 +203,6 @@
         .action-left{
             margin-top: 8px;
             margin-bottom: 10px;
-            @media screen and (max-width: 750px) {
-                margin-bottom: 0;
-            }
-        }
-        @media screen and (max-width: 750px) {
-            margin-bottom: 25px;
-            justify-content: center;
         }
         @media screen and (max-width: 392px) {
             margin-bottom: 35px;

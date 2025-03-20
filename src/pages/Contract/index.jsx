@@ -1,11 +1,11 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsContracts';
 import { useState } from 'react';
-import { Button, Skeleton, Typography, IconButton } from '@mui/material';
+import { Button, Skeleton, Typography, IconButton, useMediaQuery, Drawer } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
-import { AddCircleOutline, ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import { AddCircleOutline, ArrowBackIos, ArrowForwardIos, Close, TuneRounded } from '@mui/icons-material';
 import useContracts from '@/services/useContracts';
 import { addContracts, bulkDeleteContract } from '@/services/contractApi';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -21,6 +21,8 @@ import DataGrid from '@/components/DataGrid';
 function Contract() {
     const { setModalHandler, closeModal, setValue } = useStore();
     const actionPermission = usePermissionCheck('action');
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
     const [range, setRange] = useState(50);
     const [rank, setRank] = useState('percentage');
     const { enqueueSnackbar } = useSnackbar();
@@ -183,6 +185,9 @@ function Contract() {
             ),
         });
     };
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen);
+    };
     return (
         <div className='TablePage Contract'>
             <div className='title'>
@@ -192,87 +197,184 @@ function Contract() {
                     <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
-            <div className='title-action'>
-                <div className='action-left'>
-                    <Button className='act' disabled={!actionPermission || range === 3} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
-                        抓取
-                    </Button>
-                    <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
-                        批量刪除 ({selectedRows.length})
-                    </Button>
-                </div>
-                <div className='action-right'>
-                    <div className='date-range-outer'>
-                        <div className='date-range'>
-                            <ToggleButtonGroup color='primary' value={rank} exclusive onChange={handleRankChange} aria-label='Platform'>
-                                <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'percentage'}>
-                                    佔股本
-                                </ToggleButton>
-                                <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'qoq'}>
-                                    QoQ
-                                </ToggleButton>
-                                <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'yoy'}>
-                                    YoY
-                                </ToggleButton>
-                                <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'all'}>
-                                    全部
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </div>
-                        <div className='select-area'>
-                            {rank !== 'all' && (
-                                <Box sx={{ marginRight: 1 }}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id='range-label'>大於</InputLabel>
-                                        <Select labelId='range-label' value={range} label='大於' onChange={handleRange}>
-                                            <MenuItem value={0}>0%</MenuItem>
-                                            <MenuItem value={20}>20%</MenuItem>
-                                            <MenuItem value={50}>50%</MenuItem>
-                                            <MenuItem value={75}>75%</MenuItem>
-                                            <MenuItem value={100}>100%</MenuItem>
-                                            <MenuItem value={150}>150%</MenuItem>
-                                            <MenuItem value={200}>200%</MenuItem>
-                                        </Select>
-                                    </FormControl>
+            {isSmallScreen ? (
+                <div className='mb-1'></div>
+            ) : (
+                <div className='title-action'>
+                    <div className='action-left'>
+                        <Button
+                            className='act'
+                            disabled={!actionPermission || range === 3}
+                            variant='contained'
+                            color='warning'
+                            startIcon={<AddCircleOutline />}
+                            onClick={addHandler}
+                        >
+                            抓取
+                        </Button>
+                        <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                            批量刪除 ({selectedRows.length})
+                        </Button>
+                    </div>
+                    <div className='action-right'>
+                        <div className='date-range-outer'>
+                            <div className='date-range'>
+                                <ToggleButtonGroup color='primary' value={rank} exclusive onChange={handleRankChange} aria-label='Platform'>
+                                    <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'percentage'}>
+                                        佔股本
+                                    </ToggleButton>
+                                    <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'qoq'}>
+                                        QoQ
+                                    </ToggleButton>
+                                    <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'yoy'}>
+                                        YoY
+                                    </ToggleButton>
+                                    <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'all'}>
+                                        全部
+                                    </ToggleButton>
+                                </ToggleButtonGroup>
+                            </div>
+                            <div className='select-area'>
+                                {rank !== 'all' && (
+                                    <Box sx={{ marginRight: 1 }}>
+                                        <FormControl fullWidth>
+                                            <InputLabel id='range-label'>大於</InputLabel>
+                                            <Select labelId='range-label' value={range} label='大於' onChange={handleRange}>
+                                                <MenuItem value={0}>0%</MenuItem>
+                                                <MenuItem value={20}>20%</MenuItem>
+                                                <MenuItem value={50}>50%</MenuItem>
+                                                <MenuItem value={75}>75%</MenuItem>
+                                                <MenuItem value={100}>100%</MenuItem>
+                                                <MenuItem value={150}>150%</MenuItem>
+                                                <MenuItem value={200}>200%</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                )}
+                                <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 2 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <IconButton size='small' onClick={handlePrevQuarter} disabled={getCurrentQuarterIndex() <= 0}>
+                                            <ArrowBackIos fontSize='small' />
+                                        </IconButton>
+                                        <FormControl fullWidth>
+                                            <InputLabel id='quarter-label'>季度</InputLabel>
+                                            <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
+                                                {quarterOptions.map((option) => (
+                                                    <MenuItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                        <IconButton size='small' onClick={handleNextQuarter} disabled={getCurrentQuarterIndex() >= quarterOptions.length - 1}>
+                                            <ArrowForwardIos fontSize='small' />
+                                        </IconButton>
+                                    </Box>
+                                    <Typography
+                                        variant='caption'
+                                        sx={{
+                                            textAlign: 'center',
+                                            mt: 0.5,
+                                            color: 'text.secondary',
+                                            fontSize: '0.7rem',
+                                        }}
+                                    >
+                                        {getQuarterDeadline(quarter)}
+                                    </Typography>
                                 </Box>
-                            )}
-                            <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 2 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <IconButton size='small' onClick={handlePrevQuarter} disabled={getCurrentQuarterIndex() <= 0}>
-                                        <ArrowBackIos fontSize='small' />
-                                    </IconButton>
-                                    <FormControl fullWidth>
-                                        <InputLabel id='quarter-label'>季度</InputLabel>
-                                        <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
-                                            {quarterOptions.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <IconButton size='small' onClick={handleNextQuarter} disabled={getCurrentQuarterIndex() >= quarterOptions.length - 1}>
-                                        <ArrowForwardIos fontSize='small' />
-                                    </IconButton>
-                                </Box>
-                                <Typography
-                                    variant='caption'
-                                    sx={{
-                                        textAlign: 'center',
-                                        mt: 0.5,
-                                        color: 'text.secondary',
-                                        fontSize: '0.7rem',
-                                    }}
-                                >
-                                    {getQuarterDeadline(quarter)}
-                                </Typography>
-                            </Box>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
             <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn()} isLoading={loading}>
-                <div></div>
+                <div>
+                    {isSmallScreen && (
+                        <>
+                            <Drawer anchor='right' open={drawerOpen} onClose={toggleDrawer}>
+                                <Box sx={{ width: 320, p: 3 }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                                        <Typography variant='h6'>篩選選項</Typography>
+                                        <IconButton onClick={toggleDrawer}>
+                                            <Close />
+                                        </IconButton>
+                                    </Box>
+
+                                    <h4 style={{ marginBottom: '8px' }}>過濾方式</h4>
+                                    <ToggleButtonGroup color='primary' value={rank} exclusive onChange={handleRankChange} aria-label='Platform' fullWidth sx={{ mb: 3 }}>
+                                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'percentage'}>
+                                            佔股本
+                                        </ToggleButton>
+                                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'qoq'}>
+                                            QoQ
+                                        </ToggleButton>
+                                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'yoy'}>
+                                            YoY
+                                        </ToggleButton>
+                                        <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={'all'}>
+                                            全部
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+
+                                    {rank !== 'all' && (
+                                        <Box sx={{ mb: 3 }}>
+                                            <h4 style={{ marginBottom: '16px' }}>過濾條件</h4>
+                                            <FormControl fullWidth>
+                                                <InputLabel id='range-label'>大於</InputLabel>
+                                                <Select labelId='range-label' value={range} label='大於' onChange={handleRange}>
+                                                    <MenuItem value={0}>0%</MenuItem>
+                                                    <MenuItem value={20}>20%</MenuItem>
+                                                    <MenuItem value={50}>50%</MenuItem>
+                                                    <MenuItem value={75}>75%</MenuItem>
+                                                    <MenuItem value={100}>100%</MenuItem>
+                                                    <MenuItem value={150}>150%</MenuItem>
+                                                    <MenuItem value={200}>200%</MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Box>
+                                    )}
+
+                                    <Box sx={{ mb: 3 }}>
+                                        <h4 style={{ marginBottom: '16px' }}>季度選擇</h4>
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <IconButton size='small' onClick={handlePrevQuarter} disabled={getCurrentQuarterIndex() <= 0}>
+                                                <ArrowBackIos fontSize='small' />
+                                            </IconButton>
+                                            <FormControl fullWidth>
+                                                <InputLabel id='quarter-label'>季度</InputLabel>
+                                                <Select labelId='quarter-label' value={quarter} label='季度' onChange={handleQuarter}>
+                                                    {quarterOptions.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                            <IconButton size='small' onClick={handleNextQuarter} disabled={getCurrentQuarterIndex() >= quarterOptions.length - 1}>
+                                                <ArrowForwardIos fontSize='small' />
+                                            </IconButton>
+                                        </Box>
+                                        <Typography
+                                            variant='caption'
+                                            sx={{
+                                                display: 'block',
+                                                textAlign: 'center',
+                                                mt: 0.5,
+                                                color: 'text.secondary',
+                                                fontSize: '0.7rem',
+                                            }}
+                                        >
+                                            {getQuarterDeadline(quarter)}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </Drawer>
+                            <IconButton color='primary' onClick={toggleDrawer} style={{ marginLeft: '10px' }}>
+                                <TuneRounded />
+                            </IconButton>
+                        </>
+                    )}
+                </div>
             </DataGrid>
         </div>
     );
