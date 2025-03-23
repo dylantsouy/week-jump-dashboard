@@ -14,7 +14,8 @@ const useLoans = (props) => {
     const { data, mutate, isValidating } = useSWR([fullUrl, {}, 'GET'], swrFetcher, {
         revalidateOnFocus: false,
     });
-    let updatedDate = data?.data?.[0]?.stockUpdatedAt;
+    let updatedDate = data?.data?.[0]?.updatedAt;
+    console.log(updatedDate);
 
     return { data: data?.data, mutate, updatedDate, isLoading: isValidating };
 };

@@ -1,6 +1,6 @@
 import './index.scss';
 import { listColumn } from '@/helpers/columnsObserves';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button, Skeleton, TextField, IconButton, Tooltip, Drawer, useMediaQuery } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useStore } from '@/stores/store';
@@ -17,6 +17,7 @@ import EditObserveModal from '@/components/EditObserveModal';
 import DataGrid from '@/components/DataGrid';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import HelpModal from '@/components/HelpModal';
+
 function Observe() {
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
@@ -25,25 +26,89 @@ function Observe() {
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [type, setType] = useState(2);
-
-    // 獲取今天的日期，格式為 YYYY-MM-DD
-    const getTodayDate = () => {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
-    };
-    const todayDate = getTodayDate();
-
-    // 設定最小允許日期為 2025-03-16
-    const minDate = '2025-03-16';
-
-    const [date, setDate] = useState(getTodayDate());
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [editData, setEditData] = useState(null);
     const [showAddDialog, setShowAddDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const isSmallScreen = useMediaQuery('(max-width:700px)');
 
-    // 修改 useObserves 的調用，只在 usingDate 為真時加入 date 參數
+    // 检查日期是否为周末
+    const isWeekend = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDay();
+        return day === 0 || day === 6;
+    };
+
+    // 获取最近工作日（如果当前是周末）
+    const getLastWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+
+        if (day === 0) {
+            date.setDate(date.getDate() - 2);
+        } else if (day === 6) {
+            date.setDate(date.getDate() - 1);
+        }
+
+        return date.toISOString().split('T')[0];
+    };
+
+    // 获取下一个工作日
+    const getNextWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+        let daysToAdd = 1;
+
+        if (day === 5) {
+            daysToAdd = 3;
+        } else if (day === 6) {
+            daysToAdd = 2;
+        }
+
+        date.setDate(date.getDate() + daysToAdd);
+        return date.toISOString().split('T')[0];
+    };
+
+    // 获取前一个工作日
+    const getPreviousWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+        let daysToSubtract = 1;
+
+        if (day === 1) {
+            daysToSubtract = 3;
+        } else if (day === 0) {
+            daysToSubtract = 2;
+        }
+
+        date.setDate(date.getDate() - daysToSubtract);
+        return date.toISOString().split('T')[0];
+    };
+
+    // 获取今天的日期
+    const getTodayDate = () => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    };
+
+    const todayDate = getTodayDate();
+    // 设定最小允许日期为 2025-03-16
+    const minDate = '2025-03-16';
+
+    // 获取初始日期（如果今天是周末则返回最近的工作日）
+    const getInitialDate = useCallback(() => {
+        const today = getTodayDate();
+        return isWeekend(today) ? getLastWeekday(today) : today;
+    }, []);
+
+    const [date, setDate] = useState(getInitialDate());
+
+    // 确保组件挂载时设置正确的初始日期
+    useEffect(() => {
+        setDate(getInitialDate());
+    }, [getInitialDate]);
+
+    // 修改 useObserves 的调用，传入日期参数
     const {
         isLoading: loading,
         data: listData,
@@ -54,55 +119,67 @@ function Observe() {
         date: date,
     });
 
-    // 處理日期變更的函數
+    // 处理日期变更的函数
     const handleDateChange = (e) => {
         const newDate = e.target.value;
-        // 檢查新日期是否大於今天
+
+        // 检查新日期是否大于今天
         if (newDate > todayDate) {
-            enqueueSnackbar('不能選擇未來的日期', { variant: 'warning' });
+            enqueueSnackbar('不能選擇未來的日期', { variant: 'error' });
             return;
         }
-        // 檢查新日期是否小於最小允許日期
+
+        // 检查新日期是否小于最小允许日期
         if (newDate < minDate) {
-            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'warning' });
+            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'error' });
             return;
         }
+
+        // 检查是否为周末
+        if (isWeekend(newDate)) {
+            enqueueSnackbar('不能選擇週六或週日', { variant: 'error' });
+            return;
+        }
+
         setDate(newDate);
     };
 
-    // 日期前進一天
+    // 日期前进一个工作日
     const handleNextDay = () => {
-        const currentDate = new Date(date);
-        currentDate.setDate(currentDate.getDate() + 1);
-        const newDate = currentDate.toISOString().split('T')[0];
-        if (newDate <= todayDate) {
-            setDate(newDate);
+        const nextDate = getNextWeekday(date);
+
+        if (nextDate <= todayDate) {
+            setDate(nextDate);
         }
     };
 
-    // 日期後退一天
+    // 日期后退一个工作日
     const handlePrevDay = () => {
-        const currentDate = new Date(date);
-        currentDate.setDate(currentDate.getDate() - 1);
-        const newDate = currentDate.toISOString().split('T')[0];
-        if (newDate >= minDate) {
-            setDate(newDate);
+        const prevDate = getPreviousWeekday(date);
+
+        if (prevDate >= minDate) {
+            setDate(prevDate);
         } else {
-            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'warning' });
+            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'error' });
         }
     };
 
-    // 返回今天
+    // 返回今天（如果是周末则返回最近的工作日）
     const handleToday = () => {
-        setDate(todayDate);
+        if (isWeekend(todayDate)) {
+            setDate(getLastWeekday(todayDate));
+            enqueueSnackbar('今天是週末，已設定為最近的週五', { variant: 'success' });
+        } else {
+            setDate(todayDate);
+        }
     };
 
-    // 清除日期過濾
+    // 清除日期过滤
     const handleClearDate = () => {
         setDate('');
     };
 
-    // 其他原有的函數保持不變
+    // 其他原有的函数保持不变
     const editHandler = (e) => {
         setEditData(e);
         setShowEditDialog(true);
@@ -141,7 +218,9 @@ function Observe() {
             mutate();
         }
     };
-    const isToday = date === todayDate;
+
+    // 判断当前日期是否为今天或最近的工作日
+    const isToday = date === (isWeekend(todayDate) ? getLastWeekday(todayDate) : todayDate);
     const isMinDate = date === minDate;
 
     const handleTypeChange = (e) => {
@@ -222,7 +301,7 @@ function Observe() {
                     </div>
                     <div className='action-right'>
                         <div className='date-picker-container' style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-                            <Tooltip title={isMinDate ? '已到可選最早日期' : '前一天'}>
+                            <Tooltip title={isMinDate ? '已到可選最早日期' : '前一個工作日'}>
                                 <IconButton size='small' onClick={handlePrevDay} disabled={loading || isMinDate}>
                                     <ArrowBackIos fontSize='small' />
                                 </IconButton>
@@ -243,7 +322,7 @@ function Observe() {
                                 size='small'
                                 disabled={loading}
                             />
-                            <Tooltip title={isToday ? '已是今天' : '後一天'}>
+                            <Tooltip title={isToday ? '已是今天或最近的工作日' : '後一個工作日'}>
                                 <IconButton size='small' onClick={handleNextDay} disabled={loading || isToday}>
                                     <ArrowForwardIos fontSize='small' />
                                 </IconButton>

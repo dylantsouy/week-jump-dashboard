@@ -233,7 +233,7 @@ function Loan() {
     return (
         <div className='TablePage Observe'>
             <div className='title'>
-                <div className='title-left'>動能清單</div>
+                <div className='title-left'>融資清單</div>
 
                 <div className='title-right'>
                     收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}

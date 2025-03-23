@@ -5,12 +5,18 @@
   padding: 20px 0;
   background-color: $primary;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   align-items: center;
+  overflow-y: auto;
   @media screen and (max-width: 700px) {
     width: 42px;
   }
   .logo {
+    position: absolute;
+    top: 20px;
+    right: 50%;
+    transform: translateX(50%);
     cursor: pointer;
     svg {
       width: 30px;
@@ -18,7 +24,7 @@
     }
   }
   .sidebar-items {
-    margin-top: 50px;
+    margin-top: 80px;
     .sidebar-item{
       margin-bottom: 25px;
       svg {
@@ -28,10 +34,6 @@
     }
   }
   .logout {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
   }
   .sidebar-item {
     border-radius: 10px;

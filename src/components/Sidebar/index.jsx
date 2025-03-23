@@ -102,13 +102,13 @@ export default function Sidebar() {
             </div>
             <div className='sidebar-items'>
                 {sidebarItems.map((e) => (
-                    <HasPermission key={e.router} permission={e.permission}>
-                        <Tooltip title={e.title} placement='left'>
-                            <div className={`sidebar-item ${pathname?.includes(e.router) && 'active'}`} onClick={() => goHandler(e.router)}>
-                                <IconButton color='white'>{e.icon}</IconButton>
-                            </div>
-                        </Tooltip>
-                    </HasPermission>
+                    // <HasPermission key={e.router} permission={e.permission}>
+                    <Tooltip key={e.router} title={e.title} placement='left'>
+                        <div className={`sidebar-item ${pathname?.includes(e.router) && 'active'}`} onClick={() => goHandler(e.router)}>
+                            <IconButton color='white'>{e.icon}</IconButton>
+                        </div>
+                    </Tooltip>
+                    // </HasPermission>
                 ))}
             </div>
             <div className='logout'>
