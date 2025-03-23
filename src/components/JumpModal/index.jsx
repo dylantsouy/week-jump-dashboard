@@ -86,7 +86,7 @@ export default function JumpModal(props) {
     return (
         <Dialog className='editDialog JumpModal' open={open} onClose={() => handleClose()}>
             <DialogTitle>
-                <span className='title-text'>{'跳空明細'}</span>
+                <span className='title-text'>{'跳空歷史'}</span>
             </DialogTitle>
             <DialogContent>
                 <div className='stock-set'>

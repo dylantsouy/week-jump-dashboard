@@ -9,12 +9,13 @@ import { useSnackbar } from 'notistack';
 import HasPermission from '@/helpers/HasPermission';
 import AdsClickIcon from '@mui/icons-material/AdsClick';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CalculateModal from '../CalculateModal';
 import FastSearchModal from '../FastSearchModal';
 import { useState } from 'react';
 import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -45,9 +46,15 @@ export default function Sidebar() {
             permission: 'observe',
         },
         {
+            title: '融資清單',
+            router: '/loan',
+            icon: <PriceChangeIcon />,
+            permission: 'loan',
+        },
+        {
             title: '合約清單',
             router: '/contract',
-            icon: <ReceiptLongIcon />,
+            icon: <HandshakeIcon />,
             permission: 'contract',
         },
     ];

@@ -1,130 +1,24 @@
 import './index.scss';
-import { listColumn } from '@/helpers/columnsObserves';
-import { useState } from 'react';
+import { listColumn } from '@/helpers/columnsLoans';
+import { useState, useEffect, useCallback } from 'react';
 import { Button, Skeleton, TextField, IconButton, Tooltip, Drawer, useMediaQuery } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
 import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { AddCircleOutline, ArrowBackIos, ArrowForwardIos, TuneRounded, Close } from '@mui/icons-material';
-import useObserves from '@/services/useObserves';
-import ObserveRecordModal from '@/components/ObserveRecordModal';
 import { deleteObserve } from '@/services/observe';
-import AddObserveModal from '@/components/AddObserveModal';
-import EditObserveModal from '@/components/EditObserveModal';
 import DataGrid from '@/components/DataGrid';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import HelpModal from '@/components/HelpModal';
-function Observe() {
+import useLoans from '@/services/useLoans';
+import { addLoans } from '@/services/loanApi';
+import LoanRecordModal from '@/components/LoanRecordModal';
+
+function Loan() {
     const actionPermission = usePermissionCheck('action');
     const { setModalHandler, closeModal, setValue } = useStore();
+    const [drawerOpen, setDrawerOpen] = useState(false);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
-    const [showHelpModal, setShowHelpModal] = useState(false);
-    const [drawerOpen, setDrawerOpen] = useState(false);
-    const [type, setType] = useState(2);
-
-    // 獲取今天的日期，格式為 YYYY-MM-DD
-    const getTodayDate = () => {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
-    };
-    const todayDate = getTodayDate();
-
-    // 設定最小允許日期為 2025-03-16
-    const minDate = '2025-03-16';
-
-    const [date, setDate] = useState(getTodayDate());
-    const [showEditDialog, setShowEditDialog] = useState(false);
-    const [editData, setEditData] = useState(null);
-    const [showAddDialog, setShowAddDialog] = useState(false);
-    const { enqueueSnackbar } = useSnackbar();
-    const isSmallScreen = useMediaQuery('(max-width:700px)');
-
-    // 修改 useObserves 的調用，只在 usingDate 為真時加入 date 參數
-    const {
-        isLoading: loading,
-        data: listData,
-        mutate,
-        updatedDate,
-    } = useObserves({
-        type,
-        date: date,
-    });
-
-    // 處理日期變更的函數
-    const handleDateChange = (e) => {
-        const newDate = e.target.value;
-        // 檢查新日期是否大於今天
-        if (newDate > todayDate) {
-            enqueueSnackbar('不能選擇未來的日期', { variant: 'warning' });
-            return;
-        }
-        // 檢查新日期是否小於最小允許日期
-        if (newDate < minDate) {
-            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'warning' });
-            return;
-        }
-        setDate(newDate);
-    };
-
-    // 日期前進一天
-    const handleNextDay = () => {
-        const currentDate = new Date(date);
-        currentDate.setDate(currentDate.getDate() + 1);
-        const newDate = currentDate.toISOString().split('T')[0];
-        if (newDate <= todayDate) {
-            setDate(newDate);
-        }
-    };
-
-    // 日期後退一天
-    const handlePrevDay = () => {
-        const currentDate = new Date(date);
-        currentDate.setDate(currentDate.getDate() - 1);
-        const newDate = currentDate.toISOString().split('T')[0];
-        if (newDate >= minDate) {
-            setDate(newDate);
-        } else {
-            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'warning' });
-        }
-    };
-
-    // 返回今天
-    const handleToday = () => {
-        setDate(todayDate);
-    };
-
-    // 清除日期過濾
-    const handleClearDate = () => {
-        setDate('');
-    };
-
-    // 其他原有的函數保持不變
-    const editHandler = (e) => {
-        setEditData(e);
-        setShowEditDialog(true);
-    };
-
-    const handleCloseEdit = (refresh) => {
-        setShowEditDialog(false);
-        if (refresh) {
-            mutate();
-        }
-    };
-
-    const addHandler = () => {
-        setShowAddDialog(true);
-    };
-
-    const handleCloseAdd = (refresh) => {
-        setShowAddDialog(false);
-        if (refresh) {
-            mutate();
-        }
-    };
 
     const showRecord = (e) => {
         setRecordData(e);
@@ -135,19 +29,165 @@ function Observe() {
         setShowRecordDialog(false);
     };
 
+    const isWeekend = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDay();
+        return day === 0 || day === 6;
+    };
+
+    const getLastWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+
+        if (day === 0) {
+            date.setDate(date.getDate() - 2);
+        } else if (day === 6) {
+            date.setDate(date.getDate() - 1);
+        }
+
+        return date.toISOString().split('T')[0];
+    };
+
+    const getNextWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+        let daysToAdd = 1;
+
+        if (day === 5) {
+            daysToAdd = 3;
+        } else if (day === 6) {
+            daysToAdd = 2;
+        }
+
+        date.setDate(date.getDate() + daysToAdd);
+        return date.toISOString().split('T')[0];
+    };
+
+    const getPreviousWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+        let daysToSubtract = 1;
+
+        if (day === 1) {
+            daysToSubtract = 3;
+        } else if (day === 0) {
+            daysToSubtract = 2;
+        }
+
+        date.setDate(date.getDate() - daysToSubtract);
+        return date.toISOString().split('T')[0];
+    };
+
+    const getTodayDate = () => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    };
+
+    const todayDate = getTodayDate();
+    const minDate = '2025-03-21';
+
+    const getInitialDate = useCallback(() => {
+        const today = getTodayDate();
+        return isWeekend(today) ? getLastWeekday(today) : today;
+    }, []);
+
+    const [date, setDate] = useState(getInitialDate());
+
+    useEffect(() => {
+        setDate(getInitialDate());
+    }, [getInitialDate]);
+
+    const { enqueueSnackbar } = useSnackbar();
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
+
+    const {
+        isLoading: loading,
+        data: listData,
+        mutate,
+        updatedDate,
+    } = useLoans({
+        date: date,
+    });
+
+    const handleDateChange = (e) => {
+        const newDate = e.target.value;
+
+        if (newDate > todayDate) {
+            enqueueSnackbar('不能選擇未來的日期', { variant: 'error' });
+            return;
+        }
+
+        if (newDate < minDate) {
+            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'error' });
+            return;
+        }
+
+        if (isWeekend(newDate)) {
+            enqueueSnackbar('不能選擇週六或週日', { variant: 'error' });
+            return;
+        }
+
+        setDate(newDate);
+    };
+
+    const handleNextDay = () => {
+        const currentDate = new Date(date);
+        const nextDate = getNextWeekday(currentDate.toISOString().split('T')[0]);
+
+        if (nextDate <= todayDate) {
+            setDate(nextDate);
+        }
+    };
+
+    const handlePrevDay = () => {
+        const currentDate = new Date(date);
+        const prevDate = getPreviousWeekday(currentDate.toISOString().split('T')[0]);
+
+        if (prevDate >= minDate) {
+            setDate(prevDate);
+        } else {
+            enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'error' });
+        }
+    };
+
+    const handleToday = () => {
+        if (isWeekend(todayDate)) {
+            setDate(getLastWeekday(todayDate));
+            enqueueSnackbar('今天是週末，已設定為最近的週五', { variant: 'success' });
+        } else {
+            setDate(todayDate);
+        }
+    };
+
+    const handleClearDate = () => {
+        setDate('');
+    };
+
+    const addHandler = async () => {
+        try {
+            let result = await addLoans();
+            const { success } = result;
+            if (success) {
+                if (result?.isExisting) {
+                    enqueueSnackbar('最新資料已存在', { variant: 'error' });
+                    return;
+                }
+                enqueueSnackbar('抓取成功', { variant: 'success' });
+            }
+        } catch (err) {
+            enqueueSnackbar('抓取失敗', { variant: 'error' });
+        }
+    };
+
     const handleCloseDelete = (refresh) => {
         closeModal(false);
         if (refresh) {
             mutate();
         }
     };
-    const isToday = date === todayDate;
-    const isMinDate = date === minDate;
 
-    const handleTypeChange = (e) => {
-        const newRange = +e.target.value;
-        setType(newRange);
-    };
+    const isToday = date === (isWeekend(todayDate) ? getLastWeekday(todayDate) : todayDate);
+    const isMinDate = date === minDate;
 
     const confirmDelete = async (e) => {
         setValue('modalLoading', true);
@@ -186,14 +226,6 @@ function Observe() {
         });
     };
 
-    const helpHandler = () => {
-        setShowHelpModal(true);
-    };
-
-    const closehelp = () => {
-        setShowHelpModal(false);
-    };
-
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
     };
@@ -214,15 +246,12 @@ function Observe() {
                 <div className='title-action'>
                     <div className='action-left'>
                         <Button className='act' disabled={!actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
-                            新增
-                        </Button>
-                        <Button className='act' variant='contained' color='primary' startIcon={<HelpOutlineIcon />} onClick={helpHandler}>
-                            說明
+                            抓取
                         </Button>
                     </div>
                     <div className='action-right'>
-                        <div className='date-picker-container' style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}>
-                            <Tooltip title={isMinDate ? '已到可選最早日期' : '前一天'}>
+                        <div className='date-picker-container' style={{ display: 'flex', alignItems: 'center' }}>
+                            <Tooltip title={isMinDate ? '已到可選最早日期' : '前一個工作日'}>
                                 <IconButton size='small' onClick={handlePrevDay} disabled={loading || isMinDate}>
                                     <ArrowBackIos fontSize='small' />
                                 </IconButton>
@@ -243,7 +272,7 @@ function Observe() {
                                 size='small'
                                 disabled={loading}
                             />
-                            <Tooltip title={isToday ? '已是今天' : '後一天'}>
+                            <Tooltip title={isToday ? '已是今天或最近的工作日' : '後一個工作日'}>
                                 <IconButton size='small' onClick={handleNextDay} disabled={loading || isToday}>
                                     <ArrowForwardIos fontSize='small' />
                                 </IconButton>
@@ -257,25 +286,11 @@ function Observe() {
                                 </Button>
                             </div>
                         </div>
-                        <ToggleButtonGroup color='primary' value={type} exclusive onChange={handleTypeChange} aria-label='Platform'>
-                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
-                                熱水
-                            </ToggleButton>
-                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={2}>
-                                溫水
-                            </ToggleButton>
-                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={1}>
-                                冷水
-                            </ToggleButton>
-                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={4}>
-                                全部
-                            </ToggleButton>
-                        </ToggleButtonGroup>
                     </div>
                 </div>
             )}
 
-            <DataGrid rowData={listData} columnDefs={listColumn(showRecord, deleteHandler, editHandler, actionPermission)} isLoading={loading}>
+            <DataGrid rowData={listData} columnDefs={listColumn(showRecord)} isLoading={loading}>
                 <div>
                     {isSmallScreen && (
                         <>
@@ -299,10 +314,7 @@ function Observe() {
                                                 startIcon={<AddCircleOutline />}
                                                 onClick={addHandler}
                                             >
-                                                新增
-                                            </Button>
-                                            <Button className='act' variant='contained' color='primary' startIcon={<HelpOutlineIcon />} onClick={helpHandler}>
-                                                說明
+                                                抓取
                                             </Button>
                                         </div>
                                     </div>
@@ -345,32 +357,6 @@ function Observe() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div>
-                                        <h4 style={{ marginBottom: '8px' }}>類型選擇</h4>
-                                        <ToggleButtonGroup
-                                            color='primary'
-                                            value={type}
-                                            exclusive
-                                            onChange={handleTypeChange}
-                                            aria-label='Platform'
-                                            orientation='vertical'
-                                            fullWidth
-                                        >
-                                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={3}>
-                                                熱水
-                                            </ToggleButton>
-                                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={2}>
-                                                溫水
-                                            </ToggleButton>
-                                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={1}>
-                                                冷水
-                                            </ToggleButton>
-                                            <ToggleButton disabled={loading} variant={'contained'} color={'primary'} value={4}>
-                                                全部
-                                            </ToggleButton>
-                                        </ToggleButtonGroup>
-                                    </div>
                                 </div>
                             </Drawer>
                             <IconButton color='primary' onClick={toggleDrawer} style={{ marginLeft: '10px' }}>
@@ -380,19 +366,9 @@ function Observe() {
                     )}
                 </div>
             </DataGrid>
-            <AddObserveModal open={showAddDialog} handleClose={handleCloseAdd} />
-            <EditObserveModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
-            <ObserveRecordModal
-                loading={loading}
-                actionPermission={actionPermission}
-                open={showRecordDialog}
-                handleClose={handleCloseRecord}
-                recordData={recordData}
-                mutate={mutate}
-            />
-            <HelpModal open={showHelpModal} handleClose={closehelp} />
+            <LoanRecordModal open={showRecordDialog} handleClose={handleCloseRecord} recordData={recordData} />
         </div>
     );
 }
 
-export default Observe;
+export default Loan;

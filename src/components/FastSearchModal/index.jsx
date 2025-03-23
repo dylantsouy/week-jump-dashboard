@@ -17,6 +17,10 @@ import ObserveRecordModal from '../ObserveRecordModal';
 import useObserve from '@/services/useObserve';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import HandshakeIcon from '@mui/icons-material/Handshake';
+import useLoan from '@/services/useLoan';
+import LoanRecordModal from '../LoanRecordModal';
+import PriceChangeIcon from '@mui/icons-material/PriceChange';
 
 export default function FastSearchModal(props) {
     const { open, handleClose, propsStock } = props;
@@ -28,6 +32,8 @@ export default function FastSearchModal(props) {
     const [showJumpData, setShowJumpData] = useState(null);
     const [showRunDialog, setShowRunDialog] = useState(false);
     const [showRunData, setShowRunData] = useState(null);
+    const [showLoanDialog, setShowLoanDialog] = useState(false);
+    const [showLoanData, setShowLoanData] = useState(null);
     const [selectedStock, setSelectedStock] = useState(null);
     const isSmallScreen = useMediaQuery('(max-width:700px)');
 
@@ -103,6 +109,22 @@ export default function FastSearchModal(props) {
         setShowJumpDialog(true);
     };
 
+    const { data: loanData, isLoading: loadingLoan } = useLoan({
+        code: selectedStock?.code,
+    });
+
+    const showLoanRecord = () => {
+        let e = loanData || {};
+        if (!e?.stockCode) {
+            enqueueSnackbar('沒有紀錄', { variant: 'error' });
+            return;
+        }
+        setShowLoanData(e);
+        setShowLoanDialog(true);
+    };
+    const handleCloseLoan = () => {
+        setShowLoanDialog(false);
+    };
     const {
         data: runData,
         isLoading: loadingRun,
@@ -171,8 +193,26 @@ export default function FastSearchModal(props) {
                             動能歷史
                         </Button>
                         <Button
+                            disabled={loadingLoan || !loanData?.stockCode}
+                            variant='contained'
+                            startIcon={<PriceChangeIcon />}
+                            component={Link}
+                            onClick={() => showLoanRecord()}
+                        >
+                            融資歷史
+                        </Button>
+                        <Button
                             variant='contained'
                             startIcon={<ShowChartIcon />}
+                            component={Link}
+                            target='_blank'
+                            to={`https://tw.stock.yahoo.com/quote/${selectedStock?.code}.TW/technical-analysis`}
+                        >
+                            技術分析
+                        </Button>
+                        <Button
+                            variant='contained'
+                            startIcon={<HandshakeIcon />}
                             component={Link}
                             target='_blank'
                             to={`https://www.istock.tw/stock/${selectedStock?.code}/contract-liability`}
@@ -222,6 +262,7 @@ export default function FastSearchModal(props) {
                     recordData={showRunData}
                     mutate={mutateRun}
                 />
+                <LoanRecordModal open={showLoanDialog} handleClose={handleCloseLoan} recordData={showLoanData} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>取消</Button>

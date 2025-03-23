@@ -1,9 +1,9 @@
 import { Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Billion, Dog } from '@/assets/icons';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 import './index.scss';
 
 export default function ActionButtons(props) {
@@ -13,7 +13,7 @@ export default function ActionButtons(props) {
         <>
             <Tooltip title={'合約負債'} placement='bottom'>
                 <Link target='_blank' to={`https://www.istock.tw/stock/${code}/contract-liability`}>
-                    <ShowChartIcon className='action-icon primary mr-2' />
+                    <HandshakeIcon className='action-icon primary mr-2' />
                 </Link>
             </Tooltip>
             <Tooltip title={'股權結構'} placement='bottom'>

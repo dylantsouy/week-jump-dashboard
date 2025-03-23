@@ -79,7 +79,7 @@ export default function ObserveRecordModal(props) {
     return (
         <Dialog className='editDialog ObserveRecordModal' open={open} onClose={() => handleClose()}>
             <DialogTitle>
-                <span className='title-text'>{'觀察明細'}</span>
+                <span className='title-text'>{'動能歷史'}</span>
             </DialogTitle>
             <DialogContent>
                 <div className='stock-set'>

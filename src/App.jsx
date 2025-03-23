@@ -15,6 +15,7 @@ import Contract from './pages/Contract';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.min.css';
 import Target from './pages/Target';
+import Loan from './pages/Loan';
 
 function App() {
     let element = useRoutes([
@@ -39,6 +40,14 @@ function App() {
             element: (
                 <ProtectedRoute>
                     <Observe />
+                </ProtectedRoute>
+            ),
+        },
+        {
+            path: '/loan',
+            element: (
+                <ProtectedRoute>
+                    <Loan />
                 </ProtectedRoute>
             ),
         },
