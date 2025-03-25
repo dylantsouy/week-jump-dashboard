@@ -15,7 +15,6 @@ const useLoans = (props) => {
         revalidateOnFocus: false,
     });
     let updatedDate = data?.data?.[0]?.updatedAt;
-    console.log(updatedDate);
 
     return { data: data?.data, mutate, updatedDate, isLoading: isValidating };
 };

@@ -3,23 +3,103 @@ import { listColumn } from '@/helpers/columnsLoans';
 import { useState, useEffect, useCallback } from 'react';
 import { Button, Skeleton, TextField, IconButton, Tooltip, Drawer, useMediaQuery } from '@mui/material';
 import { generateMeasureTime } from '@/helpers/format';
-import { useStore } from '@/stores/store';
 import { useSnackbar } from 'notistack';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import { AddCircleOutline, ArrowBackIos, ArrowForwardIos, TuneRounded, Close } from '@mui/icons-material';
-import { deleteObserve } from '@/services/observe';
 import DataGrid from '@/components/DataGrid';
 import useLoans from '@/services/useLoans';
-import { addLoans } from '@/services/loanApi';
+import { addLoans, bulkDeleteLoan } from '@/services/loanApi';
 import LoanRecordModal from '@/components/LoanRecordModal';
+import { useStore } from '@/stores/store';
 
 function Loan() {
     const actionPermission = usePermissionCheck('action');
-    const { setModalHandler, closeModal, setValue } = useStore();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const { setModalHandler, closeModal, setValue } = useStore();
 
+    const getTodayDate = () => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    };
+
+    const todayDate = getTodayDate();
+    const minDate = '2025-03-21';
+
+    const isWeekend = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDay();
+        return day === 0 || day === 6;
+    };
+    const getInitialDate = useCallback(() => {
+        const today = getTodayDate();
+        return isWeekend(today) ? getLastWeekday(today) : today;
+    }, []);
+
+    const [date, setDate] = useState(getInitialDate());
+
+    const {
+        isLoading: loading,
+        data: listData,
+        updatedDate,
+        mutate,
+    } = useLoans({
+        date: date,
+    });
+
+    useEffect(() => {
+        setDate(getInitialDate());
+    }, [getInitialDate]);
+
+    const { enqueueSnackbar } = useSnackbar();
+    const isSmallScreen = useMediaQuery('(max-width:700px)');
+    const confirmBulkDelete = async () => {
+        setValue('modalLoading', true);
+        try {
+            let ids = selectedRows?.map((e) => e?.latestRecord?.id);
+            let result = await bulkDeleteLoan(ids);
+            const { success, deletedCount } = result;
+            if (success) {
+                enqueueSnackbar(`成功刪除 ${deletedCount} 條記錄`, { variant: 'success' });
+                handleCloseDelete(true);
+                setSelectedRows([]);
+                setValue('modalLoading', false);
+            }
+        } catch (err) {
+            enqueueSnackbar('批量刪除失敗', { variant: 'error' });
+            setValue('modalLoading', false);
+        }
+    };
+    const handleCloseDelete = (refresh) => {
+        closeModal(false);
+        if (refresh) {
+            mutate();
+        }
+    };
+    const bulkDeleteHandler = () => {
+        if (selectedRows.length === 0) {
+            enqueueSnackbar('請至少選擇一條記錄', { variant: 'warning' });
+            return;
+        }
+
+        setModalHandler({
+            func: confirmBulkDelete,
+            text: (
+                <div className='delete-content'>
+                    <div className='delete-title'>
+                        <div className='stock-set'>
+                            <div className='stock-name-code'>
+                                <div className='stock-name'>{'請確認是否刪除'}</div>
+                                <div className='stock-code mr-1'>{`已選擇 ${selectedRows.length} 條融資紀錄`}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ),
+        });
+    };
     const showRecord = (e) => {
         setRecordData(e);
         setShowRecordDialog(true);
@@ -27,12 +107,6 @@ function Loan() {
 
     const handleCloseRecord = () => {
         setShowRecordDialog(false);
-    };
-
-    const isWeekend = (dateString) => {
-        const date = new Date(dateString);
-        const day = date.getDay();
-        return day === 0 || day === 6;
     };
 
     const getLastWeekday = (dateString) => {
@@ -77,37 +151,6 @@ function Loan() {
         date.setDate(date.getDate() - daysToSubtract);
         return date.toISOString().split('T')[0];
     };
-
-    const getTodayDate = () => {
-        const today = new Date();
-        return today.toISOString().split('T')[0];
-    };
-
-    const todayDate = getTodayDate();
-    const minDate = '2025-03-21';
-
-    const getInitialDate = useCallback(() => {
-        const today = getTodayDate();
-        return isWeekend(today) ? getLastWeekday(today) : today;
-    }, []);
-
-    const [date, setDate] = useState(getInitialDate());
-
-    useEffect(() => {
-        setDate(getInitialDate());
-    }, [getInitialDate]);
-
-    const { enqueueSnackbar } = useSnackbar();
-    const isSmallScreen = useMediaQuery('(max-width:700px)');
-
-    const {
-        isLoading: loading,
-        data: listData,
-        mutate,
-        updatedDate,
-    } = useLoans({
-        date: date,
-    });
 
     const handleDateChange = (e) => {
         const newDate = e.target.value;
@@ -165,7 +208,7 @@ function Loan() {
 
     const addHandler = async () => {
         try {
-            let result = await addLoans();
+            let result = await addLoans({ date });
             const { success } = result;
             if (success) {
                 if (result?.isExisting) {
@@ -179,52 +222,8 @@ function Loan() {
         }
     };
 
-    const handleCloseDelete = (refresh) => {
-        closeModal(false);
-        if (refresh) {
-            mutate();
-        }
-    };
-
     const isToday = date === (isWeekend(todayDate) ? getLastWeekday(todayDate) : todayDate);
     const isMinDate = date === minDate;
-
-    const confirmDelete = async (e) => {
-        setValue('modalLoading', true);
-        try {
-            let result = await deleteObserve(e?.id);
-            const { success } = result;
-            if (success) {
-                enqueueSnackbar('刪除成功', { variant: 'success' });
-                handleCloseDelete(true);
-                setValue('modalLoading', false);
-            }
-        } catch (err) {
-            enqueueSnackbar('刪除失敗', { variant: 'error' });
-            setValue('modalLoading', false);
-        }
-    };
-
-    const deleteHandler = (e) => {
-        setModalHandler({
-            func: () => confirmDelete(e),
-            text: (
-                <div className='delete-content'>
-                    <div className='delete-title'>
-                        <div className='stock-set'>
-                            <div className='stock-name-code'>
-                                <div className='stock-name'>{'請確認是否刪除'}</div>
-                                <div className='stock-code mr-1'>
-                                    {e?.name} {e?.code}
-                                </div>
-                                <div className='stock-name'>{'觀察紀錄'}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ),
-        });
-    };
 
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
@@ -247,6 +246,9 @@ function Loan() {
                     <div className='action-left'>
                         <Button className='act' disabled={!actionPermission} variant='contained' color='warning' startIcon={<AddCircleOutline />} onClick={addHandler}>
                             抓取
+                        </Button>
+                        <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                            批量刪除 ({selectedRows.length})
                         </Button>
                     </div>
                     <div className='action-right'>
@@ -290,7 +292,7 @@ function Loan() {
                 </div>
             )}
 
-            <DataGrid rowData={listData} columnDefs={listColumn(showRecord)} isLoading={loading}>
+            <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn(showRecord)} isLoading={loading}>
                 <div>
                     {isSmallScreen && (
                         <>
