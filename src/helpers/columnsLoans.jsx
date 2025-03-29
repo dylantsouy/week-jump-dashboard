@@ -116,7 +116,7 @@ export const listColumn = (showRecord) => {
                         <Tooltip title={'融資增加歷史'} placement='bottom'>
                             <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.data)} />
                         </Tooltip>
-                        <ActionButtons code={params?.data?.code} />
+                        <ActionButtons code={params?.data?.stockCode} />
                     </div>
                 );
             },

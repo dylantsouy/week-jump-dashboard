@@ -37,7 +37,7 @@ const initValue = {
     name: '',
     content: '',
     date: dayjs(),
-    fromWhere: '',
+    fromWhere: '報告',
 };
 
 export default function AddNewsModal(props) {

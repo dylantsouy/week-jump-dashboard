@@ -1,10 +1,7 @@
 import { RenderCellExpand } from '@/components/RenderCellExpand';
 import ActionButtons from '@/components/ActionButtons';
 import moment from 'moment';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import { Tooltip } from '@mui/material';
-
-export const listColumn = (showRecord) => {
+export const listColumn = () => {
     return [
         {
             field: 'initPrice',
@@ -75,7 +72,7 @@ export const listColumn = (showRecord) => {
             cellRenderer: (params) => {
                 return (
                     <div className='action'>
-                        <ActionButtons code={params?.data?.code} />
+                        <ActionButtons code={params?.data?.stockCode} />
                     </div>
                 );
             },

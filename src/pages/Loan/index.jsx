@@ -20,13 +20,25 @@ function Loan() {
     const [selectedRows, setSelectedRows] = useState([]);
     const { setModalHandler, closeModal, setValue } = useStore();
 
+    const getLastWeekday = (dateString) => {
+        const date = new Date(dateString);
+        let day = date.getDay();
+
+        if (day === 0) {
+            date.setDate(date.getDate() - 2);
+        } else if (day === 6) {
+            date.setDate(date.getDate() - 1);
+        }
+
+        return date.toISOString().split('T')[0];
+    };
     const getTodayDate = () => {
         const today = new Date();
         return today.toISOString().split('T')[0];
     };
 
     const todayDate = getTodayDate();
-    const minDate = '2025-03-21';
+    const minDate = '2025-03-24';
 
     const isWeekend = (dateString) => {
         const date = new Date(dateString);
@@ -107,19 +119,6 @@ function Loan() {
 
     const handleCloseRecord = () => {
         setShowRecordDialog(false);
-    };
-
-    const getLastWeekday = (dateString) => {
-        const date = new Date(dateString);
-        let day = date.getDay();
-
-        if (day === 0) {
-            date.setDate(date.getDate() - 2);
-        } else if (day === 6) {
-            date.setDate(date.getDate() - 1);
-        }
-
-        return date.toISOString().split('T')[0];
     };
 
     const getNextWeekday = (dateString) => {
