@@ -206,7 +206,7 @@ export default function FastSearchModal(props) {
                             startIcon={<ShowChartIcon />}
                             component={Link}
                             target='_blank'
-                            to={`https://tw.stock.yahoo.com/quote/${selectedStock?.code}.TW/technical-analysis`}
+                            to={`https://www.wantgoo.com/stock/${selectedStock?.code}/technical-chart`}
                         >
                             技術分析
                         </Button>

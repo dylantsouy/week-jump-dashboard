@@ -17,7 +17,7 @@ export const listColumn = (showRecord) => {
                 return (
                     <div className='column_center_center'>
                         <div>{data?.stockName}</div>
-                        <a href={`https://tw.stock.yahoo.com/quote/${data?.stockCode}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
+                        <a href={`https://www.wantgoo.com/stock/${data?.stockCode}/technical-chart`} target='_blank' rel='noreferrer'>
                             {data?.stockCode}
                         </a>
                     </div>

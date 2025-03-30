@@ -19,7 +19,7 @@ export const listColumn = (editHandler, deleteHandler, epsHandler, newsHandler, 
                 return (
                     <div className='column_center_center'>
                         <div>{data?.name}</div>
-                        <a href={`https://tw.stock.yahoo.com/quote/${data?.code}.TW/technical-analysis`} target='_blank' rel='noreferrer'>
+                        <a href={`https://www.wantgoo.com/stock/${data?.code}/technical-chart`} target='_blank' rel='noreferrer'>
                             {data?.code}
                         </a>
                     </div>
