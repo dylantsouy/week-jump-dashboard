@@ -240,13 +240,13 @@ function Contract() {
                                         <FormControl fullWidth>
                                             <InputLabel id='range-label'>大於</InputLabel>
                                             <Select labelId='range-label' value={range} label='大於' onChange={handleRange}>
-                                                <MenuItem value={0}>0%</MenuItem>
                                                 <MenuItem value={20}>20%</MenuItem>
                                                 <MenuItem value={50}>50%</MenuItem>
                                                 <MenuItem value={75}>75%</MenuItem>
                                                 <MenuItem value={100}>100%</MenuItem>
                                                 <MenuItem value={150}>150%</MenuItem>
                                                 <MenuItem value={200}>200%</MenuItem>
+                                                <MenuItem value={500}>500%</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Box>

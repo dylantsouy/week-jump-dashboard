@@ -25,7 +25,7 @@ function Jump() {
     const [selectedRows, setSelectedRows] = useState([]);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
-    const [selectDate, setSelectDate] = useState(new Date());
+    const [selectDate, setSelectDate] = useState(dayjs());
     const [startDate, setStartDate] = useState(dayjs().startOf('week').day(1));
     const [endDate, setEndDate] = useState(dayjs().add(1, 'week').endOf('week').day(0));
     const [range, setRange] = useState(1);
