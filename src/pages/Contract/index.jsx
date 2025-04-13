@@ -17,6 +17,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useStore } from '@/stores/store';
 import DataGrid from '@/components/DataGrid';
+import FastSearchModal from '@/components/FastSearchModal';
 
 function Contract() {
     const { setModalHandler, closeModal, setValue } = useStore();
@@ -27,7 +28,17 @@ function Contract() {
     const [rank, setRank] = useState('percentage');
     const { enqueueSnackbar } = useSnackbar();
     const [selectedRows, setSelectedRows] = useState([]);
+    const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
+    const [propsStock, setPropsStock] = useState('');
 
+    const handleCloseFastSearch = () => {
+        setShowFastSearchDialog(false);
+    };
+
+    const showFastSearchHandler = (stock) => {
+        setPropsStock(stock);
+        setShowFastSearchDialog(true);
+    };
     // 獲取當前日期和設置預設季度
     const getDefaultQuarter = () => {
         const now = new Date();
@@ -287,7 +298,7 @@ function Contract() {
                     </div>
                 </div>
             )}
-            <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn()} isLoading={loading}>
+            <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn(showFastSearchHandler)} isLoading={loading}>
                 <div>
                     {isSmallScreen && (
                         <>
@@ -376,6 +387,7 @@ function Contract() {
                     )}
                 </div>
             </DataGrid>
+            <FastSearchModal open={showFastSearchDialog} handleClose={handleCloseFastSearch} propsStock={propsStock} />
         </div>
     );
 }

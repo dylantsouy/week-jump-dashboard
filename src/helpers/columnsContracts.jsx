@@ -1,7 +1,8 @@
 import { RenderCellExpand } from '@/components/RenderCellExpand';
-import ActionButtons from '@/components/ActionButtons';
+import { Tooltip } from '@mui/material';
+import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
 
-export const listColumn = () => {
+export const listColumn = (showFastSearchHandler) => {
     return [
         {
             field: 'name',
@@ -115,7 +116,9 @@ export const listColumn = () => {
             cellRenderer: (params) => {
                 return (
                     <div className='action'>
-                        <ActionButtons code={params?.data?.code} />
+                        <Tooltip title={'快速查詢'} placement='bottom'>
+                            <ScreenSearchDesktopIcon className='action-icon mr-2' onClick={() => showFastSearchHandler({ code: params?.data?.code, name: params?.data?.name })} />
+                        </Tooltip>
                     </div>
                 );
             },

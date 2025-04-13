@@ -13,10 +13,10 @@ import useObserves from '@/services/useObserves';
 import ObserveRecordModal from '@/components/ObserveRecordModal';
 import { deleteObserve } from '@/services/observe';
 import AddObserveModal from '@/components/AddObserveModal';
-import EditObserveModal from '@/components/EditObserveModal';
 import DataGrid from '@/components/DataGrid';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import HelpModal from '@/components/HelpModal';
+import FastSearchModal from '@/components/FastSearchModal';
 
 function Observe() {
     const actionPermission = usePermissionCheck('action');
@@ -26,20 +26,27 @@ function Observe() {
     const [showHelpModal, setShowHelpModal] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [type, setType] = useState(2);
-    const [showEditDialog, setShowEditDialog] = useState(false);
-    const [editData, setEditData] = useState(null);
     const [showAddDialog, setShowAddDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const isSmallScreen = useMediaQuery('(max-width:700px)');
+    const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
+    const [propsStock, setPropsStock] = useState('');
 
-    // 检查日期是否为周末
+    const handleCloseFastSearch = () => {
+        setShowFastSearchDialog(false);
+    };
+
+    const showFastSearchHandler = (stock) => {
+        setPropsStock(stock);
+        setShowFastSearchDialog(true);
+    };
+
     const isWeekend = (dateString) => {
         const date = new Date(dateString);
         const day = date.getDay();
         return day === 0 || day === 6;
     };
 
-    // 获取最近工作日（如果当前是周末）
     const getLastWeekday = (dateString) => {
         const date = new Date(dateString);
         let day = date.getDay();
@@ -53,7 +60,6 @@ function Observe() {
         return date.toISOString().split('T')[0];
     };
 
-    // 获取下一个工作日
     const getNextWeekday = (dateString) => {
         const date = new Date(dateString);
         let day = date.getDay();
@@ -69,7 +75,6 @@ function Observe() {
         return date.toISOString().split('T')[0];
     };
 
-    // 获取前一个工作日
     const getPreviousWeekday = (dateString) => {
         const date = new Date(dateString);
         let day = date.getDay();
@@ -85,17 +90,14 @@ function Observe() {
         return date.toISOString().split('T')[0];
     };
 
-    // 获取今天的日期
     const getTodayDate = () => {
         const today = new Date();
         return today.toISOString().split('T')[0];
     };
 
     const todayDate = getTodayDate();
-    // 设定最小允许日期为 2025-03-16
-    const minDate = '2025-03-16';
+    const minDate = '2025-04-12';
 
-    // 获取初始日期（如果今天是周末则返回最近的工作日）
     const getInitialDate = useCallback(() => {
         const today = getTodayDate();
         return isWeekend(today) ? getLastWeekday(today) : today;
@@ -103,12 +105,10 @@ function Observe() {
 
     const [date, setDate] = useState(getInitialDate());
 
-    // 确保组件挂载时设置正确的初始日期
     useEffect(() => {
         setDate(getInitialDate());
     }, [getInitialDate]);
 
-    // 修改 useObserves 的调用，传入日期参数
     const {
         isLoading: loading,
         data: listData,
@@ -119,23 +119,19 @@ function Observe() {
         date: date,
     });
 
-    // 处理日期变更的函数
     const handleDateChange = (e) => {
         const newDate = e.target.value;
 
-        // 检查新日期是否大于今天
         if (newDate > todayDate) {
             enqueueSnackbar('不能選擇未來的日期', { variant: 'error' });
             return;
         }
 
-        // 检查新日期是否小于最小允许日期
         if (newDate < minDate) {
             enqueueSnackbar('不能選擇2025-03-16之前的日期', { variant: 'error' });
             return;
         }
 
-        // 检查是否为周末
         if (isWeekend(newDate)) {
             enqueueSnackbar('不能選擇週六或週日', { variant: 'error' });
             return;
@@ -144,7 +140,6 @@ function Observe() {
         setDate(newDate);
     };
 
-    // 日期前进一个工作日
     const handleNextDay = () => {
         const nextDate = getNextWeekday(date);
 
@@ -153,7 +148,6 @@ function Observe() {
         }
     };
 
-    // 日期后退一个工作日
     const handlePrevDay = () => {
         const prevDate = getPreviousWeekday(date);
 
@@ -164,7 +158,6 @@ function Observe() {
         }
     };
 
-    // 返回今天（如果是周末则返回最近的工作日）
     const handleToday = () => {
         if (isWeekend(todayDate)) {
             setDate(getLastWeekday(todayDate));
@@ -174,22 +167,8 @@ function Observe() {
         }
     };
 
-    // 清除日期过滤
     const handleClearDate = () => {
         setDate('');
-    };
-
-    // 其他原有的函数保持不变
-    const editHandler = (e) => {
-        setEditData(e);
-        setShowEditDialog(true);
-    };
-
-    const handleCloseEdit = (refresh) => {
-        setShowEditDialog(false);
-        if (refresh) {
-            mutate();
-        }
     };
 
     const addHandler = () => {
@@ -219,7 +198,6 @@ function Observe() {
         }
     };
 
-    // 判断当前日期是否为今天或最近的工作日
     const isToday = date === (isWeekend(todayDate) ? getLastWeekday(todayDate) : todayDate);
     const isMinDate = date === minDate;
 
@@ -354,7 +332,7 @@ function Observe() {
                 </div>
             )}
 
-            <DataGrid rowData={listData} columnDefs={listColumn(showRecord, deleteHandler, editHandler, actionPermission)} isLoading={loading}>
+            <DataGrid rowData={listData} columnDefs={listColumn(showRecord, deleteHandler, actionPermission, showFastSearchHandler)} isLoading={loading}>
                 <div>
                     {isSmallScreen && (
                         <>
@@ -460,7 +438,6 @@ function Observe() {
                 </div>
             </DataGrid>
             <AddObserveModal open={showAddDialog} handleClose={handleCloseAdd} />
-            <EditObserveModal open={showEditDialog} handleClose={handleCloseEdit} editData={editData} />
             <ObserveRecordModal
                 loading={loading}
                 actionPermission={actionPermission}
@@ -470,6 +447,7 @@ function Observe() {
                 mutate={mutate}
             />
             <HelpModal open={showHelpModal} handleClose={closehelp} />
+            <FastSearchModal open={showFastSearchDialog} handleClose={handleCloseFastSearch} propsStock={propsStock} />
         </div>
     );
 }

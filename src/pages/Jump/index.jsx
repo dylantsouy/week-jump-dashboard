@@ -18,6 +18,7 @@ import { AddCircleOutline, Close, TuneRounded } from '@mui/icons-material';
 import { createStock } from '@/services/stockApi';
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
 import DataGrid from '@/components/DataGrid';
+import FastSearchModal from '@/components/FastSearchModal';
 
 function Jump() {
     const actionPermission = usePermissionCheck('action');
@@ -34,6 +35,17 @@ function Jump() {
     const isSmallScreen = useMediaQuery('(max-width:700px)');
     const { enqueueSnackbar } = useSnackbar();
     const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate, closed: checked });
+    const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
+    const [propsStock, setPropsStock] = useState('');
+
+    const handleCloseFastSearch = () => {
+        setShowFastSearchDialog(false);
+    };
+
+    const showFastSearchHandler = (stock) => {
+        setPropsStock(stock);
+        setShowFastSearchDialog(true);
+    };
 
     const confirmBulkDelete = async () => {
         setValue('modalLoading', true);
@@ -243,7 +255,7 @@ function Jump() {
                 setSelectedRows={setSelectedRows}
                 isLoading={loading}
                 rowData={listData}
-                columnDefs={listColumn(showRecord, deleteHandler, actionPermission, range)}
+                columnDefs={listColumn(showRecord, deleteHandler, actionPermission, range, showFastSearchHandler)}
             >
                 <div>
                     {isSmallScreen && (
@@ -343,6 +355,7 @@ function Jump() {
                 </div>
             </DataGrid>
             <JumpModal loading={loading} actionPermission={actionPermission} open={showRecordDialog} handleClose={handleCloseRecord} recordData={recordData} mutate={mutate} />
+            <FastSearchModal open={showFastSearchDialog} handleClose={handleCloseFastSearch} propsStock={propsStock} />
         </div>
     );
 }

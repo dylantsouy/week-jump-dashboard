@@ -11,6 +11,7 @@ import useLoans from '@/services/useLoans';
 import { addLoans, bulkDeleteLoan } from '@/services/loanApi';
 import LoanRecordModal from '@/components/LoanRecordModal';
 import { useStore } from '@/stores/store';
+import FastSearchModal from '@/components/FastSearchModal';
 
 function Loan() {
     const actionPermission = usePermissionCheck('action');
@@ -19,6 +20,17 @@ function Loan() {
     const [recordData, setRecordData] = useState(null);
     const [selectedRows, setSelectedRows] = useState([]);
     const { setModalHandler, closeModal, setValue } = useStore();
+    const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
+    const [propsStock, setPropsStock] = useState('');
+
+    const handleCloseFastSearch = () => {
+        setShowFastSearchDialog(false);
+    };
+
+    const showFastSearchHandler = (stock) => {
+        setPropsStock(stock);
+        setShowFastSearchDialog(true);
+    };
 
     const getLastWeekday = (dateString) => {
         const date = new Date(dateString);
@@ -38,7 +50,7 @@ function Loan() {
     };
 
     const todayDate = getTodayDate();
-    const minDate = '2025-03-24';
+    const minDate = '2025-04-11';
 
     const isWeekend = (dateString) => {
         const date = new Date(dateString);
@@ -291,7 +303,7 @@ function Loan() {
                 </div>
             )}
 
-            <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn(showRecord)} isLoading={loading}>
+            <DataGrid ifShowSelect={true} setSelectedRows={setSelectedRows} rowData={listData} columnDefs={listColumn(showRecord, showFastSearchHandler)} isLoading={loading}>
                 <div>
                     {isSmallScreen && (
                         <>
@@ -368,6 +380,7 @@ function Loan() {
                 </div>
             </DataGrid>
             <LoanRecordModal open={showRecordDialog} handleClose={handleCloseRecord} recordData={recordData} />
+            <FastSearchModal open={showFastSearchDialog} handleClose={handleCloseFastSearch} propsStock={propsStock} />
         </div>
     );
 }

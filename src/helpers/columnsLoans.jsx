@@ -1,10 +1,10 @@
 import { RenderCellExpand } from '@/components/RenderCellExpand';
-import ActionButtons from '@/components/ActionButtons';
 import moment from 'moment';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import { Tooltip } from '@mui/material';
+import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
 
-export const listColumn = (showRecord) => {
+export const listColumn = (showRecord, showFastSearchHandler) => {
     return [
         {
             field: 'stockName',
@@ -116,7 +116,12 @@ export const listColumn = (showRecord) => {
                         <Tooltip title={'融資增加歷史'} placement='bottom'>
                             <ReceiptLongIcon className='action-icon primary mr-2' onClick={() => showRecord(params.data)} />
                         </Tooltip>
-                        <ActionButtons code={params?.data?.stockCode} />
+                        <Tooltip title={'快速查詢'} placement='bottom'>
+                            <ScreenSearchDesktopIcon
+                                className='action-icon mr-2'
+                                onClick={() => showFastSearchHandler({ code: params?.data?.stockCode, name: params?.data?.stockName })}
+                            />
+                        </Tooltip>
                     </div>
                 );
             },
