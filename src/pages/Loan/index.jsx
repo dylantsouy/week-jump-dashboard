@@ -50,7 +50,7 @@ function Loan() {
     };
 
     const todayDate = getTodayDate();
-    const minDate = '2025-04-11';
+    const minDate = '2025-06-06';
 
     const isWeekend = (dateString) => {
         const date = new Date(dateString);

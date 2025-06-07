@@ -96,7 +96,7 @@ function Observe() {
     };
 
     const todayDate = getTodayDate();
-    const minDate = '2025-04-12';
+    const minDate = '2025-04-30';
 
     const getInitialDate = useCallback(() => {
         const today = getTodayDate();

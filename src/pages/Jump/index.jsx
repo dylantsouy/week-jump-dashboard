@@ -255,7 +255,7 @@ function Jump() {
                 setSelectedRows={setSelectedRows}
                 isLoading={loading}
                 rowData={listData}
-                columnDefs={listColumn(showRecord, deleteHandler, actionPermission, range, showFastSearchHandler)}
+                columnDefs={listColumn(showRecord, deleteHandler, actionPermission, showFastSearchHandler)}
             >
                 <div>
                     {isSmallScreen && (
