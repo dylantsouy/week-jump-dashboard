@@ -27,8 +27,17 @@ function Jump() {
     const [showRecordDialog, setShowRecordDialog] = useState(false);
     const [recordData, setRecordData] = useState(null);
     const [selectDate, setSelectDate] = useState(dayjs());
-    const [startDate, setStartDate] = useState(dayjs().startOf('week').day(1));
-    const [endDate, setEndDate] = useState(dayjs().add(1, 'week').endOf('week').day(0));
+    const [startDate, setStartDate] = useState(() => {
+        const today = dayjs();
+        const weekday = today.day();
+        return weekday === 0 ? today.subtract(6, 'day') : today.startOf('week').add(1, 'day');
+    });
+
+    const [endDate, setEndDate] = useState(() => {
+        const today = dayjs();
+        const weekday = today.day();
+        return weekday === 0 ? today : today.endOf('week').subtract(1, 'day');
+    });
     const [range, setRange] = useState(1);
     const [checked, setChecked] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);

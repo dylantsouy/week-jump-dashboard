@@ -39,12 +39,12 @@ export default function Sidebar() {
             icon: <Jump />,
             permission: 'jump',
         },
-        {
-            title: '動能清單',
-            router: '/observe',
-            icon: <DirectionsRunIcon />,
-            permission: 'observe',
-        },
+        // {
+        //     title: '動能清單',
+        //     router: '/observe',
+        //     icon: <DirectionsRunIcon />,
+        //     permission: 'observe',
+        // },
         {
             title: '融資清單',
             router: '/loan',

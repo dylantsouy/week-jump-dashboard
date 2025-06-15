@@ -35,14 +35,14 @@ function App() {
                 </ProtectedRoute>
             ),
         },
-        {
-            path: '/observe',
-            element: (
-                <ProtectedRoute>
-                    <Observe />
-                </ProtectedRoute>
-            ),
-        },
+        // {
+        //     path: '/observe',
+        //     element: (
+        //         <ProtectedRoute>
+        //             <Observe />
+        //         </ProtectedRoute>
+        //     ),
+        // },
         {
             path: '/loan',
             element: (
