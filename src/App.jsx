@@ -10,7 +10,7 @@ import Snackbar from '@/providers/Snackbar';
 import Sidebar from '@/components/Sidebar';
 import ConfirmModal from './components/ConfirmModal';
 import Jump from './pages/Jump';
-import Observe from './pages/Observe';
+// import Observe from './pages/Observe';
 import Contract from './pages/Contract';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.min.css';
@@ -69,7 +69,7 @@ function App() {
         },
         {
             path: '/',
-            element: <Navigate to='/dashboard' replace />,
+            element: <Navigate to='/jump' replace />,
         },
         {
             path: '*',
@@ -85,7 +85,7 @@ export const PublicRoute = ({ children }) => {
 
     if (isAuthenticated) {
         // user is already logged in, redirecting to the logged-in (登入後) page.
-        return <Navigate to='/dashboard' />;
+        return <Navigate to='/jump' />;
     }
     return <>{children}</>;
 };

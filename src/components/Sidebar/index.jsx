@@ -28,29 +28,29 @@ export default function Sidebar() {
 
     const sidebarItems = [
         {
-            title: '觀察清單',
-            router: '/dashboard',
-            icon: <AdsClickIcon />,
-            permission: 'dashboard',
-        },
-        {
             title: '跳空清單',
             router: '/jump',
             icon: <Jump />,
             permission: 'jump',
         },
         // {
+        //     title: '觀察清單',
+        //     router: '/dashboard',
+        //     icon: <AdsClickIcon />,
+        //     permission: 'dashboard',
+        // },
+        // {
         //     title: '動能清單',
         //     router: '/observe',
         //     icon: <DirectionsRunIcon />,
         //     permission: 'observe',
         // },
-        {
-            title: '融資清單',
-            router: '/loan',
-            icon: <PriceChangeIcon />,
-            permission: 'loan',
-        },
+        // {
+        //     title: '融資清單',
+        //     router: '/loan',
+        //     icon: <PriceChangeIcon />,
+        //     permission: 'loan',
+        // },
         {
             title: '合約清單',
             router: '/contract',
@@ -97,7 +97,7 @@ export default function Sidebar() {
 
     return (
         <div className='Sidebar'>
-            <div className='logo' data-testid='logo' onClick={() => goHandler('/dashboard')}>
+            <div className='logo' data-testid='logo' onClick={() => goHandler('/jump')}>
                 <LogoSM />
             </div>
             <div className='sidebar-items'>

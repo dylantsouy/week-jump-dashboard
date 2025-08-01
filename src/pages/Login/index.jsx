@@ -70,7 +70,7 @@ function LoginPage() {
                 setAuthValue('permissionArray', permissionHandler(result?.data?.role));
                 setAuthValue('token', result?.token);
                 setAuthValue('rememberAccount', email);
-                navigate('/dashboard');
+                navigate('/jump');
             } else {
                 enqueueSnackbar('請求發生錯誤, 請重新嘗試', { variant: 'error' });
             }
