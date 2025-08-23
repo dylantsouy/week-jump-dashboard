@@ -12,15 +12,15 @@ import useJump from '@/services/useJump';
 import JumpModal from '../JumpModal';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 import { useSnackbar } from 'notistack';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import ObserveRecordModal from '../ObserveRecordModal';
-import useObserve from '@/services/useObserve';
+// import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+// import ObserveRecordModal from '../ObserveRecordModal';
+// import useObserve from '@/services/useObserve';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import useLoan from '@/services/useLoan';
-import LoanRecordModal from '../LoanRecordModal';
-import PriceChangeIcon from '@mui/icons-material/PriceChange';
+// import LoanRecordModal from '../LoanRecordModal';
+// import PriceChangeIcon from '@mui/icons-material/PriceChange';
 
 export default function FastSearchModal(props) {
     const { open, handleClose, propsStock } = props;
@@ -30,10 +30,10 @@ export default function FastSearchModal(props) {
     const actionPermission = usePermissionCheck('action');
     const [showJumpDialog, setShowJumpDialog] = useState(false);
     const [showJumpData, setShowJumpData] = useState(null);
-    const [showRunDialog, setShowRunDialog] = useState(false);
-    const [showRunData, setShowRunData] = useState(null);
-    const [showLoanDialog, setShowLoanDialog] = useState(false);
-    const [showLoanData, setShowLoanData] = useState(null);
+    // const [showRunDialog, setShowRunDialog] = useState(false);
+    // const [showRunData, setShowRunData] = useState(null);
+    // const [showLoanDialog, setShowLoanDialog] = useState(false);
+    // const [showLoanData, setShowLoanData] = useState(null);
     const [selectedStock, setSelectedStock] = useState(null);
     const isSmallScreen = useMediaQuery('(max-width:700px)');
 
@@ -113,37 +113,37 @@ export default function FastSearchModal(props) {
         code: selectedStock?.code,
     });
 
-    const showLoanRecord = () => {
-        let e = loanData || {};
-        if (!e?.stockCode) {
-            enqueueSnackbar('沒有紀錄', { variant: 'error' });
-            return;
-        }
-        setShowLoanData(e);
-        setShowLoanDialog(true);
-    };
-    const handleCloseLoan = () => {
-        setShowLoanDialog(false);
-    };
-    const {
-        data: runData,
-        isLoading: loadingRun,
-        mutate: mutateRun,
-    } = useObserve({
-        id: selectedStock?.code,
-    });
-    const showRunRecord = () => {
-        let e = runData || {};
-        if (!e?.id) {
-            enqueueSnackbar('沒有紀錄', { variant: 'error' });
-            return;
-        }
-        setShowRunData(e);
-        setShowRunDialog(true);
-    };
-    const handleCloseRun = () => {
-        setShowRunDialog(false);
-    };
+    // const showLoanRecord = () => {
+    //     let e = loanData || {};
+    //     if (!e?.stockCode) {
+    //         enqueueSnackbar('沒有紀錄', { variant: 'error' });
+    //         return;
+    //     }
+    //     setShowLoanData(e);
+    //     setShowLoanDialog(true);
+    // };
+    // const handleCloseLoan = () => {
+    //     setShowLoanDialog(false);
+    // };
+    // const {
+    //     data: runData,
+    //     isLoading: loadingRun,
+    //     mutate: mutateRun,
+    // } = useObserve({
+    //     id: selectedStock?.code,
+    // });
+    // const showRunRecord = () => {
+    //     let e = runData || {};
+    //     if (!e?.id) {
+    //         enqueueSnackbar('沒有紀錄', { variant: 'error' });
+    //         return;
+    //     }
+    //     setShowRunData(e);
+    //     setShowRunDialog(true);
+    // };
+    // const handleCloseRun = () => {
+    //     setShowRunDialog(false);
+    // };
 
     const filterOptions = (options, { inputValue }) => {
         const filterValue = inputValue.toLowerCase();
@@ -189,7 +189,7 @@ export default function FastSearchModal(props) {
                         <Button disabled={loadingJump || !jumpData?.JumpsRecords} variant='contained' startIcon={<Jump />} component={Link} onClick={() => showJumpRecord()}>
                             跳空歷史
                         </Button>
-                        <Button disabled={loadingRun || !runData?.id} variant='contained' startIcon={<DirectionsRunIcon />} component={Link} onClick={() => showRunRecord()}>
+                        {/* <Button disabled={loadingRun || !runData?.id} variant='contained' startIcon={<DirectionsRunIcon />} component={Link} onClick={() => showRunRecord()}>
                             動能歷史
                         </Button>
                         <Button
@@ -200,7 +200,7 @@ export default function FastSearchModal(props) {
                             onClick={() => showLoanRecord()}
                         >
                             融資歷史
-                        </Button>
+                        </Button> */}
                         <Button
                             variant='contained'
                             startIcon={<ShowChartIcon />}
@@ -254,15 +254,15 @@ export default function FastSearchModal(props) {
                     recordData={showJumpData}
                     mutate={mutateJump}
                 />
-                <ObserveRecordModal
+                {/* <ObserveRecordModal
                     loading={loading}
                     actionPermission={actionPermission}
                     open={showRunDialog}
                     handleClose={handleCloseRun}
                     recordData={showRunData}
                     mutate={mutateRun}
-                />
-                <LoanRecordModal open={showLoanDialog} handleClose={handleCloseLoan} recordData={showLoanData} />
+                /> */}
+                {/* <LoanRecordModal open={showLoanDialog} handleClose={handleCloseLoan} recordData={showLoanData} /> */}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>取消</Button>

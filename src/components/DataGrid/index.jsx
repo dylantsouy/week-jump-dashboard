@@ -9,7 +9,7 @@ import { NoDataIcon } from '@/assets/icons';
 import usePermissionCheck from '@/helpers/usePermissionCheck';
 
 export default function DataGrid({ rowData, columnDefs, isLoading, children, setSelectedRows, ifShowSelect }) {
-    const actionPermission = usePermissionCheck('action');
+    const deletePermission = usePermissionCheck('delete');
     const [gridApi, setGridApi] = useState(null);
     const [quickFilter, setQuickFilter] = useState('');
 
@@ -54,7 +54,7 @@ export default function DataGrid({ rowData, columnDefs, isLoading, children, set
             return columnDefs;
         } else {
             return [
-                ...(actionPermission
+                ...(deletePermission
                     ? [
                           {
                               sortable: false,

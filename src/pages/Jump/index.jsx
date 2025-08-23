@@ -22,6 +22,7 @@ import FastSearchModal from '@/components/FastSearchModal';
 
 function Jump() {
     const actionPermission = usePermissionCheck('action');
+    const deletePermission = usePermissionCheck('delete');
     const { setModalHandler, closeModal, setValue } = useStore();
     const [selectedRows, setSelectedRows] = useState([]);
     const [showRecordDialog, setShowRecordDialog] = useState(false);
@@ -43,7 +44,7 @@ function Jump() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const isSmallScreen = useMediaQuery('(max-width:700px)');
     const { enqueueSnackbar } = useSnackbar();
-    const { isLoading: loading, data: listData, mutate, updatedDate } = useJumps({ range, startDate, closed: checked });
+    const { isLoading: loading, data: listData, mutate, stockLastUpdated } = useJumps({ range, startDate, closed: checked });
     const [showFastSearchDialog, setShowFastSearchDialog] = useState(false);
     const [propsStock, setPropsStock] = useState('');
 
@@ -101,10 +102,30 @@ function Jump() {
 
     const addHandler = async () => {
         try {
+            // 檢查 stockLastUpdated 是否為今天
+            const today = dayjs().format('YYYY-MM-DD');
+            const lastUpdatedDate = dayjs(stockLastUpdated).format('YYYY-MM-DD');
+
+            // 如果 stockLastUpdated 不是今天，先執行 refreshHandler
+            if (lastUpdatedDate !== today) {
+                enqueueSnackbar('股價資料非今日，正在更新...', { variant: 'info' });
+
+                const refreshResult = await createStock();
+                if (!refreshResult.success) {
+                    enqueueSnackbar('更新股價失敗，無法執行抓取', { variant: 'error' });
+                    return;
+                }
+                mutate();
+
+                enqueueSnackbar('股價更新成功，開始抓取跳空資料...', { variant: 'success' });
+            }
+
+            // 執行抓取操作
             let result = await addJumps({ range, startDate });
             const { success } = result;
             if (success) {
                 enqueueSnackbar('抓取成功', { variant: 'success' });
+                mutate();
             }
         } catch (err) {
             enqueueSnackbar('抓取失敗', { variant: 'error' });
@@ -116,6 +137,7 @@ function Jump() {
             let result = await updateIfClosed({ range, startDate });
             const { success } = result;
             if (success) {
+                mutate();
                 enqueueSnackbar('檢查成功', { variant: 'success' });
             }
         } catch (err) {
@@ -210,7 +232,7 @@ function Jump() {
             <div className='title'>
                 <div className='title-left'>跳空清單</div>
                 <div className='title-right'>
-                    收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(updatedDate)}</div>{' '}
+                    收盤價更新: <div className='flex-center'>{loading ? <Skeleton variant='text' width={135} /> : generateMeasureTime(stockLastUpdated)}</div>{' '}
                     <span className='mins'>(每日 14:00 後更新)</span>
                 </div>
             </div>
@@ -235,7 +257,7 @@ function Jump() {
                         <Button className='act' disabled={!actionPermission} variant='contained' startIcon={<CloseFullscreenIcon />} onClick={checkHandler}>
                             檢查補上
                         </Button>
-                        <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                        <Button className='act' disabled={!deletePermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
                             批量刪除 ({selectedRows.length})
                         </Button>
                     </div>
@@ -264,7 +286,7 @@ function Jump() {
                 setSelectedRows={setSelectedRows}
                 isLoading={loading}
                 rowData={listData}
-                columnDefs={listColumn(showRecord, deleteHandler, actionPermission, showFastSearchHandler)}
+                columnDefs={listColumn(showRecord, deleteHandler, deletePermission, showFastSearchHandler)}
             >
                 <div>
                     {isSmallScreen && (

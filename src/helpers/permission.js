@@ -1,7 +1,7 @@
 export const permissionHandler = (role) => {
     switch (role) {
         case 1:
-            return ['dashboard', 'jump', 'observe', 'contract', 'loan', 'action'];
+            return ['dashboard', 'jump', 'observe', 'contract', 'loan', 'action', 'delete'];
         case 2:
             return ['dashboard', 'jump', 'observe', 'contract', 'loan', 'action'];
         case 3:

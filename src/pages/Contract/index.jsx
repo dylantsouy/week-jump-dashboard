@@ -22,6 +22,7 @@ import FastSearchModal from '@/components/FastSearchModal';
 function Contract() {
     const { setModalHandler, closeModal, setValue } = useStore();
     const actionPermission = usePermissionCheck('action');
+    const deletePermission = usePermissionCheck('delete');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const isSmallScreen = useMediaQuery('(max-width:700px)');
     const [range, setRange] = useState(50);
@@ -223,7 +224,7 @@ function Contract() {
                         >
                             抓取
                         </Button>
-                        <Button className='act' disabled={!actionPermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
+                        <Button className='act' disabled={!deletePermission || selectedRows.length === 0} variant='contained' color='error' onClick={bulkDeleteHandler}>
                             批量刪除 ({selectedRows.length})
                         </Button>
                     </div>

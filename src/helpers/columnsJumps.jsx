@@ -6,7 +6,7 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ScreenSearchDesktopIcon from '@mui/icons-material/ScreenSearchDesktop';
 import MultiLineHeader from './MultiLineHeader';
 
-export const listColumn = (showRecord, deleteHandler, actionPermission, showFastSearchHandler) => {
+export const listColumn = (showRecord, deleteHandler, deletePermission, showFastSearchHandler) => {
     return [
         {
             field: 'name',
@@ -219,7 +219,7 @@ export const listColumn = (showRecord, deleteHandler, actionPermission, showFast
             cellRenderer: (params) => {
                 return (
                     <div className='action'>
-                        {actionPermission ? (
+                        {deletePermission ? (
                             <Tooltip title={'刪除'} placement='bottom'>
                                 <Delete className='action-icon warning mr-2' onClick={() => deleteHandler(params.data)} />
                             </Tooltip>
