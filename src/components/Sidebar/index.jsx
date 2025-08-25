@@ -45,12 +45,12 @@ export default function Sidebar() {
         //     icon: <DirectionsRunIcon />,
         //     permission: 'observe',
         // },
-        // {
-        //     title: '融資清單',
-        //     router: '/loan',
-        //     icon: <PriceChangeIcon />,
-        //     permission: 'loan',
-        // },
+        {
+            title: '融資清單',
+            router: '/loan',
+            icon: <PriceChangeIcon />,
+            permission: 'loan',
+        },
         {
             title: '合約清單',
             router: '/contract',
